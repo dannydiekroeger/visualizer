@@ -21,4 +21,8 @@ python -m SimpleHTTPServer
 Then in your browser go to:
 
 localhost:8000/sound.html
+
+If you don't have python installed then it's up to you to figure out how to locally host the webpage. Also your web browser may block microphone access, but you should be able to change these settings.
+
+okay
 ---------------------------
