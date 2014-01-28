@@ -15,6 +15,9 @@ var barWidth;
 var expandFactor;
 var heightMult;
 var gradient;
+var flippedBars;
+var doubleBars;
+var middleBars;
 var numColors = 4;
 
 function initScreen() {
@@ -22,8 +25,6 @@ function initScreen() {
 	    canv.setAttribute("height", window.innerHeight-50);
 	    canv.setAttribute("style", "background:black");
 		
-		centX = 3*window.innerWidth/4;
-		centY = window.innerHeight/4;
 		centX = window.innerWidth/2;
 		centY = window.innerHeight/3;
 		//create gradient for the bins
@@ -41,7 +42,10 @@ function initScreen() {
 		maxfluid = false;
 		fill = 0;
 		accentPeaks = true;
-	
+		flippedBars = false;
+		doubleBars = false;
+		middleBars = false;
+		initKeyboard();
 		//set new gradient as fill style
 		ctx.fillStyle = gradient;
 }
@@ -59,6 +63,32 @@ function updateScreen(array) {
 	if(maxfluid) drawMaxFluid(array);
 	ctx.fill();
 	
+}
+
+function initKeyboard() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
+		if(code == 49) goFullScreen(); // 1
+		else if(code == 67) toggleCircle(); // C
+		else if(code == 68) toggleDoubleBars(); // D
+		else if(code == 70) toggleFluid();// F
+		else if(code == 65) toggleColor(); // A
+		else if(code == 90) toggleFlippedBars(); // Z
+		else if(code == 77) toggleMiddleBars(); // M
+		else if(code==190) lowerExpandFactor(); // Period
+		else if(code==191) increaseExpandFactor(); // For. Slash
+		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
+	}
+}
+
+
+
+function catchArrowKey(code) {
+	var scale = 20;
+	if(code == 37) centX -= scale;
+	else if(code == 38) centY -= scale;
+	else if(code==39) centX += scale;
+	else centY += scale;
 }
 
 function initConstants(){
@@ -135,11 +165,11 @@ function getOrderedBins(array) {
 function goFullScreen(){
     var canvas = canv;
     if(canvas.requestFullScreen)
-        canvas.requestFullScreen();
+        canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
     else if(canvas.webkitRequestFullScreen)
-        canvas.webkitRequestFullScreen();
+        canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
     else if(canvas.mozRequestFullScreen)
-        canvas.mozRequestFullScreen();
+        canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
 }
 
 function drawOneCircle(x, y, radius) {
@@ -162,6 +192,30 @@ function toggleCircle() {
 	}
 }
 
+function toggleFlippedBars() {
+	if(flippedBars) {
+		flippedBars = false;
+	} else {
+		flippedBars = true;
+	}
+}
+
+function toggleDoubleBars() {
+	if(doubleBars) {
+		doubleBars = false;
+	} else {
+		doubleBars = true;
+	}
+}
+
+function toggleMiddleBars() {
+	if(middleBars) {
+		middleBars = false;
+	} else {
+		middleBars = true;
+	}	
+}
+
 function toggleFluid() {
 	if(fluid) {
 		fluid = false;
@@ -180,24 +234,49 @@ function drawSmoothBars(array) {
 	//the max count of bins for the visualization
 	var maxBinCount = array.length;
 	//space between bins
-
+	var yval = 0;
 	var maxBin = getMaxFreqBin(array);
 	//set fill color to maxBin % 7
 	//var color = getBinColor(maxBin, array.length);
 	//gradient.addColorStop(.75, color);
 	//go over each bin
+	//expandFactor = 3*(canv.width-5)/(maxBinCount*space);
+	//expandFactor = 10;
+	if(middleBars) {
+		helpDrawBars(array, maxBinCount, threshold,yval,expandFactor);
+	} else {
+		helpDrawBars(array, maxBinCount, threshold,yval,expandFactor);
+		if(doubleBars) {
+			toggleFlippedBars();
+			helpDrawBars(array, maxBinCount, threshold,yval,expandFactor);
+			toggleFlippedBars();
+		}
+	}
+}
+
+function helpDrawBars(array, maxBinCount, threshold, yval, expandFactor) {
 	for ( var i = 0; i < maxBinCount-1; i++ ){
 		var value = array[i];
 		if (value >= threshold) {				
 
 			//draw bin
-			ctx.fillRect(5 + i * space *expandFactor, canv.height - value*heightMult, barWidth, canv.height);
-			var nextVal = array[i+1];
-			var diff = nextVal-value;
-			var incr = diff/expandFactor;
-			
-			for (var j=1; j<expandFactor; j++){
-				ctx.fillRect(5 + i * space*expandFactor + j, canv.height - (value+incr*j)*heightMult, barWidth, canv.height);
+			if(middleBars) {
+				yval = canv.height/2 - value*heightMult/2;
+			} else if(flippedBars) {
+				yval = canv.height-value*heightMult;
+			}
+			var xval = 5 + i * space *expandFactor;
+			if(xval <= canv.width) {
+				ctx.fillRect(xval, yval, barWidth, value*heightMult);
+				var nextVal = array[i+1];
+				var diff = nextVal-value;
+				var incr = diff/expandFactor;
+				
+				for (var j=1; j<expandFactor; j++){
+					if(middleBars) yval = canv.height/2 - (value+incr*j)*heightMult/2
+					else if(flippedBars) yval = canv.height - (value+incr*j)*heightMult;
+					ctx.fillRect(5 + i * space*expandFactor + j, yval, barWidth, (value+incr*j)*heightMult);
+				}
 			}
 		}
 	}
@@ -249,4 +328,13 @@ function getMaxFreqBin(array) {
 		}
 	}
 	return maxBin;
+}
+function lowerExpandFactor() {
+	if(expandFactor > 2) {
+		expandFactor -= 1;
+	}
+}
+
+function increaseExpandFactor() {
+	expandFactor++;
 }
