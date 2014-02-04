@@ -13,6 +13,9 @@ var initGraphics = initFreqBars;
 // see mygraphics.js for example.
 var updateGraphics = drawBars;
 
+//update song to equal the name of the mp3 file you want to play
+var song = "three.mp3";
+
 // ------------------------------------------------------------//
 
 
@@ -53,14 +56,28 @@ function initSound() {
 	initNavigator();
 }
 
+//function to init the canvas element. Should be called from all init methods using the html canvas
 	function initCanvas() {
+		d3.select("svg").remove();
 		canvasWidth = window.innerWidth - 225;
 		canvasHeight = window.innerHeight -200;
 	   	canv.setAttribute("width", canvasWidth);
 	    canv.setAttribute("height", canvasHeight);
-	    canv.setAttribute("style", "background:black");
-	    canv.setAttribute("style", "border:3px solid #A9BCF5; background:black" );
+	    document.getElementById("screen").setAttribute("style", "background:black");
+	    document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );
 	}
+	
+//function to init the svg element. Should be called from all init methods using an svg container as a background (all applications using d3)
+	function initSVG(){
+		canv.setAttribute("width", 0);
+	    canv.setAttribute("height", 0);
+		var svgWidth = window.innerWidth - 225;
+		var svgHeight = window.innerHeight -200;
+		d3.select("#screen").style("background-color", "black")	
+		var svgContainer = d3.select("#screen").append("svg").attr("width", svgWidth).attr("height",svgHeight);
+	}	
+	
+	
 	
 	function updateVisualization() {
 	    // get the average for the first channel
@@ -95,7 +112,7 @@ function initSound() {
     	// to draw the volume
     	
     	////javascriptNode.onaudioprocess = updateVisualization
-    	loadSound("three.mp3");
+    	loadSound(song);
 	}
 	
 	function initNavigator() {
@@ -174,6 +191,38 @@ function initSound() {
     	console.log("error");
         console.log(e);
     }
+    
+    function initKeyboard() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
+		if(code == 49) goFullScreen(); // 1
+		else if(code == 67) toggleCircle(); // C
+		else if(code == 68) toggleDoubleBars(); // D
+		else if(code == 70) toggleFluid();// F
+		else if(code == 65) toggleColor(); // A
+		else if(code == 90) toggleFlippedBars(); // Z
+		else if(code == 77) toggleMiddleBars(); // M
+		else if(code==190) lowerExpandFactor(); // Period
+		else if(code==191) increaseExpandFactor(); // For. Slash
+		else if(code==75) lowerRiseFactor(); // Period
+		else if(code==76) increaseRiseFactor(); // For. Slash
+		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
+		else if(code==80) toggleBallDrop(); // P
+	}
+}
+
+function goFullScreen(){
+    var canvas = canv;
+    if(canvas.requestFullScreen) {
+        canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+    else if(canvas.webkitRequestFullScreen) {
+        canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+    else if(canvas.mozRequestFullScreen)
+        canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+}
+
 
 
 

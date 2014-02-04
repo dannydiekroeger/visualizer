@@ -103,24 +103,6 @@ function logPeaks(peakarray, num) {
 	console.log(str);
 }
 
-function initKeyboard() {
-	document.onkeydown = function (event) {
-		code = event.keyCode;
-		if(code == 49) goFullScreen(); // 1
-		else if(code == 67) toggleCircle(); // C
-		else if(code == 68) toggleDoubleBars(); // D
-		else if(code == 70) toggleFluid();// F
-		else if(code == 65) toggleColor(); // A
-		else if(code == 90) toggleFlippedBars(); // Z
-		else if(code == 77) toggleMiddleBars(); // M
-		else if(code==190) lowerExpandFactor(); // Period
-		else if(code==191) increaseExpandFactor(); // For. Slash
-		else if(code==75) lowerRiseFactor(); // Period
-		else if(code==76) increaseRiseFactor(); // For. Slash
-		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
-		else if(code==80) toggleBallDrop(); // P
-	}
-}
 
 
 
@@ -204,18 +186,6 @@ function getOrderedBins(array) {
 	return array2;
 }
 
-function goFullScreen(){
-	enlargeCanvas();
-    var canvas = canv;
-    if(canvas.requestFullScreen) {
-        canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    }
-    else if(canvas.webkitRequestFullScreen) {
-        canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    }
-    else if(canvas.mozRequestFullScreen)
-        canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-}
 
 function drawOneCircle(x, y, radius) {
 	ctx.beginPath();
