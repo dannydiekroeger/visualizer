@@ -12,23 +12,23 @@ function initNeon(){
 		//console.log(currentGenre);
 }
 
-function drawNeon(array){
+function drawNeon(freqArray, waveArray){
 	var circle = d3.select("circle")
 	//circle.data(array).transition().attr("r", function(d){
 	//	return d;	
 	//});
-	var amp=getTotalAmplitude(array);
+	var amp=getTotalAmplitude(freqArray);
 	var maxScale = 95555;
 	var percent = amp/maxScale;
-	var maxRad = 5;
+	var maxRad = 2;
 	var radius = maxRad*amp/maxScale;
-	for(var i=0; i< array.length; i++){
+	for(var i=0; i< freqArray.length; i++){
 	var fillColor=getNeonColor()
 	d3.select("svg")
 		.append("circle")
 		//.attr("cx", Math.floor(Math.random()*window.innerWidth))
 		.attr("cx", i)
-		.attr("cy", array[i])
+		.attr("cy", freqArray[i])
 		.attr("r",radius)
 		.style("fill-opacity", .4)
 		//.transition()
@@ -42,6 +42,7 @@ function drawNeon(array){
 	//	.duration(250)
 	//	.ease(Math.sqrt)
 	//	.style("stroke-opacity", 1)
+		
 		.transition()
 		.duration(150)
 		.ease(Math.sqrt)

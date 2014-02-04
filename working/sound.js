@@ -41,6 +41,24 @@ var song = "three.mp3";
 	var gradient;
 	var canvasWidth;
 	var canvasHeight;
+	var maxBinCount;
+	
+	//Beat variables
+	var beatCutOff = 0;
+	var beatTime = 0;
+	var levelHistory = []; //last 256 ave norm levels
+	var levelsData = []; //levels of each frequecy - from 0 - 1 . no sound is 0. Array [levelsCount]
+	var audioParams = {
+		useMic: false,
+		useSample:true,
+		volSens:1,
+		beatHoldTime:40,
+		beatDecayRate:0.97,
+	};
+	var BEAT_HOLD_TIME = 40; //num of frames to hold a beat
+	var BEAT_DECAY_RATE = 0.98;
+	var BEAT_MIN = 0.15; //a volume less than this is no beat
+
 
 function initSound() {
 	if (! window.AudioContext) {
@@ -52,6 +70,10 @@ function initSound() {
 	context = new AudioContext();
 	canv = document.getElementById("canvas");
 	ctx = canv.getContext("2d");
+	var length = 256;
+		for(var i = 0; i < length; i++) {
+		    levelHistory.push(0);
+		}
 	initGraphics();
 	initNavigator();
 }
@@ -60,7 +82,7 @@ function initSound() {
 	function initCanvas() {
 		d3.select("svg").remove();
 		canvasWidth = window.innerWidth - 225;
-		canvasHeight = window.innerHeight -200;
+		canvasHeight = window.innerHeight -150;
 	   	canv.setAttribute("width", canvasWidth);
 	    canv.setAttribute("height", canvasHeight);
 	    document.getElementById("screen").setAttribute("style", "background:black");
@@ -72,7 +94,7 @@ function initSound() {
 		canv.setAttribute("width", 0);
 	    canv.setAttribute("height", 0);
 		var svgWidth = window.innerWidth - 225;
-		var svgHeight = window.innerHeight -200;
+		var svgHeight = window.innerHeight -150;
 		d3.select("#screen").style("background-color", "black")	
 		var svgContainer = d3.select("#screen").append("svg").attr("width", svgWidth).attr("height",svgHeight);
 	}	
@@ -81,15 +103,70 @@ function initSound() {
 	
 	function updateVisualization() {
 	    // get the average for the first channel
-	    var array =  new Uint8Array(analyser.frequencyBinCount);
-	    analyser.getByteFrequencyData(array);
+	    var freqArray =  new Uint8Array(analyser.frequencyBinCount);
+	    analyser.getByteFrequencyData(freqArray);
+	   
+	   var waveArray = new Uint8Array(analyser.frequencyBinCount);
+	   analyser.getByteTimeDomainData(waveArray);
+	   
+	   maxBinCount = freqArray.length;
+	   
+	   var beat = gotBeat(freqArray);
 	    // clear the current state
 	    //ctx.clearRect(0, 0, 1000, 325);
 	    // set the fill style
 	    //ctx.fillStyle=gradient;
-	    updateGraphics(array);
+	    updateGraphics(freqArray,waveArray, beat);
 	    rafID = window.requestAnimationFrame(updateVisualization);
 	}
+	
+	
+	function gotBeat(freqArray){
+	/*	//normalize levelsData from freqByteData
+		for(var i = 0; i < levelsCount; i++) {
+			var sum = 0;
+			for(var j = 0; j < levelBins; j++) {
+				sum += freqByteData[(i * levelBins) + j];
+			}
+			levelsData[i] = sum / levelBins/256 * ControlsHandler.audioParams.volSens; //freqData maxs at 256
+
+			//adjust for the fact that lower levels are percieved more quietly
+			//make lower levels smaller
+			//levelsData[i] *=  1 + (i/levelsCount)/2;
+		}*/
+		
+		//GET AVG LEVEL
+		var sum = 0;
+		var beat = false;
+		for(var j = 0; j < maxBinCount; j++) {
+		//	sum += levelsData[j];
+			sum+=freqArray[j];
+		}
+		
+		level = sum / maxBinCount;
+
+		levelHistory.push(level);
+		levelHistory.shift(1);
+
+		//BEAT DETECTION
+		if (level  > beatCutOff && level > BEAT_MIN){
+			beat = true;
+			beatCutOff = level *1.1;
+			beatTime = 0;
+		}else{
+			if (beatTime <= audioParams.beatHoldTime){
+				beatTime ++;
+			}else{
+				beatCutOff *= audioParams.beatDecayRate;
+				beatCutOff = Math.max(beatCutOff,BEAT_MIN);
+			}
+		}
+
+
+		//bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
+		return beat;
+	}
+	
 	
 	function enlargeCanvas() {
 		//canvas.setAttribute("width",screen.width);

@@ -18,14 +18,13 @@ function initFreqBars() {
 
 // My update function
 // Notice: takes in array as parameter
-function drawBars (array) {
+function drawBars (array, waveArray, beat) {
 
 	//just show bins with a value over the treshold
 	var threshold = 0;
 	// clear the current state
 	ctx.clearRect(0, 20, canv.width, canv.height);
 	//the max count of bins for the visualization
-	var maxBinCount = array.length;
 	//space between bins
 	var space = 15;
 
