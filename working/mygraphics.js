@@ -4,18 +4,14 @@
 //           id "canvas" in sound.html
 //         - refers to "ctx" which is defined in sound.js 
 function initFreqBars() {
-		// get the context from the canvas to draw on
-	    canv.setAttribute("width", window.innerWidth - 225);
-	    canv.setAttribute("height", window.innerHeight -200 );
-	    canv.setAttribute("style", "background:black");
-	    canv.setAttribute("style", "border:3px solid #A9BCF5; background:black" );
+	
+		initCanvas();
+
 		//create gradient for the bins
 		gradient = ctx.createLinearGradient(0,0,0,300);
-		gradient.addColorStop(1,'#000000'); //black
-		gradient.addColorStop(0.75,'#ff0000'); //red
-		gradient.addColorStop(0.25,'#ffff00'); //yellow
+		gradient.addColorStop(1,'#ff0000'); //red
+		gradient.addColorStop(0.5,'#ffff00'); //yellow
 		gradient.addColorStop(0,'#ffffff'); //white
-	
 		//set new gradient as fill style
 		ctx.fillStyle = gradient;
 }
@@ -40,7 +36,7 @@ function drawBars (array) {
 		if (value >= threshold) {				
 
 			//draw bin
-			ctx.fillRect(5 + i * space, canv.height - value, 5 , canv.height);
+			ctx.fillRect(5 + i * space, canv.height - value, 5 , value);
 
 			//draw every second bin area in hertz	
 			if (i % 2 == 0) {

@@ -50,14 +50,21 @@ var gradient;
 initGraphics();
 initNavigator();
 
+	function initCanvas() {
+	   	canv.setAttribute("width", window.innerWidth - 225);
+	    canv.setAttribute("height", window.innerHeight -200 );
+	    canv.setAttribute("style", "background:black");
+	    canv.setAttribute("style", "border:3px solid #A9BCF5; background:black" );
+	}
+	
 	function updateVisualization() {
 	    // get the average for the first channel
 	    var array =  new Uint8Array(analyser.frequencyBinCount);
 	    analyser.getByteFrequencyData(array);
 	    // clear the current state
-	    ctx.clearRect(0, 0, 1000, 325);
+	    //ctx.clearRect(0, 0, 1000, 325);
 	    // set the fill style
-	    ctx.fillStyle=gradient;
+	    //ctx.fillStyle=gradient;
 	    updateGraphics(array);
 	    rafID = window.requestAnimationFrame(updateVisualization);
 	}
@@ -72,7 +79,7 @@ initNavigator();
     	// to draw the volume
     	
     	////javascriptNode.onaudioprocess = updateVisualization
-    	loadSound("satisfy.mp3");
+    	loadSound("three.mp3");
 	}
 	
 	function initNavigator() {
