@@ -48,16 +48,10 @@ var song = "three.mp3";
 	var beatTime = 0;
 	var levelHistory = []; //last 256 ave norm levels
 	var levelsData = []; //levels of each frequecy - from 0 - 1 . no sound is 0. Array [levelsCount]
-	var audioParams = {
-		useMic: false,
-		useSample:true,
-		volSens:1,
-		beatHoldTime:40,
-		beatDecayRate:0.97,
-	};
-	var BEAT_HOLD_TIME = 40; //num of frames to hold a beat
-	var BEAT_DECAY_RATE = 0.98;
-	var BEAT_MIN = 0.15; //a volume less than this is no beat
+
+	var BEAT_HOLD_TIME = 15; //num of frames to hold a beat
+	var BEAT_DECAY_RATE = 0.7;
+	var BEAT_MIN = 0.10; //a volume less than this is no beat
 
 
 function initSound() {
@@ -154,10 +148,10 @@ function initSound() {
 			beatCutOff = level *1.1;
 			beatTime = 0;
 		}else{
-			if (beatTime <= audioParams.beatHoldTime){
+			if (beatTime <= BEAT_HOLD_TIME){
 				beatTime ++;
 			}else{
-				beatCutOff *= audioParams.beatDecayRate;
+				beatCutOff *= BEAT_DECAY_RATE
 				beatCutOff = Math.max(beatCutOff,BEAT_MIN);
 			}
 		}
