@@ -56,7 +56,6 @@ body {
 }
 #cssmenu > ul > li:first-child > a {
   padding: 15px 10px;
-  background: url(menu_images/pattern.png) top left repeat;
   border: none;
   border-top: 1px solid #818176;
   -webkit-border-radius: 3px 3px 0 0;
@@ -96,7 +95,6 @@ body {
 #cssmenu > ul > li > a {
   font-size: .9em;
   display: block;
-  background: url(menu_images/pattern.png) top left repeat;
   color: #ffffff;
   border: 1px solid #153EBB;
   border-top: none;
@@ -116,10 +114,8 @@ body {
   border-bottom: none;
 }
 #cssmenu > ul > li.has-sub > a span {
-  background: url(menu_images/icon_plus.png) 96% center no-repeat;
 }
 #cssmenu > ul > li.has-sub.active > a span {
-  background: url(menu_images/icon_minus.png) 96% center no-repeat;
 }
 
 #cssmenu ul ul {
