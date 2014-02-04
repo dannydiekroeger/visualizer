@@ -28,31 +28,36 @@ var updateGraphics = drawBars;
 //     ---      ---
 //       --------
 //
+	var context;
+	var audioBuffer;
+	var sourceNode;
+	var analyser;
+	var javascriptNode;
+	var canv;
+	var ctx;
+	var gradient;
+	var canvasWidth;
+	var canvasHeight;
 
-
-// create the audio context (chrome only for now)
-// create the audio context (chrome only for now)
-    if (! window.AudioContext) {
+function initSound() {
+	if (! window.AudioContext) {
         if (! window.webkitAudioContext) {
             alert('no audiocontext found');
         }
         window.AudioContext = window.webkitAudioContext;
     }
-var context = new AudioContext();
-var audioBuffer;
-var sourceNode;
-var analyser;
-var javascriptNode;
-var canv = document.getElementById("canvas");
-var ctx = canv.getContext("2d");
-var gradient;
-
-initGraphics();
-initNavigator();
+	context = new AudioContext();
+	canv = document.getElementById("canvas");
+	ctx = canv.getContext("2d");
+	initGraphics();
+	initNavigator();
+}
 
 	function initCanvas() {
-	   	canv.setAttribute("width", window.innerWidth - 225);
-	    canv.setAttribute("height", window.innerHeight -200 );
+		canvasWidth = window.innerWidth - 225;
+		canvasHeight = window.innerHeight -200;
+	   	canv.setAttribute("width", canvasWidth);
+	    canv.setAttribute("height", canvasHeight);
 	    canv.setAttribute("style", "background:black");
 	    canv.setAttribute("style", "border:3px solid #A9BCF5; background:black" );
 	}
@@ -67,6 +72,17 @@ initNavigator();
 	    //ctx.fillStyle=gradient;
 	    updateGraphics(array);
 	    rafID = window.requestAnimationFrame(updateVisualization);
+	}
+	
+	function enlargeCanvas() {
+		//canvas.setAttribute("width",screen.width);
+		//canvas.setAttribute("height",screen.height);
+		console.log("changed");
+	}
+	
+	function exitFullScreen() {
+		console.log("Exiting full");
+		initCanvas();
 	}
 	
 	function playClick() {
@@ -158,30 +174,6 @@ initNavigator();
     	console.log("error");
         console.log(e);
     }
-
-	function drawCircles(array) {
-		
-		var x = 0;
-        for ( var i = 0; i < (array.length); i++ ){
-            var sum = 0;
-            for (var j = i; j<i+array.length/7; j++) {
-            	var value = array[i];
-            	sum += value
-            }
-            rad = sum*200/10000;
-			drawOneCircle(x, rad);
-			i = j;
-			x += 1;
-        }
-        
-		
-	}
-	
-	function drawOneCircle(x, radius) {
-		ctx.beginPath();
-		ctx.arc(400*x+100,200,rad,0,2*Math.PI);
-		ctx.stroke();	
-	}
 
 
 

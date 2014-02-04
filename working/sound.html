@@ -4,9 +4,10 @@
 		<title>Sound</title>
 		<link rel="stylesheet" type="text/css" href="styles.css" />
 		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-  		<script src="main.js" type="text/javascript"></script>  
+  		<script src="main.js" type="text/javascript"></script>
+  		<script src="../oscillator/oscillator.js" type="text/javascript"></script>
 	</head>
-	<body>
+	<body onload="initSound()">
 		<div id = 'title'>
 			<h1 align = "center" style="font-family:verdana; color:#A9BCF5">DEEZY VISUALIZER</h1>
 		</div>
@@ -19,16 +20,15 @@
 
 		<button id="play" onclick="playClick()" class = "button">Play Sound</button>
 		<button id="micro" onclick="microClick()" class = "button">Microphone</button>
+		<button id="gofull" onclick="goFullScreen()" class="button">Go Fullscreen</button>
 		</div>
 		<div id= 'mainarea'>
 		<div id='cssmenu'>
 			<ul>
 			   <li><a href='http://google.com'><span>Effects</span></a></li>
-			   <li><a href='http://google.com'><span>Category1</span></a>
+			   <li><a href='http://google.com'><span>Oscillator</span></a>
 			      <ul>
-			         <li><a href='http://google.com'>Style1</a></li>
-			         <li><a href='#'>Style2</a></li>
-			         <li><a href='#'>Style3</a></li>
+			         <li><a onclick="loadOscillator()">Load Oscillator</a></li>
 			      </ul>
 			   </li>
 			   <li><a href='#'><span>Category2</span></a>
@@ -53,7 +53,7 @@
 			</ul>
 		</div>
 		<div id = 'screen'>
-		<canvas id="canvas"></canvas>
+		<canvas id="canvas" mozfullscreenchange="fullScreenChange()"></canvas>
 	</div>
 	</div>
 	

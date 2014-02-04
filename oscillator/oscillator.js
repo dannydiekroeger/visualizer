@@ -26,9 +26,7 @@ var backgroundImage;
 var backgroundPattern;
 
 function initScreen() {
-	    canv.setAttribute("width", window.innerWidth - 50);
-	    canv.setAttribute("height", window.innerHeight-50);
-	    canv.setAttribute("style", "background:black");
+	    initCanvas();
 		
 		centX = window.innerWidth/2;
 		centY = window.innerHeight/3;
@@ -71,6 +69,7 @@ function updateScreen(array) {
 	//canv.setAttribute("style","background:"+color);
 	//console.log(maxFreqBin);
 	//ctx.fillStyle = backgroundPattern;
+	ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 	ctx.fillStyle = color;
 	if(ballDrop) updateBallDrop();
 	if(circle) drawOneCircle(centX, centY, radius);
@@ -80,6 +79,12 @@ function updateScreen(array) {
 	
 	ctx.fill();
 	
+}
+
+function loadOscillator() {
+	initGraphics = initScreen;
+	updateGraphics = updateScreen;
+	initSound();
 }
 
 function initImage(){
@@ -200,11 +205,14 @@ function getOrderedBins(array) {
 }
 
 function goFullScreen(){
+	enlargeCanvas();
     var canvas = canv;
-    if(canvas.requestFullScreen)
+    if(canvas.requestFullScreen) {
         canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    else if(canvas.webkitRequestFullScreen)
+    }
+    else if(canvas.webkitRequestFullScreen) {
         canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
     else if(canvas.mozRequestFullScreen)
         canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
 }
