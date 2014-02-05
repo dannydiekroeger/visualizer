@@ -79,6 +79,7 @@ function initSound() {
 		canvasHeight = window.innerHeight -150;
 	   	canv.setAttribute("width", canvasWidth);
 	    canv.setAttribute("height", canvasHeight);
+	    canv.setAttribute("style","background:black");
 	    document.getElementById("screen").setAttribute("style", "background:black");
 	    document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );
 	}
