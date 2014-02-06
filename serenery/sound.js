@@ -5,13 +5,13 @@
 //
 // 2. Set initGraphics to equal the name of your init function.
 // No parameters are taken, see mygraphics.js for example.
-var initGraphics = initScreen;
+var initGraphics = initScreenSerenery;
 
 // 3. Set updateGraphics to equal the name of your update function.
 // This function must take in a single parameter "array" which is
 // the frequency array bin.
 // see mygraphics.js for example.
-var updateGraphics = updateScreen;
+var updateGraphics = updateScreenSerenery;
 
 // ------------------------------------------------------------//
 
