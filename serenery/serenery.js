@@ -18,9 +18,12 @@ var pixels;
 var centX;
 var centY;
 var imageDataArray;
+var livePixels;
+var deadPixels;
+var oldNoteCounts
 
 function initScreenSerenery() {
-		var imsrc = "night.jpg";
+		var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
 			imsrc = "../serenery/images/"+imsrc;
@@ -40,7 +43,7 @@ function initScreenSerenery() {
 		
 
 		//canv.style.backgroundImage=im;
-		opacityScale = 14;
+		opacityScale = 10;
 		maxAmp = 1.0;
 		invert = false;
 		//imageData = ctx.getImageData(0,0,canv.width,canv.height);
@@ -53,10 +56,13 @@ function updateScreenSerenery(array) {
 	//bounceAlpha(amp);
 	//averageHues(getMaxFreqBin(array));
 	//updateColorize(array);
-	updateRandomColorize(amp);
+	//updateRandomColorize(amp);
 	//ctx.putImageData(imageData,0,0);
 	
 	//ctx.putImageData(imageData,0,0);
+	updateRandomPixels(array);
+	ctx.clearRect(0,0,canv.width,canv.height);
+	ctx.putImageData(imageData,0,0);
 }
 
 function loadSerenery() {
@@ -66,7 +72,7 @@ function loadSerenery() {
 }
 
 function averageHues(bin) {
-	var scale = 2;
+	var scale = 10;
 	var color = binNoteColor(bin);
     for (y = 0; y < height; y++) {
         inpos = y * width * 4; // *4 for 4 ints per pixel
@@ -87,15 +93,48 @@ function bounceAlpha(amp) {
 	updateAlphas(amp/(maxAmp+0.0))
 }
 
-function updateRandomColorize(amp) {
-	var percent = amp/(maxAmp+0.0);
-	var dataIndex = Math.min(9, Math.floor(percent*10));
-	//console.log(dataIndex);
-	//console.log(dataIndex);
-	//if(imageData.data != imageDataArray[dataIndex]) console.log("not!");
-	//imageData.data = imageDataArray[dataIndex];
-	//ctx.clearRect(0,0,canv.width,canv.height);
-	ctx.putImageData(imageDataArray[dataIndex],0,0);	
+function updateRandomPixels(array) {
+	var noteTotals = getNoteTotals(array);
+	//noteTotals = skewNoteTotals(noteTotals);
+	var notePercents = getNotePercents(noteTotals);
+	var thisNoteCounts = getNoteCounts(notePercents);
+	//console.log(thisNoteCounts);
+	var note = "a";
+	for(var i=0;i<7;i++) {
+		var diff = thisNoteCounts[note] - oldNoteCounts[note];
+		if(diff > 0) addPixels(diff, note);
+		else if(diff<0) removePixels((-1)*diff,note);
+		note = getNextNote(note);
+	}
+	oldNoteCounts = thisNoteCounts;
+}
+
+function addPixels(num, note) {
+	for(var i=0;i<num;i++){
+		var index = Math.floor(Math.random()*deadPixels[note].length);
+		var pixel = deadPixels[note][index];
+		var lastPixel = deadPixels[note][deadPixels[note].length-1];
+		deadPixels[note][index] = lastPixel;
+		deadPixels[note].pop();
+		if(pixel) {
+			livePixels[note].push(pixel);
+			imageData.data[pixel.index+3] = 255;
+		}	
+	}
+}
+
+function removePixels(num, note) {
+	for(var i=0;i<num;i++){
+		var index = Math.floor(Math.random()*livePixels[note].length);
+		var pixel = livePixels[note][index];
+		var lastPixel = livePixels[note][livePixels[note].length-1];
+		livePixels[note][index] = lastPixel;
+		livePixels[note].pop();
+		if(pixel) {
+			deadPixels[note].push(pixel);
+			imageData.data[pixel.index+3] = 0;
+		}
+	}
 }
 
 function updateColorize(array) {
@@ -103,21 +142,7 @@ function updateColorize(array) {
 	//noteTotals = skewNoteTotals(noteTotals);
 	var notePercents = getNotePercents(noteTotals);
 	var thisNoteCounts = getNoteCounts(notePercents);
-	
-	//for (var y = 0; y < canv.height; y++) {
-	//	var inpos = y * canv.width * 4; // *4 for 4 ints per pixel
-	 //   for (var x = 0; x < canv.width; x++) {
-	        	//imageData.data[inpos] = 255;
-	  for(var i=0;i<pixels.length;i++) {
-	  			/*
-	        	r = imageData.data[inpos++];
-	        	g = imageData.data[inpos++];
-	        	b = imageData.data[inpos++];
-	        	var note = closestNotes[inpos];
-	        	*/
-	        	//console.log(note);
-	        	//console.log(noteTotals);
-	        	//var noteAmp = noteTotals[note] + 0.0;
+	for(var i=0;i<pixels.length;i++) {
 	        	var pixel = pixels[i];
 	        	var inpos = pixel.index + 3;
 	        	var note = pixel.note;
@@ -130,9 +155,7 @@ function updateColorize(array) {
 	        		imageData.data[inpos]=0;
 	        	}
 	        	*/
-	        	
-	        	
-	        	
+	   
 	        	//Random turn on here
 	        	
 	        	var percent = notePercents[note]
@@ -140,30 +163,27 @@ function updateColorize(array) {
 	        		imageData.data[inpos] = 0;
 	        	} else {
 	        		imageData.data[inpos] = 255;
-	        	}
-	        	
-	        	//console.log(percent);
-	        	//var alphaVal = Math.min(255, 255*percent);
-	        	//console.log(alphaVal);
-	        	//imageData.data[inpos] = alphaVal;
-	        	inpos++;
+	        	}inpos++;
 	  }
-	  //  }
-   	//}
 }
 
 function skewNoteTotals(noteTotals) {
+	var scale = 1.1;
 	var note="a";
-	for(var i=0;i<6;i++){
-		total1 = noteTotals[note];
-		total2 = noteTotals[getNextNote(note)];
-		if(total1 > total2) {
-			noteTotals[note] += noteTotals[getNextNote(note)]/1.1;
-			noteTotals[getNextNote(note)] = noteTotals[getNextNote(note)]/1.1;
-		} else {
-			noteTotals[getNextNote(note)] += noteTotals[note]/1.1;
-			noteTotals[note] = noteTotals[note]/1.1;
+	var maxnote="a";
+	for(var i=0;i<7;i++){
+		if(noteTotals[note] > noteTotals[maxnote]) {
+			maxnote = note;
 		}
+		note = getNextNote(note);
+	}
+	note = "a";
+	for(var i=0;i<7;i++){
+		if(note != maxnote) {
+			noteTotals[maxnote] += noteTotals[note]/scale;
+			noteTotals[note] = noteTotals[note]/scale;
+		}
+		note = getNextNote(note);
 	}
 	return noteTotals;
 }
@@ -182,7 +202,8 @@ function getNotePercents(noteTotals){
 	var note="a";
 	var notePercents = new Object();
 	for(var i=0; i<7; i++){
-		notePercents[note] = (noteTotals[note]*opacityScale+0.0)/(maxAmp+0.0);
+		var val = (noteTotals[note]*opacityScale+0.0)/(maxAmp+0.0);
+		notePercents[note] = Math.min(1.0, val*val);
 		note=getNextNote(note);
 	}
 	return notePercents;
@@ -252,12 +273,11 @@ function imageLoaded(ev) {
     // stamp the image on the left of the canvas:
     ctx.drawImage(im, 0, 0);
     // get all canvas pixel data
-
+	initPixelsByNote();
     imageData = ctx.getImageData(0, 0, width, height);
-    imageDataArray = new Array();
-    initImageDataArray();
     closestNotes = new Array();
     imageNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
+    oldNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
     pixels = new Array();
     //ctx.putImageData(imageData, 0, 0);
     for (y = 0; y < height; y++) {
@@ -280,9 +300,13 @@ function imageLoaded(ev) {
 	        	pixel.y = y;
 	        	pixel.distanceFromCenter = getDistanceFromCenter(x,y);
 	        	pixels[pixels.length] = pixel;
-	        	updateImageDataArray(pixel);
+	        	if(!isBlack(pixel)) {
+	        		livePixels[note].push(pixel);
+	        		oldNoteCounts[note]++;
+	        		imageNoteCounts[note] = imageNoteCounts[note]+1;
+	        	}
 	        	closestNotes[inpos] = note
-	        	imageNoteCounts[note] = imageNoteCounts[note]+1;
+	        	
 	        	inpos++;
 	    }
    	}
@@ -291,51 +315,15 @@ function imageLoaded(ev) {
    	//console.log(imageDataArray);
 }
 
-function initImageDataArray() {
-	for(var i=0; i<10; i++) {
-		var imgData = ctx.createImageData(canv.width,canv.height);
-		for(var j=0;j<imageData.data.length;j++){
-			imgData.data[j] = imageData.data[j];
-		}
-		imageDataArray[i] = imgData;
-	}
+function isBlack(pixel) {
+	return pixel.r==255 && pixel.g == 255 && pixel.b==255;
 }
 
-function updateImageDataArray(pixel) {
-	var num = Math.random();
-	if(num > .8) {
-		//console.log("9");
-		includeInData(pixel,10);
-	} else if (num > .8) {
-		//console.log("8");
-		includeInData(pixel,9);
-	} else if (num > .7) {
-		//console.log("7");
-		includeInData(pixel,8);
-	} else if (num > .6) {
-		//console.log("6");
-		includeInData(pixel,7);
-	} else if (num > .5) {
-		//console.log("5");
-		includeInData(pixel,6);
-	} else if (num > .4) {
-		//console.log("4");
-		includeInData(pixel,5);
-	} else if (num > .3) {
-		//console.log("3");
-		includeInData(pixel,4);
-	} else if (num > .2) {
-		includeInData(pixel,3);
-	} else if (num > .1) {
-		includeInData(pixel,2);
-	}
+function initPixelsByNote() {
+	livePixels = {"a":new Array(), "b":new Array(), "c":new Array(), "d":new Array(), "e":new Array(), "f":new Array(), "g":new Array()};
+	deadPixels = {"a":new Array(), "b":new Array(), "c":new Array(), "d":new Array(), "e":new Array(), "f":new Array(), "g":new Array()};
 }
 
-function includeInData(pixel,num) {
-	for(var i=0; i<num;i++){
-		imageDataArray[i].data[pixel.index+3] = 0;
-	}
-}
 
 function getDistanceFromCenter(x,y) {
 	return Math.sqrt((x-centX)*(x-centX)+(y-centY)*(y-centY));
