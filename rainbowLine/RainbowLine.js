@@ -1,20 +1,19 @@
-
-var numNodes = 64;
+var rainbowNodes = 64;
 var firsttime = 0;
-var circleRadius;
-var leftOfs;
-var innerOfs;
-var hFloor;
-var hOfs;
+var rainbowRadius;
+var rainbowLeftOfs;
+var rainbowInnerOfs;
+var rainbowFloor;
+var rainbowOfs;
 var twoPI = 2.0 * Math.PI;
-var myCircles = new Array();
+var rainbowCircles = new Array();
 
 // Constructor function to build a circle structure
 
 function baseCircle(pos, colorH) {
-	this.radius = circleRadius;
-	this.cx = leftOfs + (innerOfs * pos);
-	this.cy = hFloor;
+	this.radius = rainbowRadius;
+	this.cx = rainbowLeftOfs + (rainbowInnerOfs * pos);
+	this.cy = rainbowFloor;
 	this.colorH = colorH;
 	this.colorS = 50;
 	this.colorL = 50;
@@ -22,11 +21,11 @@ function baseCircle(pos, colorH) {
 }
 
 function drawLineCircles() {
-	for (var i = 0; i < myCircles.length; i++)
+	for (var i = 0; i < rainbowCircles.length; i++)
 	{
 		ctx.beginPath();
-		ctx.fillStyle = "hsl(" + myCircles[i].colorH + ", " + myCircles[i].colorS + "%, " + myCircles[i].colorL + "%)";
-		ctx.arc(myCircles[i].cx, myCircles[i].cy, myCircles[i].radius, 0, twoPI);
+		ctx.fillStyle = "hsl(" + rainbowCircles[i].colorH + ", " + rainbowCircles[i].colorS + "%, " + rainbowCircles[i].colorL + "%)";
+		ctx.arc(rainbowCircles[i].cx, rainbowCircles[i].cy, rainbowCircles[i].radius, 0, twoPI);
 		ctx.fill();
 	}
 }
@@ -37,40 +36,42 @@ function initRainbowLine() {
 	initCanvas();
 
 	// get the context from the canvas to draw on
-	var svgWidth = window.innerWidth - 50;
+	var svgWidth = canv.width;
 
 	var svgHeight = 325;
 
 
-	circleRadius = svgWidth / (numNodes * 3 + 1);
-	leftOfs = circleRadius + circleRadius;
-	innerOfs = leftOfs + circleRadius;
-	hFloor = svgHeight - circleRadius;
-	hOfs = (hFloor - 100 + circleRadius) / 256;
-	var colorDelta = 360 / numNodes;
+	rainbowRadius = svgWidth / (rainbowNodes * 3 + 1);
+	rainbowLeftOfs = rainbowRadius + rainbowRadius;
+	rainbowInnerOfs = rainbowLeftOfs + rainbowRadius;
+	rainbowFloor = svgHeight - rainbowRadius;
+	rainbowOfs = (rainbowFloor - 100 + rainbowRadius) / 256;
+	var colorDelta = 360 / rainbowNodes;
 
-	for (var nodeNum = 0; nodeNum < numNodes; nodeNum++) {
-		myCircles.push(new baseCircle(nodeNum, nodeNum * colorDelta));
+	rainbowCircles.splice(0, rainbowCircles.length);
+
+	for (var nodeNum = 0; nodeNum < rainbowNodes; nodeNum++) {
+		rainbowCircles.push(new baseCircle(nodeNum, nodeNum * colorDelta));
 	}
 	drawLineCircles();
 }
 
 
 
-function updateRainbowLine(visArray)
+function updateRainbowLine(visArray, waveArray, beat)
 {
-	ctx.clearRect(0, 20, canv.width, canv.height);
-	var interpSize = visArray.length / myCircles.length;		
+	ctx.clearRect(0, 0, canv.width, canv.height);
+	var interpSize = visArray.length / rainbowCircles.length;		
 	var interpStart = 0;						
 	var interpEnd = interpSize;					
 	var value;
-	for (var i = 0; i < myCircles.length; i++) {
+	for (var i = 0; i < rainbowCircles.length; i++) {
 		value = 0;
 		for (var j = interpStart; j < interpEnd; j++) {		
 			value += visArray[j];				
 		}
 		value /= interpSize;
-		myCircles[i].cy = hFloor - (value * hOfs);		
+		rainbowCircles[i].cy = rainbowFloor - (value * rainbowOfs);		
 		interpStart += interpSize;				
 		interpEnd += interpSize;
 	}
