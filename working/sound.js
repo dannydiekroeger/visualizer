@@ -235,7 +235,14 @@ function initSound() {
         rafID = window.requestAnimationFrame(updateVisualization);
     }
 
-    // load the specified sound
+
+    //change to external URL sound
+    function changeSound(){
+    	song = document.forms["urlForm"]["urlText"].value;
+    	return true;
+    }
+
+        // load the specified sound
     function loadSound(url) {
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
