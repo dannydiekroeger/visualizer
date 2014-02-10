@@ -37,6 +37,10 @@ function initScreenSerenery() {
 	    centX = canv.width/2.0;
 	    centY = canv.width/4.0;
 	    initKeyboard();
+	    imageNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
+	   	closestNotes = new Array();
+	    oldNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
+	    pixels = new Array();
 	    im = new Image();
 		im.onload = imageLoaded;
 		im.src = imsrc
@@ -275,10 +279,6 @@ function imageLoaded(ev) {
     // get all canvas pixel data
 	initPixelsByNote();
     imageData = ctx.getImageData(0, 0, width, height);
-    closestNotes = new Array();
-    imageNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
-    oldNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
-    pixels = new Array();
     //ctx.putImageData(imageData, 0, 0);
     for (y = 0; y < height; y++) {
 		inpos = y * width * 4; // *4 for 4 ints per pixel
