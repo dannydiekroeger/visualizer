@@ -23,7 +23,7 @@ var deadPixels;
 var oldNoteCounts
 
 function initScreenSerenery() {
-		var imsrc = "biggie.jpg";
+		var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
 			imsrc = "../serenery/images/"+imsrc;

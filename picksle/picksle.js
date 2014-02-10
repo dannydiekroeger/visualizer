@@ -43,7 +43,7 @@ function initPicksle() {
 	    centY = canv.height/2.0;
 	    initKeyboard();
 	    im = new Image();
-		im.onload = imageLoaded;
+		im.onload = imageLoadedP;
 		im.src = imsrc
 		
 		arrayUsage = 600;
@@ -59,7 +59,13 @@ function initPicksle() {
 		//imageData = ctx.getImageData(0,0,canv.width,canv.height);
 }
 
-function imageLoaded(ev) {
+function loadPicksle() {
+	initGraphics = initPicksle;
+	updateGraphics = updatePicksle;
+	initSound();
+}
+
+function imageLoadedP(ev) {
     im = ev.target; // the image
 
     // read the width and height of the canvas

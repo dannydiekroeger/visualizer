@@ -273,6 +273,7 @@ function initSound() {
         console.log(e);
     }
     
+    /*
     function initKeyboard() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
@@ -290,7 +291,7 @@ function initSound() {
 		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
 		else if(code==80) toggleBallDrop(); // P
 	}
-}
+	}*/
 
 function goFullScreen(){
     var canvas = canv;

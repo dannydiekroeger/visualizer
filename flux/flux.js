@@ -51,6 +51,12 @@ function initFlux() {
 		//imageData = ctx.getImageData(0,0,canv.width,canv.height);
 }
 
+function loadFlux() {
+	initGraphics = initFlux;
+	updateGraphics = updateFlux;
+	initSound();
+}
+
 function imageLoaded(ev) {
     im = ev.target; // the image
 
@@ -128,7 +134,7 @@ function getVelocity(pixel) {
 
 function initFluxPixels() {
 	var numpix =200000;
-	addRandomPixels(numpix)
+	addRandomPixelsFlux(numpix)
 }
 
 function getCoord(pixel) {
@@ -224,7 +230,7 @@ function updateRandomPixels(array) {
 }
 
 
-function addRandomPixels(num) {
+function addRandomPixelsFlux(num) {
 	for(var i=0;i<num;i++){
 		var index = Math.floor(Math.random()*deadPixels.length);
 		var pixel = deadPixels[index];
