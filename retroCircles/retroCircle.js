@@ -1,77 +1,127 @@
-var RetroCircleColor = ["#F09B0A", "#F03060", "#13613A", "#805B37", "#EBE18C", "#DC3F1C", "#448D7A", "#D8A027", "#88A764", "#00515C", "#FCFBB8", "#B38235","#A61407", "#5B0400", "#EDC218", "#E30E1F"];
+var newColor = ["#F09B0A", "#F03060", "#13613A", "#805B37", "#EBE18C", "#DC3F1C", "#448D7A", "#D8A027", "#88A764", "#00515C", "#FCFBB8", "#B38235","#A61407", "#5B0400", "#EDC218", "#E30E1F"];
 
-var RetroNumNodes = 16;
-var RetroCircleRadius = 50;
+var numNodes = 16;
+var retroFirsttime = 0;		// to use with debugging
+var circleRadius = 50;
+var retroCircleLineWidth = 10;
 var twoPI = 2.0 * Math.PI;
-var RetroCircles = new Array();
-var RetroCanvCentX;
-var RetroCanvCentY;
+var myCircles = new Array();
+var canvCentX;
+var canvCentY;
 
+var retroBeatRadius = 50;
+var retroBeatCX;
+var retroBeatYX;
+var retroBeatColor = "#E8D392";
 
+var retroGrays = 16;	// shades of gray to calculate
+var retroDoBox;
+var retroBoxX;
+var retroBoxY;
+var retroBoxW = (256 + retroCircleLineWidth) * 2;
+//var retroBoxGradR = Math.sqrt((retroBoxW * retroBoxW) / 2);	// this value will create an obvious rectangle
+var retroBoxGradR = retroBoxW / 2;
 
-
-function RetroBaseCircleHex(pos, colorHex) {
-	this.radius = RetroCircleRadius;
-	this.cx = RetroCanvCentX;
-	this.cy = RetroCanvCentY;
+function baseCircleHex(pos, colorHex) {
+	this.radius = circleRadius;
+	this.cx = canvCentX;
+	this.cy = canvCentY;
 	this.color = colorHex;
 	this.pos = pos;
 }
 
-function RetroDrawCircle() {
-	for (var i = 0; i < RetroCircles.length; i++)
+function drawCircleLines() {
+	ctx.lineWidth = retroCircleLineWidth;
+
+	for (var i = 0; i < myCircles.length; i++)
 	{
 		ctx.beginPath();
-		ctx.lineWidth = 10;
-		ctx.strokeStyle = RetroCircles[i].color;
-		ctx.arc(RetroCircles[i].cx, RetroCircles[i].cy, RetroCircles[i].radius, 0, twoPI, false);
+		ctx.strokeStyle = myCircles[i].color;
+		ctx.arc(myCircles[i].cx, myCircles[i].cy, myCircles[i].radius, 0, twoPI, false);
 		ctx.stroke();
-		
 	}
 }
 
+function drawRetroBeat(beat) {
+
+	if (beat) {
+		ctx.beginPath();
+		ctx.fillStyle = retroBeatColor;
+		ctx.arc(retroBeatCX, retroBeatCY, retroBeatRadius, 0, twoPI, false);
+		ctx.fill();
+	}
+}
 
 function initRetro() {
 
 	initCanvas();	
 
-	RetroCanvCentX = canv.width / 2.0;
-	RetroCanvCentY = canv.height / 2.0;
+	canvCentX = canv.width / 2.0;
+	canvCentY = canv.height / 2.0;
+	retroBoxX = canvCentX - (retroBoxW / 2);
+	retroBoxY = canvCentY - (retroBoxW / 2);
+	retroBeatCX = canvCentX / 4;
+	retroBeatCY = canvCentY;
 
+	myCircles.splice(0, myCircles.length);
 
-	for (var nodeNum = 0; nodeNum < RetroNumNodes; nodeNum++) {
-		var testColor = RetroCircleColor[nodeNum];
+	for (var nodeNum = 0; nodeNum < numNodes; nodeNum++) {
+		var testColor = newColor[nodeNum];
 
-		RetroCircles.push(new RetroBaseCircleHex(nodeNum, testColor));
+		myCircles.push(new baseCircleHex(nodeNum, testColor));
 	}
 
-	RetroDrawCircle();
+	drawCircleLines();
 }
 
 
 function drawRetro(visArray, waveArray, beat)
 {
-	ctx.clearRect(0, 20, canv.width, canv.height);
-	var interpSize = visArray.length / RetroCircles.length;		
+//	ctx.clearRect(0, 0, canv.width, canv.height);
+	var interpSize = visArray.length / myCircles.length;		
 	var interpStart = 0;						
 	var interpEnd = interpSize;					
 	var value;
-	for (var i = 0; i < RetroCircles.length; i++) {
+	var valueBox = 0;
+
+	for (var i = 0; i < myCircles.length; i++) {
 		value = 0;
 		for (var j = interpStart; j < interpEnd; j++) {		
 			value += visArray[j];				
 		}
-		value /= interpSize;		
-		RetroCircles[i].radius = value;
+		valueBox += value;
+		value /= interpSize;
+		myCircles[i].radius = value;
 		interpStart += interpSize;				
 		interpEnd += interpSize;
 	}
-	RetroDrawCircle();			
+
+	if (retroDoBox == 0) {
+		ctx.clearRect(0, 0, canv.width, canv.height);
+	} else if (retroDoBox == 3) {
+		ctx.clearRect(0, 0, canv.width, canv.height);
+		drawRetroBeat(beat);
+	} else {
+		valueBox /= visArray.length;
+		valueBox = Math.floor((valueBox + 1) / retroGrays) * retroGrays;
+		if (retroDoBox == 1) {
+			ctx.fillStyle = "rgb(" + valueBox + ", " + valueBox + ", " + valueBox + ")";
+		} else {
+			var grad = ctx.createRadialGradient(canvCentX, canvCentY, 0, canvCentX, canvCentY, retroBoxGradR);
+			grad.addColorStop(0, "rgb(" + valueBox + ", " + valueBox + ", " + valueBox + ")");
+			grad.addColorStop(1, "black");
+			ctx.fillStyle = grad;
+		}
+		ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW)
+	}
+
+	drawCircleLines();			
 }
 
 
-function loadRetro() {
+function loadRetro(type) {
 	initGraphics = initRetro;
 	updateGraphics = drawRetro;
+	retroDoBox = type;
 	initSound();
 }
