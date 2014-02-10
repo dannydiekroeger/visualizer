@@ -235,7 +235,15 @@ function initSound() {
         rafID = window.requestAnimationFrame(updateVisualization);
     }
 
-    // load the specified sound
+
+    //change to external URL sound
+    function changeSound(){
+    	song = $("#soundUrl").val();
+    	console.log(song)
+    	return true;
+    }
+
+        // load the specified sound
     function loadSound(url) {
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
@@ -256,6 +264,7 @@ function initSound() {
     function playSound(buffer) {
         sourceNode.buffer = buffer;
         sourceNode.start(0);
+        console.log(song);
     }
 
     // log if an error occurs

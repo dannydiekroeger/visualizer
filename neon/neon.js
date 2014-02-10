@@ -54,7 +54,7 @@ function drawNeon(freqArray, waveArray, beat){
 		d3.select("svg")
 		.append("circle")
 		.attr("cx", i)
-		.attr("cy", waveArray[i]+180)
+		.attr("cy", waveArray[i]+200)
 		.attr("r", 2)
 		.style("fill-opacity", .4)
 		.style("stroke", fillColor)
