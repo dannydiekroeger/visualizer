@@ -21,9 +21,9 @@ var imageDataArray;
 var livePixels;
 var deadPixels;
 var oldNoteCounts
+var imsrc = "frac2.jpg";
 
 function initScreenSerenery() {
-		var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
 			imsrc = "../serenery/images/"+imsrc;
@@ -73,6 +73,12 @@ function loadSerenery() {
 	initGraphics = initScreenSerenery;
 	updateGraphics = updateScreenSerenery;
 	initSound();
+}
+
+function changeSereneryImg(){
+	imsrc = $("#imageImg").val();
+    console.log(imsrc)
+    return true;
 }
 
 function averageHues(bin) {
