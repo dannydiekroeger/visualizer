@@ -20,10 +20,15 @@ var centY;
 var imageDataArray;
 var livePixels;
 var deadPixels;
-var oldNoteCounts
+var oldNoteCounts;
+var binwidth;
+var maxBinAmp;
+var prevArray;
+var pixPerBin;
+var arrayUsage;
 
-function initScreenSerenery() {
-		var imsrc = "biggie.jpg";
+function initPicksle() {
+		var imsrc = "everest.jpg";
 		try {
 			initCanvas();
 			imsrc = "../serenery/images/"+imsrc;
@@ -35,40 +40,135 @@ function initScreenSerenery() {
 		    imsrc = "images/"+imsrc;
 		}
 	    centX = canv.width/2.0;
-	    centY = canv.width/4.0;
+	    centY = canv.height/2.0;
 	    initKeyboard();
 	    im = new Image();
 		im.onload = imageLoaded;
 		im.src = imsrc
 		
-
+		arrayUsage = 600;
+		binwidth = Math.floor(canv.width/arrayUsage);
+		pixPerBin = binwidth*canv.height;
 		//canv.style.backgroundImage=im;
 		opacityScale = 10;
 		maxAmp = 1.0;
+		maxBinAmp = 1.0;
 		invert = false;
+		initPrevArray();
+		
 		//imageData = ctx.getImageData(0,0,canv.width,canv.height);
 }
 
-function updateScreenSerenery(array) {
-	//newimageData = ctx.getImageData(0,0,canv.width,canv.height);
-	var amp = getTotalAmplitude(array);
-	if(amp > maxAmp) maxAmp = amp;
-	//bounceAlpha(amp);
-	//averageHues(getMaxFreqBin(array));
-	//updateColorize(array);
-	//updateRandomColorize(amp);
-	//ctx.putImageData(imageData,0,0);
-	
-	//ctx.putImageData(imageData,0,0);
-	updateRandomPixels(array);
-	ctx.clearRect(0,0,canv.width,canv.height);
-	ctx.putImageData(imageData,0,0);
+function imageLoaded(ev) {
+    im = ev.target; // the image
+
+    // read the width and height of the canvas
+    width = canv.width;
+    height = canv.height;
+    // stamp the image on the left of the canvas:
+    ctx.drawImage(im, 0, 0);
+    // get all canvas pixel data
+	initPixelBins();
+    imageData = ctx.getImageData(0, 0, width, height);
+    //ctx.putImageData(imageData, 0, 0);
+    for (y = 0; y < height; y++) {
+		inpos = y * width * 4; // *4 for 4 ints per pixel
+	    for (x = 0; x < width; x++) {
+	    		var index = inpos;
+	        	var r = imageData.data[inpos++];
+	        	var g = imageData.data[inpos++];
+	        	var b = imageData.data[inpos++];
+	        	var alpha = imageData.data[inpos];
+	        	var note = getClosestNote([r,g,b]);
+	        	var pixel = new Object();
+	        	pixel.note = note;
+	        	pixel.index = index;
+	        	pixel.x = x;
+	        	pixel.y = y;
+	        	pixel.coord = getCoord(pixel);
+	        	pixel.distanceFromCenter = getDistanceFromCenter(x,y);
+	        	var arrayIndex = Math.floor(Math.min(x/binwidth,arrayUsage-1));
+	        	deadPixels[arrayIndex].push(pixel);
+	        	imageData.data[pixel.index+3] = 0;
+	        	inpos++;
+	    }
+   	}
 }
 
-function loadSerenery() {
-	initGraphics = initScreenSerenery;
-	updateGraphics = updateScreenSerenery;
-	initSound();
+function initPrevArray(){
+	prevArray = new Array();
+	for(var i=0;i<1024;i++){
+		prevArray[i]=0;
+	}
+}
+
+function calculateIndex(pixel) {
+	return pixel.y*canv.width*4 + pixel.x*4;
+}
+
+function updatePicksle(array) {
+	var thismax = getMaxBinAmp(array);
+	if(thismax) maxBinAmp = Math.max(maxBinAmp,thismax);
+	updatePixels(array);
+	ctx.putImageData(imageData,0,0);
+	prevArray = array;
+}
+
+function updatePixels(array) {
+	for(var i=0;i<arrayUsage;i++){
+		var diff = array[i]-prevArray[i];
+		if(diff>0) {
+			addRandomPixels(i,diff);
+		} else if(diff<0){
+			removeRandomPixels(i, (-1)*diff);
+		}
+	}
+}
+
+
+function addRandomPixels(bin, val) {
+	var numPix = (val+0.0)/(maxBinAmp+0.0)*pixPerBin;
+	for(var i=0;i<numPix;i++){
+		var index = Math.floor(Math.random()*(deadPixels[bin].length));
+		var pixel = deadPixels[bin][index];
+		var lastPixel = deadPixels[bin][deadPixels[bin].length-1];
+		if(pixel) {
+			deadPixels[bin][index] = lastPixel;
+			deadPixels[bin].pop();
+			livePixels[bin].push(pixel);
+			imageData.data[pixel.index+3] = 255;
+		}
+	}
+}
+
+function removeRandomPixels(bin, value) {
+	var numPix = (value+0.0)/(maxBinAmp+0.0)*pixPerBin;
+	for(var i=0;i<numPix;i++){
+		var len = livePixels[bin].length;
+		var index = Math.floor(Math.random()*(livePixels[bin].length));
+		var pixel = livePixels[bin][index];
+		var lastPixel = livePixels[bin][livePixels[bin].length-1];
+		if(pixel) {
+			livePixels[bin][index] = lastPixel;
+			livePixels[bin].pop();
+			deadPixels[bin].push(pixel);
+			imageData.data[pixel.index+3] = 0;
+		}
+	}
+}
+
+function getCoord(pixel) {
+	var xval = pixel.x-centX;
+	var yval = pixel.y-centY;
+	return {"x":xval, "y":yval};
+}
+
+function randomVal(min,max){
+	return Math.floor(Math.random()*(max-min)+min);
+}
+
+function outOfBounds(pixel) {
+	return pixel.x > canv.width || pixel.x <0 || pixel.y < 0 || pixel.y > canv.height;
 }
 
 function averageHues(bin) {
@@ -93,79 +193,6 @@ function bounceAlpha(amp) {
 	updateAlphas(amp/(maxAmp+0.0))
 }
 
-function updateRandomPixels(array) {
-	var noteTotals = getNoteTotals(array);
-	//noteTotals = skewNoteTotals(noteTotals);
-	var notePercents = getNotePercents(noteTotals);
-	var thisNoteCounts = getNoteCounts(notePercents);
-	//console.log(thisNoteCounts);
-	var note = "a";
-	for(var i=0;i<7;i++) {
-		var diff = thisNoteCounts[note] - oldNoteCounts[note];
-		if(diff > 0) addPixels(diff, note);
-		else if(diff<0) removePixels((-1)*diff,note);
-		note = getNextNote(note);
-	}
-	oldNoteCounts = thisNoteCounts;
-}
-
-function addPixels(num, note) {
-	for(var i=0;i<num;i++){
-		var index = Math.floor(Math.random()*deadPixels[note].length);
-		var pixel = deadPixels[note][index];
-		var lastPixel = deadPixels[note][deadPixels[note].length-1];
-		deadPixels[note][index] = lastPixel;
-		deadPixels[note].pop();
-		if(pixel) {
-			livePixels[note].push(pixel);
-			imageData.data[pixel.index+3] = 255;
-		}	
-	}
-}
-
-function removePixels(num, note) {
-	for(var i=0;i<num;i++){
-		var index = Math.floor(Math.random()*livePixels[note].length);
-		var pixel = livePixels[note][index];
-		var lastPixel = livePixels[note][livePixels[note].length-1];
-		livePixels[note][index] = lastPixel;
-		livePixels[note].pop();
-		if(pixel) {
-			deadPixels[note].push(pixel);
-			imageData.data[pixel.index+3] = 0;
-		}
-	}
-}
-
-function updateColorize(array) {
-	var noteTotals = getNoteTotals(array);
-	//noteTotals = skewNoteTotals(noteTotals);
-	var notePercents = getNotePercents(noteTotals);
-	var thisNoteCounts = getNoteCounts(notePercents);
-	for(var i=0;i<pixels.length;i++) {
-	        	var pixel = pixels[i];
-	        	var inpos = pixel.index + 3;
-	        	var note = pixel.note;
-	        	// Fill effect
-	        	/*
-	        	if(thisNoteCounts[note] > 0) {
-	        		imageData.data[inpos]=255;
-	        		thisNoteCounts[note] = thisNoteCounts[note]-1;
-	        	} else {
-	        		imageData.data[inpos]=0;
-	        	}
-	        	*/
-	   
-	        	//Random turn on here
-	        	
-	        	var percent = notePercents[note]
-	        	if(Math.random() >percent*percent*percent) { // turn pixel off
-	        		imageData.data[inpos] = 0;
-	        	} else {
-	        		imageData.data[inpos] = 255;
-	        	}inpos++;
-	  }
-}
 
 function skewNoteTotals(noteTotals) {
 	var scale = 1.1;
@@ -263,65 +290,19 @@ function getClosestNote(color) {
 	return closest;
 }
 
-function imageLoaded(ev) {
-	console.log("processing image");
-    im = ev.target; // the image
 
-    // read the width and height of the canvas
-    width = canv.width;
-    height = canv.height;
-    // stamp the image on the left of the canvas:
-    ctx.drawImage(im, 0, 0);
-    // get all canvas pixel data
-	initPixelsByNote();
-    imageData = ctx.getImageData(0, 0, width, height);
-    closestNotes = new Array();
-    imageNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
-    oldNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
-    pixels = new Array();
-    //ctx.putImageData(imageData, 0, 0);
-    for (y = 0; y < height; y++) {
-		inpos = y * width * 4; // *4 for 4 ints per pixel
-	    for (x = 0; x < width; x++) {
-	    		var index = inpos;
-	        	var r = imageData.data[inpos++];
-	        	var g = imageData.data[inpos++];
-	        	var b = imageData.data[inpos++];
-	        	var alpha = imageData.data[inpos];
-	        	var note = getClosestNote([r,g,b]);
-	        	var pixel = new Object();
-	        	pixel.r = r;
-	        	pixel.g = g;
-	        	pixel.b = b;
-	        	pixel.alpha = alpha;
-	        	pixel.note = note;
-	        	pixel.index = index;
-	        	pixel.x = x;
-	        	pixel.y = y;
-	        	pixel.distanceFromCenter = getDistanceFromCenter(x,y);
-	        	pixels[pixels.length] = pixel;
-	        	if(!isBlack(pixel)) {
-	        		livePixels[note].push(pixel);
-	        		oldNoteCounts[note]++;
-	        		imageNoteCounts[note] = imageNoteCounts[note]+1;
-	        	}
-	        	closestNotes[inpos] = note
-	        	
-	        	inpos++;
-	    }
-   	}
-   	//central sort
-   	pixels.sort(function(a,b){return a.distanceFromCenter - b.distanceFromCenter});
-   	//console.log(imageDataArray);
-}
 
 function isBlack(pixel) {
 	return pixel.r==255 && pixel.g == 255 && pixel.b==255;
 }
 
-function initPixelsByNote() {
-	livePixels = {"a":new Array(), "b":new Array(), "c":new Array(), "d":new Array(), "e":new Array(), "f":new Array(), "g":new Array()};
-	deadPixels = {"a":new Array(), "b":new Array(), "c":new Array(), "d":new Array(), "e":new Array(), "f":new Array(), "g":new Array()};
+function initPixelBins() {
+	livePixels = new Array();
+	deadPixels = new Array();
+	for(var x=0;x<arrayUsage;x++){
+		livePixels[x] = new Array();
+		deadPixels[x] = new Array();
+	}
 }
 
 
@@ -664,6 +645,10 @@ function getNote(bin) {
 	}
 	return minNote;
 
+}
+
+function getMaxBinAmp(array) {
+	return array[getMaxFreqBin(array)];
 }
 
 function getMaxFreqBin(array) { 
