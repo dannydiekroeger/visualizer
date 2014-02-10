@@ -238,7 +238,8 @@ function initSound() {
 
     //change to external URL sound
     function changeSound(){
-    	song = document.forms["urlForm"]["urlText"].value;
+    	song = $("#soundUrl").val();
+    	console.log(song)
     	return true;
     }
 
@@ -263,6 +264,7 @@ function initSound() {
     function playSound(buffer) {
         sourceNode.buffer = buffer;
         sourceNode.start(0);
+        console.log(song);
     }
 
     // log if an error occurs
