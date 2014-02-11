@@ -15,13 +15,14 @@ function loadRandom() {
 }
 
 function drawRandom(freqArray, waveArray, beat){
-	if(!beat){
-		timeSinceBeat++;		
-	}else timeSinceBeat=0;
-	if(timeSinceBeat>16){
+if(timeSinceBeat>20 && beat){
 			//console.log("here");
 		getRandomScene();
 	}
+	if(!beat){
+		timeSinceBeat++;		
+	}else timeSinceBeat=0;
+
 	randomDraw(freqArray, waveArray, beat);
 }
 
