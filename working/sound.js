@@ -116,6 +116,10 @@ function initSound() {
 	    rafID = window.requestAnimationFrame(updateVisualization);
 	}
 	
+	function loadFreqBars() {
+		initGraphics = initFreqBars;
+		updateGraphics = drawBars;
+	}
 	
 	function gotBeat(freqArray){
 	/*	//normalize levelsData from freqByteData
@@ -275,25 +279,8 @@ function initSound() {
         console.log(e);
     }
     
-    /*
-    function initKeyboard() {
-	document.onkeydown = function (event) {
-		code = event.keyCode;
-		if(code == 49) goFullScreen(); // 1
-		else if(code == 67) toggleCircle(); // C
-		else if(code == 68) toggleDoubleBars(); // D
-		else if(code == 70) toggleFluid();// F
-		else if(code == 65) toggleColor(); // A
-		else if(code == 90) toggleFlippedBars(); // Z
-		else if(code == 77) toggleMiddleBars(); // M
-		else if(code==190) lowerExpandFactor(); // Period
-		else if(code==191) increaseExpandFactor(); // For. Slash
-		else if(code==75) lowerRiseFactor(); // Period
-		else if(code==76) increaseRiseFactor(); // For. Slash
-		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
-		else if(code==80) toggleBallDrop(); // P
-	}
-	}*/
+    
+
 
 function goFullScreen(){
     var canvas = canv;

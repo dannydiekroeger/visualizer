@@ -25,8 +25,15 @@ var circleRotateStart;
 var backgroundImage;
 var backgroundPattern;
 
-function initScreen() {
-	    initCanvas();
+function initScreenOsc() {
+		try {
+			initCanvas();
+		}
+		catch(err){
+		   	canv.setAttribute("width", window.innerWidth - 50);
+		    canv.setAttribute("height", window.innerHeight-50);
+		    canv.setAttribute("style", "background:black");
+		}
 		
 		centX = window.innerWidth/2;
 		centY = window.innerHeight/3;
@@ -50,13 +57,13 @@ function initScreen() {
 		middleBars = false;
 		ballDrop = false;
 		circleRotateStart = 0;
-		initKeyboard();
+		initKeyboardOsc();
 		//set new gradient as fill style
 		
 		ctx.fillStyle = gradient;
 }
 
-function updateScreen(array) {
+function updateScreenOsc(array) {
 	var amp=getTotalAmplitude(array);
 	var maxScale = 95555;
 	var percent = amp/maxScale;
@@ -81,9 +88,28 @@ function updateScreen(array) {
 	
 }
 
+    function initKeyboardOsc() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
+		if(code == 49) goFullScreen(); // 1
+		else if(code == 67) toggleCircle(); // C
+		else if(code == 68) toggleDoubleBars(); // D
+		else if(code == 70) toggleFluid();// F
+		else if(code == 65) toggleColor(); // A
+		else if(code == 90) toggleFlippedBars(); // Z
+		else if(code == 77) toggleMiddleBars(); // M
+		else if(code==190) lowerExpandFactor(); // Period
+		else if(code==191) increaseExpandFactor(); // For. Slash
+		else if(code==75) lowerRiseFactor(); // Period
+		else if(code==76) increaseRiseFactor(); // For. Slash
+		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
+		else if(code==80) toggleBallDrop(); // P
+	}
+	}
+
 function loadOscillator() {
-	initGraphics = initFreqBars;
-	updateGraphics = drawBars;
+	initGraphics = initScreenOsc;
+	updateGraphics = updateScreenOsc;
 	initSound();
 }
 
