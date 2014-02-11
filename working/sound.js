@@ -86,6 +86,7 @@ function initSound() {
 	
 //function to init the svg element. Should be called from all init methods using an svg container as a background (all applications using d3)
 	function initSVG(){
+		d3.select("svg").remove();
 		canv.setAttribute("width", 0);
 	    canv.setAttribute("height", 0);
 		var svgWidth = window.innerWidth - 225;

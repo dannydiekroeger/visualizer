@@ -82,8 +82,8 @@ function updateScreen(array) {
 }
 
 function loadOscillator() {
-	initGraphics = initScreen;
-	updateGraphics = updateScreen;
+	initGraphics = initFreqBars;
+	updateGraphics = drawBars;
 	initSound();
 }
 
