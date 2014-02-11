@@ -14,7 +14,7 @@ var initGraphics = initFreqBars;
 var updateGraphics = drawBars;
 
 //update song to equal the name of the mp3 file you want to play
-var song = "three.mp3";
+var song = "audio/three.mp3";
 
 // ------------------------------------------------------------//
 
@@ -241,6 +241,7 @@ function initSound() {
     function changeSound(){
     	song = $("#soundUrl").val();
     	console.log(song)
+    	playClick()
     	return true;
     }
 

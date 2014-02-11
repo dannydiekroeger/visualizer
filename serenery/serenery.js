@@ -44,7 +44,8 @@ function initScreenSerenery() {
 	    im = new Image();
 		im.onload = imageLoaded;
 		im.src = imsrc
-		
+		im.style.width=canv.width;
+		im.style.height=canv.height;
 
 		//canv.style.backgroundImage=im;
 		opacityScale = 10;
@@ -77,7 +78,8 @@ function loadSerenery() {
 
 function changeSereneryImg(){
 	imsrc = $("#imageImg").val();
-    console.log(imsrc)
+	
+    initScreenSerenery();
     return true;
 }
 
