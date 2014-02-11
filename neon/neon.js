@@ -2,7 +2,7 @@
 function initNeon(){
 		initSVG();
 	   var svgContainer = d3.select("svg")
-	   var rect = svgContainer.append("rect").attr("x",400).attr("y",200).attr("width", 50).attr("height", 50).style("fill", "#FF00FF");
+	   //var rect = svgContainer.append("rect").attr("x",400).attr("y",200).attr("width", 50).attr("height", 50).style("fill", "#FF00FF");
 	   var currentGenre;
 	  /* function mycallback() { 
 		   currentGenre="katie"
@@ -17,7 +17,7 @@ function drawNeon(freqArray, waveArray, beat){
 	//circle.data(array).transition().attr("r", function(d){
 	//	return d;	
 	//});*/
-	var square = d3.select("rect");
+	/*8var square = d3.select("rect");
 	if(beat){
 		square
 		.style("fill", "#00FFFF");
@@ -25,14 +25,14 @@ function drawNeon(freqArray, waveArray, beat){
 		square
 		.style("fill", "#FF00FF")
 
-	}
+	}*/
 	
 	var amp=getTotalAmplitude(freqArray);
 	var maxScale = 95555;
 	var percent = amp/maxScale;
-	var maxRad = 2;
+	var maxRad = 4;
 	var radius = maxRad*amp/maxScale;
-	for(var i=0; i< freqArray.length; i++){
+	for(var i=0; i< freqArray.length; i+=2){
 	var fillColor=getNeonColor()
 /*
 	d3.select("svg")
@@ -62,8 +62,8 @@ function drawNeon(freqArray, waveArray, beat){
 		.style("fill", fillColor)
 		.transition()
 		.duration(50)
-		//.ease(Math.sqrt)
-		//.style("stroke-opacity",1e-6)
+		.ease(Math.sqrt)
+		.style("stroke-opacity",1e-6)
 		.remove();
 	}
 
