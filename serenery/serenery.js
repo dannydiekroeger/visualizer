@@ -78,7 +78,6 @@ function loadSerenery() {
 
 function changeSereneryImg(){
 	imsrc = $("#imageImg").val();
-	
     initScreenSerenery();
     return true;
 }
