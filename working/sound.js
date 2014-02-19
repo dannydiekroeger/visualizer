@@ -49,9 +49,9 @@ var song = "audio/three.mp3";
 	var levelHistory = []; //last 256 ave norm levels
 	var levelsData = []; //levels of each frequecy - from 0 - 1 . no sound is 0. Array [levelsCount]
 
-	var BEAT_HOLD_TIME = 40; //num of frames to hold a beat
-	var BEAT_DECAY_RATE = 0.4;
-	var BEAT_MIN = 0.30; //a volume less than this is no beat
+	var BEAT_HOLD_TIME = 20; //num of frames to hold a beat
+	var BEAT_DECAY_RATE = 0.7;
+	var BEAT_MIN = 0.20; //a volume less than this is no beat
 
 
 function initSound() {

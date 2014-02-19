@@ -79,15 +79,16 @@ function getTotalAmplitude(array) {
 }
 
 function getNeonColor(){
-	var rand = Math.floor(Math.random()*100)/100
 	var numNeon = 7
-	if(rand< numNeon/100) return "#6FFF00" //Neon Green:
-	if (rand<2*numNeon/100) return "#FF00FF" //Neon Pink: 
-if (rand<3*numNeon/100) return "#FFFF00" ////Neon Yellow:
- if (rand<4*numNeon/100) return "#00FFFF" // "#4D4DFF" ////Neon Blue:
- if (rand<5*numNeon/100) return "#FE0001" ////Neon Red:
- if (rand<6*numNeon/100) return"#FF4105" //Neon Orange:
-else return "#993CF3" //Neon Purple: 
+	var rand = Math.random() * (numNeon - 0) + 0;
+	
+	if(rand< 1) return "#6FFF00" //Neon Green:
+	if (rand<2) return "#993CF3" //Neon Purple: 
+if (rand<3) return "#FFFF00" ////Neon Yellow:
+ if (rand<4) return "#00FFFF" // "#4D4DFF" ////Neon Blue:
+ if (rand<5) return "#FE0001" ////Neon Red:
+ if (rand<6) return"#FF4105" //Neon Orange:
+else return "#FF00FF" //Neon Pink: 
 }
 
 function loadNeon() {
