@@ -24,6 +24,7 @@ var ballDropVelocity;
 var circleRotateStart;
 var backgroundImage;
 var backgroundPattern;
+var sideFluid;
 
 function initScreenOsc() {
 		try {
@@ -56,6 +57,7 @@ function initScreenOsc() {
 		doubleBars = false;
 		middleBars = false;
 		ballDrop = false;
+		sideFluid = false;
 		circleRotateStart = 0;
 		initKeyboardOsc();
 		//set new gradient as fill style
@@ -64,10 +66,11 @@ function initScreenOsc() {
 }
 
 function updateScreenOsc(array) {
+	array = convertArray(array);
 	var amp=getTotalAmplitude(array);
 	var maxScale = 95555;
 	var percent = amp/maxScale;
-	var maxRad = 300;
+	var maxRad = 150*heightMult;
 	var radius = maxRad*amp/maxScale;
 	var maxFreqBin = getMaxFreqBin(array);
 	var color = getBinColor(maxFreqBin, array.length);
@@ -81,6 +84,10 @@ function updateScreenOsc(array) {
 	if(ballDrop) updateBallDrop();
 	if(circle) drawOneCircle(centX, centY, radius);
 	if(fluid) drawSmoothBars(array);
+	if(sideFluid) {
+		drawLeftBars(array.slice(array.length/2,3*array.length/4));
+		drawRightBars(array.slice(array.length/2,3*array.length/4));
+	}
 	//if(accentPeaks) drawPeakAccent(array);
 	if(maxfluid) drawMaxFluid(array);
 	
@@ -100,10 +107,11 @@ function updateScreenOsc(array) {
 		else if(code == 77) toggleMiddleBars(); // M
 		else if(code==190) lowerExpandFactor(); // Period
 		else if(code==191) increaseExpandFactor(); // For. Slash
-		else if(code==75) lowerRiseFactor(); // Period
-		else if(code==76) increaseRiseFactor(); // For. Slash
+		else if(code==75) lowerRiseFactor(); // K
+		else if(code==76) increaseRiseFactor(); // L
 		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
 		else if(code==80) toggleBallDrop(); // P
+		else if(code==83) toggleSideFluid(); // P
 	}
 	}
 
@@ -111,6 +119,14 @@ function loadOscillator() {
 	initGraphics = initScreenOsc;
 	updateGraphics = updateScreenOsc;
 	initSound();
+}
+
+function convertArray(array) {
+	newArray = new Array();
+	for(var i=0;i<array.length;i++){
+		newArray[i] = array[i];
+	}
+	return newArray;
 }
 
 function initImage(){
@@ -230,6 +246,13 @@ function toggleCircle() {
 		circle = false;
 	} else {
 		circle = true;
+	}
+}
+function toggleSideFluid() {
+	if(sideFluid) {
+		sideFluid = false;
+	} else {
+		sideFluid = true;
 	}
 }
 
@@ -458,6 +481,57 @@ function increaseExpandFactor() {
 function lowerRiseFactor() {
 	if(heightMult > .1) {
 		heightMult -= .1;
+	}
+}
+
+function drawLeftBars(array) {
+	var expand = (canv.height+0.0)/array.length;
+	for(var i=0;i<array.length;i++){
+		var value = array[i];
+		var xval = 5;
+		var yval = i*expand;
+		if(yval <= canv.height) {
+			ctx.fillRect(xval, yval, value*heightMult, barWidth);
+			var nextVal = array[i+1];
+			var diff = nextVal-value;
+			var incr = diff/expand;
+				
+			for (var j=1; j<expand; j++){
+				ctx.fillRect(xval, yval+j,(value+incr*j)*heightMult, barWidth);
+			}
+		}
+		
+	}
+}
+function goFullScreen(){
+    var canvas = canv;
+    if(canvas.requestFullScreen) {
+        canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+    else if(canvas.webkitRequestFullScreen) {
+        canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+    else if(canvas.mozRequestFullScreen)
+        canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+}
+
+function drawRightBars(array) {
+	var expand = (canv.height+0.0)/array.length;
+	for(var i=0;i<array.length;i++){
+		var value = array[i];
+		var xval = canv.width-value*heightMult;
+		var yval = i*expand;
+		if(yval <= canv.height) {
+			ctx.fillRect(xval, yval, value*heightMult, barWidth);
+			var nextVal = array[i+1];
+			var diff = nextVal-value;
+			var incr = diff/expand;
+				
+			for (var j=1; j<expand; j++){
+				ctx.fillRect(xval, yval+j,(value+incr*j)*heightMult, barWidth);
+			}
+		}
+		
 	}
 }
 

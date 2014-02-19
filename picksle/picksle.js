@@ -26,8 +26,12 @@ var prevArray;
 var pixPerBin;
 var arrayUsage;
 
+/*
+Straight bars with opacity instead of fuzzy??
+*/
+
 function initPicksle() {
-		var imsrc = "everest.jpg";
+		var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
 			imsrc = "../serenery/images/"+imsrc;
@@ -46,8 +50,8 @@ function initPicksle() {
 		im.src = imsrc
 		
 		arrayUsage = 600;
-		binwidth = Math.floor(canv.width/arrayUsage);
-		pixPerBin = binwidth*canv.height;
+		binwidth = Math.floor(canv.height/arrayUsage);
+		pixPerBin = binwidth*canv.width;
 		//canv.style.backgroundImage=im;
 		opacityScale = 10;
 		maxAmp = 1.0;
@@ -92,7 +96,7 @@ function imageLoadedP(ev) {
 	        	pixel.y = y;
 	        	pixel.coord = getCoord(pixel);
 	        	pixel.distanceFromCenter = getDistanceFromCenter(x,y);
-	        	var arrayIndex = Math.floor(Math.min(x/binwidth,arrayUsage-1));
+	        	var arrayIndex = Math.floor(Math.min((canv.height-y)/binwidth,arrayUsage-1));
 	        	deadPixels[arrayIndex].push(pixel);
 	        	imageData.data[pixel.index+3] = 0;
 	        	inpos++;
