@@ -13,6 +13,7 @@ hslParticles = [];
 calchsl = false;
 
 zMoveConst = 200; //remove mouse dep
+StarBeatTime = 0;
 
 StarTotalAmp = 0;
 
@@ -123,6 +124,7 @@ function getTotalAmpStar(visArray) {
 // moves all the particles dependent on mouse position
 function updateStarParticles(beat) { 
 	var hsl;
+	if(beat) { StarBeatTime = 3; }
 
 	// iterate through every particle
 	for(var i=0; i<particles.length; i++) {
@@ -136,7 +138,7 @@ function updateStarParticles(beat) {
 		if(particle.position.z>1000) particle.position.z-=2000;
 
 
-		if(!beat) {
+		if(StarBeatTime == 0) {
 			// set luminosity to range .1 to .9 as sprite gets nearer to viewer
 			if (calchsl) {
 			hsl = particle.material.color.getHSL();
@@ -157,6 +159,7 @@ function updateStarParticles(beat) {
 		}
 
 	}
+	if(StarBeatTime > 0) { StarBeatTime--; }
 
 }
 

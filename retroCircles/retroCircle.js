@@ -2,7 +2,7 @@ var newColor = ["#F09B0A", "#F03060", "#13613A", "#805B37", "#EBE18C", "#DC3F1C"
 
 var numNodes = 16;
 var retroFirsttime = 0;		// to use with debugging
-var circleRadius = 50;
+var circleRadius = 0;
 var retroCircleLineWidth = 10;
 var twoPI = 2.0 * Math.PI;
 var myCircles = new Array();
@@ -112,8 +112,7 @@ function drawRetro(visArray, waveArray, beat)
 			grad.addColorStop(1, "black");
 			ctx.fillStyle = grad;
 		}
-		//ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW)
-		ctx.fillRect(0,0,canv.width,canv.height);
+		ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW)
 	}
 
 	drawCircleLines();			
