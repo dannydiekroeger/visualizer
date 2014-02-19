@@ -20,6 +20,7 @@ var imageDataArray;
 var livePixels;
 var deadPixels;
 var oldNoteCounts;
+var velo;
 
 function initFlux() {
 		var imsrc = "frac2.jpg";
@@ -45,6 +46,7 @@ function initFlux() {
 		opacityScale = 10;
 		maxAmp = 1.0;
 		invert = false;
+		velo = 1;
 		
 		
 		//imageData = ctx.getImageData(0,0,canv.width,canv.height);
@@ -86,8 +88,14 @@ function imageLoadedFlux(ev) {
 	        	pixel.index = index;
 	        	pixel.x = x;
 	        	pixel.y = y;
-	        	if(Math.random()>.5) pixel.velocity = [0,40];
-	        	else pixel.velocity = [40,0];
+	        	if(pixel.x>centX) {
+	        		pixel.velocity = [5,0];
+	        		pixel.hand = 1
+	        	}
+	        	else {
+	        		pixel.velocity = [-5,0];
+	        		pixel.hand = 0;
+	        	}
 	        	pixel.coord = getCoord(pixel);
 	        	pixel.distanceFromCenter = getDistanceFromCenter(x,y);
 	        	if(!isBlack(pixel)) {
@@ -104,8 +112,9 @@ function calculateIndex(pixel) {
 	return pixel.y*canv.width*4 + pixel.x*4;
 }
 
-function updateFlux() {
+function updateFlux(array, something, beat) {
 	//if(livePixels.length > 1)console.log(livePixels[0].index);
+	if(beat) velo += 100;
 	updateFluxPixels();
 	ctx.putImageData(imageData,0,0);
 }
@@ -117,7 +126,7 @@ function updateFluxPixels() {
 		var pixel = livePixels[i];
 		imageData.data[pixel.index+3]=0;
 		var newPixel = moveStep(pixel);
-		//newPixel.velocity = getVelocity(newPixel);
+		newPixel.velocity = getVelocity(newPixel);
 		newLivePixels.push(newPixel);
 		imageData.data[pixel.index+3]=255;
 	}
@@ -127,12 +136,14 @@ function updateFluxPixels() {
 function getVelocity(pixel) {
 	var scale = 50;
 	//return [Math.log(pixel.coord["x"])/Math.log(1000), Math.log(pixel.coord["y"])/Math.log(1000)];
-	return [20,0]
+	if(velo > 15) velo-=15;
+	if(pixel.hand == 1) return [velo,0];
+	return[-velo,0];
 }
 
 
 function initFluxPixels() {
-	var numpix =200000;
+	var numpix =30000;
 	addRandomPixelsFlux(numpix)
 }
 

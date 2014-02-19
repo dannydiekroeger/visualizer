@@ -21,6 +21,7 @@ var imageDataArray;
 var livePixels;
 var deadPixels;
 var oldNoteCounts
+var accentuate;
 var imsrc = "frac2.jpg";
 
 function initScreenSerenery() {
@@ -51,13 +52,27 @@ function initScreenSerenery() {
 		opacityScale = 10;
 		maxAmp = 1.0;
 		invert = false;
+		accentuate = true;
 		//imageData = ctx.getImageData(0,0,canv.width,canv.height);
 }
 
+/*
+throw circle back to center
+make it disappear
+make the radius bigger
+source node
+source nodes each with own circle
+velocity corresponds to volume. color to freq?
+*/
+
 function updateScreenSerenery(array) {
 	//newimageData = ctx.getImageData(0,0,canv.width,canv.height);
+	var maxBin = getMaxFreqBin(array);
+	if(accentuate) array[maxBin]*=3;
+	
 	var amp = getTotalAmplitude(array);
 	if(amp > maxAmp) maxAmp = amp;
+
 	//bounceAlpha(amp);
 	//averageHues(getMaxFreqBin(array));
 	//updateColorize(array);

@@ -112,7 +112,8 @@ function drawRetro(visArray, waveArray, beat)
 			grad.addColorStop(1, "black");
 			ctx.fillStyle = grad;
 		}
-		ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW)
+		//ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW)
+		ctx.fillRect(0,0,canv.width,canv.height);
 	}
 
 	drawCircleLines();			
