@@ -13,7 +13,8 @@ hslParticles = [];
 calchsl = false;
 
 zMoveConst = 200; //remove mouse dep
-StarBeatTime = 0;
+StarBeatTime = 0; //current time left for last beat
+StarBeatTimeDur = 8; //how long a beat effects color
 
 StarTotalAmp = 0;
 
@@ -124,7 +125,7 @@ function getTotalAmpStar(visArray) {
 // moves all the particles dependent on mouse position
 function updateStarParticles(beat) { 
 	var hsl;
-	if(beat) { StarBeatTime = 3; }
+	if(beat) { StarBeatTime = StarBeatTimeDur; }
 
 	// iterate through every particle
 	for(var i=0; i<particles.length; i++) {
