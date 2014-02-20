@@ -66,7 +66,7 @@
 			<div id = 'forms'>
 				<form action="upload_file.php" method="post" enctype="multipart/form-data">	
 				<label for="file" style = "color:#A9BCF5">AUDIO FILE:</label>
-				<input type="file" name="file" id="file"><br>
+				<input type="file" name="file" id="file">
 				<input type="submit" name="submit" value="Submit" class = "button">
 				</form>
 
@@ -164,7 +164,7 @@
 					 <li><a onclick="loadRandom()">Load Random</a></li>
 				  </ul>
 			   </li>
-			   <li><a href='#'><span>Help</span></a></li>
+			   <li><a href="#" onClick="MyWindow=window.open('help.html','MyWindow',width=600,height=300); return false;"><span>Help</span></a></li>
 			</ul>
 	</div>
 		<div id = 'screen'>
