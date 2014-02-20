@@ -284,14 +284,24 @@ function initSound() {
 
 function goFullScreen(){
     var canvas = canv;
-    if(canvas.requestFullScreen) {
+    if(canvas.requestFullScreen){
         canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
     }
-    else if(canvas.webkitRequestFullScreen) {
+    else if(canvas.webkitRequestFullScreen){
         canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
     }
-    else if(canvas.mozRequestFullScreen)
+    else if(canvas.mozRequestFullScreen){
         canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+    }
 }
 
 
