@@ -54,6 +54,27 @@ var song = "audio/three.mp3";
 	var BEAT_MIN = 0.20; //a volume less than this is no beat
 
 
+$(document).ready(function() {
+$("input").change(function(e) {
+    for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+
+        var file = e.originalEvent.srcElement.files[i];
+        var reader = new FileReader();
+        clearNodes();
+		setupAudioNodes();
+
+        reader.onloadend = function() {
+             context.decodeAudioData(reader.result, function(buffer) {
+                // when the audio is decoded play the sound
+                playSound(buffer);
+            }, onError);
+        }
+        reader.readAsArrayBuffer(file);
+    }
+});
+}); 
+
+
 function initSound() {
 	if (! window.AudioContext) {
         if (! window.webkitAudioContext) {
