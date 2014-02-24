@@ -42,6 +42,8 @@ var song = "audio/three.mp3";
 	var canvasWidth;
 	var canvasHeight;
 	var maxBinCount;
+	var filePlaylist;
+	var plIndicator = 0;
 	
 	//Beat variables
 	var beatCutOff = 0;
@@ -55,27 +57,34 @@ var song = "audio/three.mp3";
 
 
 $(document).ready(function() {
-$("input").change(function(e) {
+$("#selectFile").change(function(e) {
     for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-
         var file = e.originalEvent.srcElement.files[i];
-        var reader = new FileReader();
+        //how to get name? to put into playlist indicator
+        filePlaylist[i] = file;
+    }
+});
+}); 
+
+function playUpload() {
+		plIndicator = 0;
+		var reader = new FileReader();
         clearNodes();
 		setupAudioNodes();
 
+		//Add for loop for all playlist elements, need callback from playSound
         reader.onloadend = function() {
              context.decodeAudioData(reader.result, function(buffer) {
                 // when the audio is decoded play the sound
                 playSound(buffer);
             }, onError);
         }
-        reader.readAsArrayBuffer(file);
-    }
-});
-}); 
+        reader.readAsArrayBuffer(filePlaylist[0]);
+	}
 
 
 function initSound() {
+	filePlaylist = new Array();
 	if (! window.AudioContext) {
         if (! window.webkitAudioContext) {
             alert('no audiocontext found');
