@@ -67,11 +67,8 @@
 		</div>
 		<div id = 'setup'>
 			<div id = 'forms'>
-				<form action="upload_file.php" method="post" enctype="multipart/form-data">	
-				<label for="file" style = "color:#A9BCF5">AUDIO FILE:</label>
-				<input type="file" name="file" id="file">
-				<input type="submit" name="submit" value="Submit" class = "button">
-				</form>
+				<input type = "file" id = "selectFile">
+				<button id="playUpload" onclick="playUpload()" class = "button">Play Sound</button>
 
 				<!--<form name = "urlForm" action="">-->
 				URL Audio: <!--<input type="text" name="urlText" id="soundUrl">-->
@@ -134,7 +131,10 @@
 
 			  <li><a href='#'><span>Rainbow</span></a>
 				  <ul>
-					 <li><a onclick="loadRainbowLine()">Load Rainbow</a></li>
+					 <li><a onclick="loadRainbowLine(0)">Load Rainbow</a></li>	
+					 <li><a onclick="loadRainbowLine(1)">Load Rainbow, Decreased Range</a></li>	
+					 <li><a onclick="loadRainbowLine(2)">Load Rainbow With Wave</a></li>	
+					 <li><a onclick="loadRainbowLine(3)">Load Rainbow With Wave, Decreaded Range</a></li>
 				  </ul>
 			   </li>
 			  <li><a href='#'><span>Retro</span></a>
