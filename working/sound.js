@@ -44,6 +44,7 @@ var song = "audio/three.mp3";
 	var maxBinCount;
 	var filePlaylist;
 	var plIndicator = 0;
+	var plSize = 0;
 	
 	//Beat variables
 	var beatCutOff = 0;
@@ -57,17 +58,29 @@ var song = "audio/three.mp3";
 
 
 $(document).ready(function() {
-$("#selectFile").change(function(e) {
-    for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-        var file = e.originalEvent.srcElement.files[i];
-        //how to get name? to put into playlist indicator
-        filePlaylist[i] = file;
-    }
-});
+	$("#selectFile").change(function(e) {
+        var file = e.originalEvent.srcElement.files[0];
+        console.log(e.originalEvent.srcElement.files[0].name);
+        filePlaylist[plSize] = file;
+        plSize++;
+	});
 }); 
 
+function next(){
+	if(plIndicator < plSize-1){
+		plIndicator ++;
+		playUpload();
+	}
+}
+
+function back(){
+	if(plIndicator > 0){
+		plIndicator --;
+		playUpload();
+	}
+}
+
 function playUpload() {
-		plIndicator = 0;
 		var reader = new FileReader();
         clearNodes();
 		setupAudioNodes();
@@ -79,7 +92,7 @@ function playUpload() {
                 playSound(buffer);
             }, onError);
         }
-        reader.readAsArrayBuffer(filePlaylist[0]);
+        reader.readAsArrayBuffer(filePlaylist[plIndicator]);
 	}
 
 
@@ -292,7 +305,7 @@ function initSound() {
             context.decodeAudioData(request.response, function(buffer) {
                 // when the audio is decoded play the sound
                 playSound(buffer);
-            }, onError);
+;            }, onError);
         }
         request.send();
     }
