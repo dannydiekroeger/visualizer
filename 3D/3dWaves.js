@@ -1,5 +1,7 @@
+
+
 // the main three.js components
-var camera, scene, renderer, ticks
+var camera, scene, renderer, ticks, composer
 
 lines = [];
 
@@ -7,7 +9,10 @@ lines = [];
 function WavesInit() {
 	ticks=0;
 	initCanvas();
+	var width = canv.width;
+	var height = canv.height;
 
+	canv.remove();
 	camera = new THREE.PerspectiveCamera(150, window.innerWidth / window.innerHeight, 1, 4000 );
 	 camera.useQuaternion = true;
 
@@ -20,11 +25,36 @@ function WavesInit() {
 	scene = new THREE.Scene();
 
 	scene.add(camera);
+	
+		drawWaves();
 
-	renderer = new THREE.CanvasRenderer({ canvas : canv });
-	renderer.setSize( canv.width, canv.height );
 
-	drawWaves();
+	renderer = new THREE.WebGLRenderer();
+	
+	//renderer = new THREE.CanvasRenderer({ canvas : canv });
+	renderer.setSize(width, height );
+	document.getElementById("screen").appendChild( renderer.domElement);
+
+
+	
+	composer = new THREE.EffectComposer( renderer );
+	
+	renderPass = new THREE.RenderPass( scene, camera );
+	composer.addPass(renderPass);
+	
+	bloomPass = new THREE.BloomPass(1,25,4.0,256);
+	composer.addPass( bloomPass );
+	
+	kaleidoPass = new THREE.ShaderPass( THREE.KaleidoShader );
+	//composer.addPass(kaleidoPass);
+
+	copyPass = new THREE.ShaderPass( THREE.CopyShader );
+	composer.addPass( copyPass );
+	//set last pass in composer chain to renderToScreen
+	copyPass.renderToScreen = true;
+    composer.render();
+
+
 }
 
 // the main update function, called 30 times a second
@@ -64,7 +94,8 @@ function WaveUpdate(visArray, waveArray, beat) {
 
 //camera.rotation.x=camera.rotation.x+rot;
 	}
-renderer.render( scene, camera );
+//renderer.render( scene, camera );
+composer.render(.1);
 
 }
 
@@ -85,26 +116,23 @@ function drawWaves(){
 	 		geometry.vertices.push(new THREE.Vector3(-1000+i, 100*n-600, 500));
 	 	}
 	 	var line = new THREE.Line(geometry, material);
-	 //var spline =	new THREE.SplineCurve3(geometry, material);
-	 //new tugeGeometry(spline curve, number of segments, radius, radius segments, closed, debug), 2, 
-	// var line= new THREE.TubeGeometry(spline, 1, 10, false,false );
-    // parent = new THREE.Object3D();
-
-	/* tubeMesh = THREE.SceneUtils.createMultiMaterialObject( line, 										new THREE.MeshBasicMaterial({
-					color: 0x000011,
-					opacity: 1,
-					wireframe: true,
-					//transparent: true
-			}));
-			*/
-     //parent.add(tubeMesh);
-      //scene.add(parent);
-      scene.add(line);
+	      scene.add(line);
       lines.push(line);
 	 }
+	 
+	 
+	var imgMaterial2 = new THREE.MeshBasicMaterial( { 
+					color:'blue'
+				} );
 
-     
-    renderer.render(scene, camera);
+				//create cube
+				var geometry = new THREE.CubeGeometry(1000, 1000, 1000);
+				cube = new THREE.Mesh(geometry, imgMaterial2);
+				scene.add(cube);
+				      
+     //composer.render(.1);
+
+  //  renderer.render(scene, camera);
 
 }
 
@@ -116,7 +144,7 @@ function loadWaves() {
 }
 
 /*
-___________________________________________________________________________________
+//___________________________________________________________________________________
 // the main three.js components
 var camera, scene, renderer, ticks
 
@@ -137,7 +165,7 @@ function WavesInit() {
 //	$('#screen').append('<div id="container"></div');
 	
  camera = new THREE.PerspectiveCamera(
-        angle, aspect, near, far);    /*
+        angle, aspect, near, far);    
 	camera.position.z = 800;
 	camera.position.y=100;
 	camera.position.x=900;
@@ -183,7 +211,7 @@ function drawWaves(){
 	 		points.push(new THREE.Vector3(i, 0, 0));
 	 	}
 	 
-	 	/*var spline =	new THREE.SplineCurve3(points);
+	 	var spline =	new THREE.SplineCurve3(points);
 	 	var geometry= new THREE.TubeGeometry(spline, 150,3, 200,false,false);    
 	 	var material = 
         new THREE.MeshLambertMaterial(
@@ -313,5 +341,4 @@ function loadWaves() {
 	initGraphics = WavesInit;
 	updateGraphics = WaveUpdate;
 	initSound();
-}
-*/
+}*/
