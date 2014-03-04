@@ -72,7 +72,7 @@ initNavigator();
     	// to draw the volume
     	
     	////javascriptNode.onaudioprocess = updateVisualization
-    	loadSound("../satisfy.mp3");
+    	loadSound("../audio/deadmau5.mp3");
 	}
 	
 	function initNavigator() {
