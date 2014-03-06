@@ -16,6 +16,7 @@
 		<script src="../flux/flux.js" type="text/javascript"></script>
 		<script src="../picksle/picksle.js" type="text/javascript"></script>
 		<script src="../3D/StarParts.js" type="text/javascript"></script>
+		<script src="../3D/Donuts.js" type="text/javascript"></script>		
 		<script src="../3D/tween.js"></script>
 
 		<script src="../3D/Sparks.js"></script>
@@ -61,7 +62,7 @@
 
 
 	</head>
-	<body onload="initSound()">
+	<body onload="initSoundFirstTime()">
 		<div id = 'title'>
 			<h1 align = "center" style="font-family:verdana; color:#A9BCF5">DEEZY VISUALIZER</h1>
 		</div>
@@ -157,6 +158,8 @@
 				  <ul>
 					 <li><a onclick="loadStarParticles()">Load Stars</a></li>
 					 <li><a onclick="loadWaves()">Load Waves</a></li>
+					 <li><a onclick="loadDonuts(0)">Load Freq Donuts</a></li>
+					 <li><a onclick="loadDonuts(1)">Load Slinky Donuts</a></li>
 
 				  </ul>
 			   </li>

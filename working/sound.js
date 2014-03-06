@@ -38,6 +38,7 @@ var song = "audio/three.mp3";
 	var javascriptNode;
 	var canv;
 	var ctx;
+	var canvWebGL;
 	var gradient;
 	var canvasWidth;
 	var canvasHeight;
@@ -96,48 +97,121 @@ function playUpload() {
 	}
 
 
+//Needed because there two canvases that need to be build once
+
+function initSoundFirstTime() {
+
+	filePlaylist = new Array();
+
+	if (! window.AudioContext) {
+		if (! window.webkitAudioContext) {
+			alert('no audiocontext found');
+		}
+		window.AudioContext = window.webkitAudioContext;
+	}
+	context = new AudioContext();
+
+	canvasWidth = window.innerWidth - 225;										// relocated from initCanvas()
+	canvasHeight = window.innerHeight - 150;									// relocated from initCanvas()
+	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );		// relocated from initCanvas()
+
+	// create 2d canvas context
+	canv = document.getElementById("canvas");
+	ctx = canv.getContext("2d");
+
+	// create WebGL canvas and append to screen div		added
+	canvWebGL = document.createElement("canvas");
+	canvWebGL.setAttribute("id", "canvasWebGL");
+	canvWebGL.setAttribute("width", 0);
+	canvWebGL.setAttribute("height", 0);
+	document.getElementById("screen").appendChild(canvWebGL);
+	canvWebGL.setAttribute("style","background:black");
+
+	var length = 256;
+	for(var i = 0; i < length; i++) {
+	    levelHistory.push(0);
+	}
+
+	initNavigator();
+	initSound();
+}
+
+
+
 function initSound() {
 	filePlaylist = new Array();
 	if (! window.AudioContext) {
-        if (! window.webkitAudioContext) {
-            alert('no audiocontext found');
-        }
-        window.AudioContext = window.webkitAudioContext;
-    }
+        	if (! window.webkitAudioContext) {
+            		alert('no audiocontext found');
+        	}
+        	window.AudioContext = window.webkitAudioContext;
+    	}
 	context = new AudioContext();
+/*
 	canv = document.getElementById("canvas");
 	ctx = canv.getContext("2d");
+*/
+
 	var length = 256;
-		for(var i = 0; i < length; i++) {
-		    levelHistory.push(0);
-		}
+	for(var i = 0; i < length; i++) {
+	    levelHistory.push(0);
+	}
+
 	initGraphics();
 	initNavigator();
 }
 
 //function to init the canvas element. Should be called from all init methods using the html canvas
-	function initCanvas() {
-		d3.select("svg").remove();
-		canvasWidth = window.innerWidth - 225;
-		canvasHeight = window.innerHeight -150;
-	   	canv.setAttribute("width", canvasWidth);
-	    canv.setAttribute("height", canvasHeight);
-	    canv.setAttribute("style","background:black");
-	    document.getElementById("screen").setAttribute("style", "background:black");
-	    document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );
-	}
+
+function initCanvas() {
+	d3.select("svg").remove();
+
+	canvWebGL.setAttribute("width", 0);
+	canvWebGL.setAttribute("height", 0);
+
+	//canvasWidth = window.innerWidth - 225;
+	//canvasHeight = window.innerHeight -150;
+
+   	canv.setAttribute("width", canvasWidth);
+	canv.setAttribute("height", canvasHeight);
+	canv.setAttribute("style","background:black");
+	
+	document.getElementById("screen").setAttribute("style", "background:black");
+	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );
+}
 	
 //function to init the svg element. Should be called from all init methods using an svg container as a background (all applications using d3)
-	function initSVG(){
-		d3.select("svg").remove();
-		canv.setAttribute("width", 0);
-	    canv.setAttribute("height", 0);
-		var svgWidth = window.innerWidth - 225;
-		var svgHeight = window.innerHeight -150;
-		d3.select("#screen").style("background-color", "black")	
-		var svgContainer = d3.select("#screen").append("svg").attr("width", svgWidth).attr("height",svgHeight);
-	}	
 	
+function initSVG(){
+	d3.select("svg").remove();
+
+	canv.setAttribute("width", 0);
+	canv.setAttribute("height", 0);
+
+	canvWebGL.setAttribute("width", 0);
+	canvWebGL.setAttribute("height", 0);
+
+	var svgWidth = window.innerWidth - 225;
+	var svgHeight = window.innerHeight -150;
+
+	d3.select("#screen").style("background-color", "black")	
+	var svgContainer = d3.select("#screen").append("svg").attr("width", svgWidth).attr("height",svgHeight);
+}	
+	
+// function to init the WebGL canvas element. Should be called from all init methods using the html WebGL canvas
+
+function initCanvasWebGL() {
+	d3.select("svg").remove();
+
+	canv.width = 0;
+	canv.height = 0;
+
+	canvWebGL.width = canvasWidth;
+	canvWebGL.height = canvasHeight;
+	canvWebGL.setAttribute("style","background:black");
+}
+
+
 	
 	
 	function updateVisualization() {
