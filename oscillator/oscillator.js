@@ -119,6 +119,7 @@ function loadOscillator() {
 	initGraphics = initScreenOsc;
 	updateGraphics = updateScreenOsc;
 	initSound();
+	alert("Hot Keys are F,Z,D,M,A,S,'Period','Backslash',K,L,P,C \n Try them out!");
 }
 
 function convertArray(array) {

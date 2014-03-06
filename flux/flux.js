@@ -47,6 +47,8 @@ function initFlux() {
 		}
 	    fluxCentX = canv.width/2.0;
 	    fluxCentY = canv.height/2.0;
+	    console.log(fluxCentX);
+	    console.log(fluxCentY);
 	    initKeyboard();
 	    fluxim = new Image();
 		fluxim.onload = imageLoadedFlux;
@@ -65,7 +67,7 @@ function initFlux() {
 		fluxRadialGrav = 2;
 		fluxheightscale = 10;
 		fluxradscale = 10;
-		fluxRotationTheta = 0;
+		fluxRotationTheta = 0.01;
 		fluxRotation = .01;
 		fluxRadius = 100;
 		//fluxImageData = ctx.getfluxImageData(0,0,canv.width,canv.height);
@@ -86,7 +88,7 @@ function imageLoadedFlux(ev) {
     // stamp the image on the left of the canvas:
     ctx.drawImage(fluxim, 0, 0);
     // get all canvas pixel data
-	initLiveAndDead();
+	fluxInitLiveAndDead();
     fluxImageData = ctx.getImageData(0, 0, width, height);
     //ctx.putfluxImageData(fluxImageData, 0, 0);
     for (y = 0; y < height; y++) {
@@ -108,7 +110,7 @@ function imageLoadedFlux(ev) {
 	        	pixel.x = x;
 	        	pixel.y = y;
 	        	pixel.velocity = [0,0];
-	        	pixel.coord = getCoord(pixel);
+	        	pixel.coord = fluxGetCoord(pixel);
 				pixel = setRadAndTheta(pixel);
 	        	if(!isBlack(pixel)) {
 	        		fluxDeadPixels.push(pixel);
@@ -121,7 +123,7 @@ function imageLoadedFlux(ev) {
 }
 
 function setRadAndTheta(pixel) {
-	pixel.radius = getDistanceFromCenter(pixel.x,pixel.y);
+	pixel.radius = fluxGetDistanceFromCenter(pixel.x,pixel.y);
 	pixel.theta = Math.asin(pixel.coord["y"]/pixel.radius);
 	if(pixel.coord["x"] < 0) {
 		pixel.theta *= -1;
@@ -147,10 +149,10 @@ function updateFluxPixelsSpawn(array) {
 	for(var i=0;i<fluxLivePixels.length;i++){
 		var pixel = fluxLivePixels[i];
 		fluxImageData.data[pixel.index+3]=0;
-		var newPixel = moveStep(pixel);
-		//newPixel.velocity = getVelocity(newPixel);
+		var newPixel = fluxMoveStep(pixel);
+		//newPixel.velocity = fluxGetVelocity(newPixel);
 		if(newPixel.y <= canv.height) {
-			newPixel.velocity = getVelocity(newPixel,array);
+			newPixel.velocity = fluxGetVelocity(newPixel,array);
 			newfluxLivePixels.push(newPixel);
 			fluxImageData.data[pixel.index+3]=255;
 		}
@@ -190,8 +192,8 @@ function updateFluxPixels(array) {
 		var pixel = fluxLivePixels[i];
 		fluxImageData.data[pixel.index+3]=0;
 		var newPixel = pixel;
-		newPixel.velocity = getVelocity(newPixel,array);
-		newPixel = moveStep(newPixel);
+		newPixel.velocity = fluxGetVelocity(newPixel,array);
+		newPixel = fluxMoveStep(newPixel);
 		newfluxLivePixels.push(newPixel);
 		fluxImageData.data[pixel.index+3]=255;
 	}
@@ -205,8 +207,8 @@ function updateFluxRadial(array){
 		var pixel = fluxLivePixels[i];
 		fluxImageData.data[pixel.index+3]=0;
 		var newPixel = pixel;
-		//newPixel.velocity = getVelocity(newPixel);
-		//newPixel.velocity = getVelocity(newPixel,array);
+		//newPixel.velocity = fluxGetVelocity(newPixel);
+		//newPixel.velocity = fluxGetVelocity(newPixel,array);
 		newPixel.velocity = getNewRadialVelocity(newPixel);
 		if(Math.abs(newPixel.radius)<fluxRadius) {
 			var trueTheta = newPixel.theta + Math.PI/2;
@@ -283,18 +285,18 @@ function updatePixelFromRad(pixel) {
 }
 
 
-function getVector(startx,starty,endx,endy,scale) {
+function fluxGetVector(startx,starty,endx,endy,scale) {
 	var dx = endx-startx;
 	var dy = endy-starty;
 	var mag = Math.sqrt(dx*dx+dy*dy);
 	return [Math.floor(dx*scale/mag),Math.floor(dy*scale/mag)];
 }
 
-function getVelocity(pixel,array) {
+function fluxGetVelocity(pixel,array) {
 	var xvel = pixel.velocity[0];
 	if(pixel.x >= canv.width || pixel.x <= 0) xvel = -xvel;
 	if(pixel.y >= canv.height - 200) {
-		var yval = getBump(pixel,array);
+		var yval = fluxGetBump(pixel,array);
 		/*
 		var variance = -1;
 		var rand = Math.random();
@@ -310,28 +312,28 @@ function getVelocity(pixel,array) {
 	return [xvel,pixel.velocity[1]+fluxgravity];
 }
 
-function getBump(pixel,array){
+function fluxGetBump(pixel,array){
 	var chunksize = canv.width/array.length;
 	var index = Math.floor(pixel.x/chunksize);
 	return Math.floor(array[index]/fluxheightscale);
 }
 
 function initFluxPixels() {
-	var numpix =20000;
+	var numpix =10000;
 	addRandomPixelsFlux(numpix)
 }
 
-function getCoord(pixel) {
+function fluxGetCoord(pixel) {
 	var xval = pixel.x-fluxCentX;
 	var yval = pixel.y-fluxCentY;
 	return {"x":xval, "y":yval};
 }
 
 // returns new pixel one step away accord. to pixel's velocity
-function moveStep(pixel) {
+function fluxMoveStep(pixel) {
 	pixel.x += Math.floor(pixel.velocity[0]);
 	pixel.y += Math.floor(pixel.velocity[1]);
-	pixel.coord = getCoord(pixel);
+	pixel.coord = fluxGetCoord(pixel);
 	pixel.index = calculateIndex(pixel);
 	pixel = setRadAndTheta(pixel);
 	return pixel;
@@ -376,7 +378,7 @@ function addRandomPixelsFlux(num) {
 	}
 }
 
-function removeRandomPixels(num, note) {
+function removeRandomPixelsFlux(num, note) {
 	for(var i=0;i<num;i++){
 		var index = Math.floor(Math.random()*fluxLivePixels.length);
 		var pixel = fluxLivePixels[index];
@@ -400,13 +402,13 @@ function isBlack(pixel) {
 	return pixel.r==255 && pixel.g == 255 && pixel.b==255;
 }
 
-function initLiveAndDead() {
+function fluxInitLiveAndDead() {
 	fluxLivePixels = new Array();
 	fluxDeadPixels = new Array();
 }
 
 
-function getDistanceFromCenter(x,y) {
+function fluxGetDistanceFromCenter(x,y) {
 	return Math.sqrt((x-fluxCentX)*(x-fluxCentX)+(y-fluxCentY)*(y-fluxCentY));
 }
 
