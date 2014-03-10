@@ -82,13 +82,13 @@ function getNeonColor(){
 	var numNeon = 7
 	var rand = Math.random() * (numNeon - 0) + 0;
 	
-	if(rand< 1) return "#6FFF00" //Neon Green:
-	if (rand<2) return "#993CF3" //Neon Purple: 
-if (rand<3) return "#FFFF00" ////Neon Yellow:
- if (rand<4) return "#00FFFF" // "#4D4DFF" ////Neon Blue:
- if (rand<5) return "#FE0001" ////Neon Red:
- if (rand<6) return"#FF4105" //Neon Orange:
-else return "#FF00FF" //Neon Pink: 
+	if(rand< 1.5) return "#6FFF00" //Neon Green:
+	//if (rand<2) return "#ea00ff" //Neon Purple: 
+if (rand<3) return "#F3F315" ////Neon Yellow:
+ if (rand<4.5) return "#00FFFF" //  ////Neon Blue:
+ if (rand<5) return "#ff0099" ////Neon pink 2:
+ if (rand<6) return"#FF6600" //Neon Orange:
+else return "#ff0099" //Neon Pink: 
 }
 
 function loadNeon() {
