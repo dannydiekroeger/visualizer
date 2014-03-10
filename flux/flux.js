@@ -67,7 +67,7 @@ function initFlux() {
 		fluxRadialGrav = 2;
 		fluxheightscale = 10;
 		fluxradscale = 10;
-		fluxRotationTheta = 0.01;
+		fluxRotationTheta = 0;
 		fluxRotation = .01;
 		fluxRadius = 100;
 		//fluxImageData = ctx.getfluxImageData(0,0,canv.width,canv.height);
@@ -210,7 +210,7 @@ function updateFluxRadial(array){
 		//newPixel.velocity = fluxGetVelocity(newPixel);
 		//newPixel.velocity = fluxGetVelocity(newPixel,array);
 		newPixel.velocity = getNewRadialVelocity(newPixel);
-		if(Math.abs(newPixel.radius)<fluxRadius) {
+		if(fluxInBoundsTriangle(newPixel)==1) {
 			var trueTheta = newPixel.theta + Math.PI/2;
 			if(newPixel.radius < 0)trueTheta = Math.abs(trueTheta - Math.PI);
 			var index = Math.floor(trueTheta/chunksize);
@@ -224,6 +224,17 @@ function updateFluxRadial(array){
 		fluxImageData.data[pixel.index+3]=255;
 	}
 	fluxLivePixels = newfluxLivePixels;
+}
+//return 1 for true, 0 for false
+function fluxInBoundsRadius(pixel) {
+	if(Math.abs(pixel.radius)<fluxRadius) return 1;
+	return 0;
+}
+
+function fluxInBoundsTriangle(pixel) {
+	var delta = 50;
+	if(pixel.coord["y"] > Math.abs(pixel.coord["x"]) - delta && pixel.coord["y"] > delta) return 1;
+	return 0;
 }
 
 function getNewRadialVelocity(pixel) {
@@ -419,14 +430,26 @@ function initKeyboard() {
 		else if(code == 67) toggleCircle(); // C
 		else if(code == 68) toggleDoubleBars(); // D
 		else if(code == 70) toggleUpdateFluxPixels();// F
+		else if(code == 75) fluxDecreaseRad();
+		else if(code == 76) fluxIncreaseRad();
 		else if(code == 65) toggleColor(); // A
 		else if(code == 90) toggleFlippedBars(); // Z
 		else if(code == 77) toggleMiddleBars(); // M
 		else if(code==190) lowerOpacityFactor(); // Period
 		else if(code==191) increaseOpacityFactor(); // For. Slash
-		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
+		else if(code >=37 && code <=40) fluxCatchArrowKey(code); // Arrow Keys
 		else if(code==80) toggleBallDrop(); // P
 	}
+}
+
+function fluxDecreaseRad() {
+	if (fluxRadius >= 0) {
+		fluxRadius -= 1;
+	}
+}
+
+function fluxIncreaseRad() {
+	fluxRadius += 1;
 }
 
 function toggleUpdateFluxPixels() {
@@ -439,8 +462,8 @@ function toggleUpdateFluxPixels() {
 	}
 }
 
-function catchArrowKey(code) {
-	var scale = 20;
+function fluxCatchArrowKey(code) {
+	var scale = 2;
 	if(code == 37) fluxCentX -= scale;
 	else if(code == 38) fluxCentY -= scale;
 	else if(code==39) fluxCentX += scale;

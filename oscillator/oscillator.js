@@ -49,7 +49,7 @@ function initScreenOsc() {
 		initConstants();
 		initImage();
 		circle = false;
-		fluid = false;
+		fluid = true;
 		maxfluid = false;
 		fill = 0;
 		accentPeaks = true;
@@ -57,7 +57,7 @@ function initScreenOsc() {
 		doubleBars = false;
 		middleBars = false;
 		ballDrop = false;
-		sideFluid = false;
+		sideFluid = true;
 		circleRotateStart = 0;
 		initKeyboardOsc();
 		//set new gradient as fill style
