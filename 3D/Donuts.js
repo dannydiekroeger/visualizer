@@ -1,11 +1,27 @@
-// canvas rendering objects are declared in sound.js and referenced forward here
+/*********************************************
+ *
+ * Donut World
+ *
+ * -------------------------------------------
+ *
+ * A test world for webgl rendering. A series
+ * of toruses are rendered, similar to the 
+ * children stacking ring toy. Toruses are 
+ * colored in a rainbow scheme.
+ *
+ * Variations available.
+ *
+ *********************************************/
+
 
 // the main three.js components
+
 var cameraTorus, sceneTorus, rendererTorus;
 var lookAtTorus = new THREE.Vector3(0, 0, 0);
 var yUpTorus = new THREE.Vector3(0, 1, 0);	// used as a vector in the xy plane for up vector calculations
 
 // Phong lights
+
 var ambLightTorus = new THREE.AmbientLight( 0x404040 );
 
 var dirLightTorus = new THREE.DirectionalLight( 0xffffff, 0.5 );
@@ -16,13 +32,12 @@ pntLightTorus.position.set( 0, 0, 0 );
 var plFramesTorus = 0;
 var plFramesMaxTorus = 3;
 
-// to keep track of the mouse position
-var torusMouseY = 0;
-
 // an array to store our materials in
+
 var torusMaterials = [];
 
 // an array to store our toruses in
+
 var toruses = [];
 var torusParms = [];
 
@@ -33,12 +48,65 @@ var moveCamera = 2.0;
 
 var doValue = 0;
 
-// initialize for WebGL canvas use and build scene values and initial display
+
+
+/****************************************
+ *
+ * The load function for Donuts.
+ *
+ * Type set for variation availablity.
+ *
+ ***************************************/
+
+function loadDonuts(type) {
+	doValue = type;
+	initGraphics = DonutInit;
+	updateGraphics = DonutUpdate;
+	initSound();
+}
+
+
+
+/****************************************
+ *
+ * The init function for Donuts.
+ *
+ ***************************************/
 
 function DonutInit() {
 	initCanvasWebGL();
 	initTorus();
 }
+
+
+
+/****************************************
+ *
+ * The update function for Donuts.
+ *
+ ***************************************/
+
+function DonutUpdate(visArray, waveArray, beat) {
+
+	if ((moveCamera > 0 && cameraTorus.position.z == cameraDistanceTorus) || (moveCamera < 0 && cameraTorus.position.z == -cameraDistanceTorus)) moveCamera = -moveCamera;
+
+	updateCameraParmsTorus(moveCamera);
+
+	updateToruses(visArray, beat);
+
+	// render the scene from the new perspective of the camera
+	rendererTorus.render( sceneTorus, cameraTorus );
+}
+
+
+
+/****************************************
+ *
+ * Called by: DonutInit
+ *
+ * Setup donut world.
+ *
+ ***************************************/ 
 
 function initTorus() {
 
@@ -47,9 +115,7 @@ function initTorus() {
 
 	// move the camera backwards so we can see stuff! 
 	// default position is 0,0,0. 
-
-//	updateCameraParmsTorus(0);			// if active, view is from the side
-	updateCameraParmsTorus(cameraDistanceTorus);	// if active, view is from above
+	updateCameraParmsTorus(cameraDistanceTorus);	
 
 	// the scene contains all the 3D object data
 	sceneTorus = new THREE.Scene();
@@ -65,9 +131,6 @@ function initTorus() {
 
 	rendererTorus = new THREE.WebGLRenderer({canvas: canvWebGL});
 	rendererTorus.setSize( canvWebGL.width, canvWebGL.height );
-//	var clearColor = new THREE.Color();
-//	clearColor.setRGB(1, 0, 0);
-//	rendererTorus.setClearColor(clearColor);
 
 	// build the torus set
 	makeToruses(); 
@@ -76,15 +139,27 @@ function initTorus() {
 	rendererTorus.render( sceneTorus, cameraTorus );
 }
 
-// set camera up vector and evoke lookAt to recalculate camera values
-//  deltaZ is the change to the camera Z coordinate
-//  the camera X coordinate is calculated to simulate a globe effect where
-//  the camera rests on a globe with the scene inside and the globe is rotated
-//  so that the view ranges from the top to the bottom of the globe
+
+
+/****************************************
+ *
+ * Called by: DonutUpdate
+ *
+ * Set camera up vector and evoke lookAt to
+ * recalculate camera values. DeltaZ is 
+ * the change to the camera Z coordinate.
+ * The camera X coordinate is calculated
+ * to simulate a globe effect where
+ * the camera rests on a globe with the 
+ * scene inside. The globe is rotated
+ * so that the view ranges from the top 
+ * to the bottom of the globe.
+ *
+ ***************************************/ 
+
 
 function updateCameraParmsTorus(deltaZ) {
 
-	//if ((deltaZ > 0 && camera.position.z == cameraDistanceTorus) || (deltaZ < 0 && camera.position.z == -cameraDistanceTorus)) return;
 	cameraTorus.position.z += deltaZ;
 	if (cameraTorus.position.z > cameraDistanceTorus) {
 		cameraTorus.position.z = cameraDistanceTorus;
@@ -102,25 +177,19 @@ function updateCameraParmsTorus(deltaZ) {
 	upVector.cross(yUpTorus).normalize();
 	
 	cameraTorus.up = upVector;
-	cameraTorus.lookAt(lookAtTorus);		// set to be looking at the origin
+	cameraTorus.lookAt(lookAtTorus); // set to be looking at the origin
 }
 
 
-// the main update function
 
-function DonutUpdate(visArray, waveArray, beat) {
-
-	if ((moveCamera > 0 && cameraTorus.position.z == cameraDistanceTorus) || (moveCamera < 0 && cameraTorus.position.z == -cameraDistanceTorus)) moveCamera = -moveCamera;
-
-	updateCameraParmsTorus(moveCamera);
-
-	updateToruses(visArray, beat);
-
-	// render the scene from the new perspective of the camera
-	rendererTorus.render( sceneTorus, cameraTorus );
-}
-
-// create the set of torus objects
+/****************************************
+ *
+ * Called by: initTorus
+ *
+ * Create the toruses and load them into
+ * toruses array.
+ *
+ ***************************************/ 
 
 function makeToruses() { 
 	var torus, material, torusColor, hslValues;
@@ -137,7 +206,6 @@ function makeToruses() {
 		var hue = m * colorDelta;
 		hslValues = {h:hue, s:0.5, l:0.5};
 		torusColor = new THREE.Color().setHSL(hue, 0.5, 0.5);
-//		material = new THREE.MeshBasicMaterial( { color: torusColor, overdraw: 0.5 } );
 		material = new THREE.MeshPhongMaterial( { color: torusColor, ambient: torusColor, overdraw: 0.5 } );
 		torusMaterials.push(material);
 	}
@@ -172,7 +240,19 @@ function makeToruses() {
 	}
 }
 
-// moves all the toruses along the Z axis dependent on their sizes
+
+
+/****************************************
+ *
+ * Called by: DonutUpdate
+ *
+ * Toruses move along the z axis.
+ * If doValue is 1 they move dependent 
+ * their size. If do value is 0 they
+ * move based on an average of the
+ * frequency array.
+ *
+ ***************************************/ 
 
 function updateToruses(visArray, beat) { 
 
@@ -226,9 +306,4 @@ function updateToruses(visArray, beat) {
 
 }
 
-function loadDonuts(type) {
-	doValue = type;
-	initGraphics = DonutInit;
-	updateGraphics = DonutUpdate;
-	initSound();
-}
+
