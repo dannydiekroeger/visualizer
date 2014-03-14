@@ -210,7 +210,7 @@ function updateFluxRadial(array){
 		//newPixel.velocity = fluxGetVelocity(newPixel);
 		//newPixel.velocity = fluxGetVelocity(newPixel,array);
 		newPixel.velocity = getNewRadialVelocity(newPixel);
-		if(fluxInBoundsTriangle(newPixel)==1) {
+		if(fluxInBoundsRadius(newPixel)==1) {
 			var trueTheta = newPixel.theta + Math.PI/2;
 			if(newPixel.radius < 0)trueTheta = Math.abs(trueTheta - Math.PI);
 			var index = Math.floor(trueTheta/chunksize);
