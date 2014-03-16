@@ -3,7 +3,7 @@ var timeSinceBeat;
 
 function initRandom(){
 	getRandomScene();
-	}
+}
 
 function loadRandom() {
 	initGraphics = initRandom;

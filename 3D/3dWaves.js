@@ -48,7 +48,7 @@ function WavesInit() {
 	
 	initComposer();
 	
-    composer.render();
+    	composer.render();
 
 
 }

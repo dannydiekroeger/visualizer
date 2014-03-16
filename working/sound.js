@@ -46,6 +46,8 @@ var song = "audio/three.mp3";
 	var filePlaylist;
 	var plIndicator = 0;
 	var plSize = 0;
+
+	var activeCanvas = 0; // 0 = 2d, 1 = 3d, 2 = d3
 	
 	//Beat variables
 	var beatCutOff = 0;
@@ -174,6 +176,8 @@ function initCanvas() {
 	
 	document.getElementById("screen").setAttribute("style", "background:black");
 	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );
+
+	activeCanvas = 0; //for the full screen //adt
 }
 	
 //function to init the svg element. Should be called from all init methods using an svg container as a background (all applications using d3)
@@ -192,6 +196,8 @@ function initSVG(){
 
 	d3.select("#screen").style("background-color", "black")	
 	var svgContainer = d3.select("#screen").append("svg").attr("width", svgWidth).attr("height",svgHeight);
+
+	activeCanvas = 2; //for the full screen //adt
 }	
 	
 // function to init the WebGL canvas element. Should be called from all init methods using the html WebGL canvas
@@ -205,6 +211,8 @@ function initCanvasWebGL() {
 	canvWebGL.width = canvasWidth;
 	canvWebGL.height = canvasHeight;
 	canvWebGL.setAttribute("style","background:black");
+
+	activeCanvas = 1; //for the full screen //adt
 }
 
 
@@ -229,10 +237,7 @@ function updateVisualization() {
 		rafID = window.requestAnimationFrame(updateVisualization);
 	}
 	
-function loadFreqBars() {
-	initGraphics = initFreqBars;
-	updateGraphics = drawBars;
-}
+
 
 function gotBeat(freqArray){
 /*	//normalize levelsData from freqByteData
@@ -397,24 +402,41 @@ function onError(e) {
     
     
 function goFullScreen(){
-	var canvas = canv;
+	var canvas;
+
+	if (activeCanvas == 0) { canvas = canv; }
+	else if (activeCanvas == 1) { canvas = canvWebGL; }
+	//else { canvas = d3.select("svg"); }//for the svg 	
+
 	if(canvas.requestFullScreen){
         	canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         	var rect = canvas.getBoundingClientRect();
-        	canvas.width = rect.width;
-        	canvas.height = rect.height;
+
+		if (activeCanvas == 2) { d3.select("svg").attr("width", svgWidth).attr("height",svgHeight); }
+		else {
+	        	canvas.width = rect.width;
+        		canvas.height = rect.height;
+		}
     	}
     	else if(canvas.webkitRequestFullScreen){
         	canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         	var rect = canvas.getBoundingClientRect();
-        	canvas.width = rect.width;
-        	canvas.height = rect.height;
+
+		if (activeCanvas == 2) { d3.select("svg").attr("width", svgWidth).attr("height",svgHeight); }
+		else {
+	        	canvas.width = rect.width;
+        		canvas.height = rect.height;
+		}
     	}
     	else if(canvas.mozRequestFullScreen){
         	canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         	var rect = canvas.getBoundingClientRect();
-        	canvas.width = rect.width;
-        	canvas.height = rect.height;
+
+		if (activeCanvas == 2) { d3.select("svg").attr("width", svgWidth).attr("height",svgHeight); }
+		else {
+	        	canvas.width = rect.width;
+        		canvas.height = rect.height;
+		}
     	}
 }
 

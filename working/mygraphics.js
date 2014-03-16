@@ -3,6 +3,17 @@
 //         - refers to "canv" which refers to the element with
 //           id "canvas" in sound.html
 //         - refers to "ctx" which is defined in sound.js 
+
+
+
+function loadFreqBars() {
+	initGraphics = initFreqBars;
+	updateGraphics = drawBars;
+
+	initSound();
+}
+
+
 function initFreqBars() {
 	
 		initCanvas();
