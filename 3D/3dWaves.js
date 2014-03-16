@@ -15,6 +15,7 @@ var far = 4000;
 var vlightRadius;
 var vlightDetail;
 
+//array to hold all of the lines in the scene
 lines = [];
 
 
@@ -29,32 +30,20 @@ function WavesInit() {
 	numLines = 10;
 	lineLength = 4000;
 	ticks=0;
-	initCanvas();
-	var width = canv.width;
-	var height = canv.height;
 	vlightRadius = 200;
 	vlightDetail = 3;
 
+	initCanvas();
+	//remove non 3d canvas from screen
 	canv.remove();
-	camera = new THREE.PerspectiveCamera(fov, width / height, near, far );
 
-	camera.position.z = zpos;
-	camera.position.y= ypos;
-	camera.position.x= xpos;
-	scene = new THREE.Scene();
-
-	scene.add(camera);
-
+	initCamera();
 	drawWaves();
 	drawvLight();
 				
 	//camera.lookAt(vlight);  WHY DOESN'T THIS WORK
-	renderer = new THREE.WebGLRenderer();
+	initRenderer();
 	
-	//renderer = new THREE.CanvasRenderer({ canvas : canv });
-	renderer.setSize(width, height );
-	document.getElementById("screen").appendChild( renderer.domElement);
-
 	initComposer();
 	
     composer.render();
@@ -62,7 +51,37 @@ function WavesInit() {
 
 }
 
-//
+//inits the THREE camera and addis it to a new THREE scene
+function initCamera(){
+	var width = canv.width;
+	var height = canv.height;
+	camera = new THREE.PerspectiveCamera(fov, width / height, near, far );
+	camera.position.z = zpos;
+	camera.position.y= ypos;
+	camera.position.x= xpos;
+	scene = new THREE.Scene();
+
+	scene.add(camera);
+
+}
+
+//initializes a THREE renderer and adds its DOM element to the screen
+function initRenderer(){
+console.log("here");
+	var width = canv.width;
+	var height = canv.height;
+
+	renderer = new THREE.WebGLRenderer();
+	//renderer = new THREE.CanvasRenderer({ canvas : canv });
+	renderer.setSize(width, height );
+	document.getElementById("screen").appendChild( renderer.domElement);
+
+
+}
+
+
+//draws the voluminous light object that leads the waves
+//uses a Icosahedron geometry with high enough detail that it appears sphere
 function drawvLight(){
 	vlight = new THREE.Mesh(
    	 	new THREE.IcosahedronGeometry(vlightRadius, vlightDetail),
@@ -78,7 +97,8 @@ function drawvLight(){
 
 
 // the main update function, called 30 times a second
-
+//updates each line's y value to show the sound wave form
+//line stays a constant length, just shifts to add each new value to the end
 function WaveUpdate(visArray, waveArray, beat) {
 	ticks+=30;
 
@@ -91,7 +111,6 @@ function WaveUpdate(visArray, waveArray, beat) {
 					lines[l]=lines[randLine];
 					lines[randLine]=curLine;
 		}
-	//	var curGeom = curLine.geometry;
 		curLine.geometry.vertices.shift();
 		curLine.geometry.vertices.push(new THREE.Vector3(700+ticks, waveArray[i]*10, 200-l*30));
 		curLine.geometry.verticesNeedUpdate=true;
@@ -145,6 +164,7 @@ composer.render(.1);
 
 }
 
+//creates the line objects and adds them to the scene when the scene is intiailized
 function drawWaves(){
 	var  lineColor;
 
@@ -154,17 +174,13 @@ function drawWaves(){
           
           	
 			var color = getNeonColor();
-          var material = new THREE.LineBasicMaterial({
+			var material = new THREE.LineBasicMaterial({
 			  color: color,
 			  ambient: color,  
-			  //opacity:.7,
-			  linewidth: 3,
-			//  overdraw: 0.5
-			  
+			  linewidth: 3,			  
 		});
 
-     for(var i=0;i<lineLength;i++){
-     	
+     for(var i=0;i<lineLength;i++){	
 	 		geometry.vertices.push(new THREE.Vector3(-1000+i, 600, 500-100*n));
 	 	}
 	 	 line = new THREE.Line(geometry, material);
@@ -189,9 +205,11 @@ function loadWaves() {
 function wavesComposer(){
 	composer = new THREE.EffectComposer( renderer );
 	
+	//causes the scene to be rendered by the composer
 	renderPass = new THREE.RenderPass( scene, camera );
 	composer.addPass(renderPass);
 	
+	//bloom pass creates the glowing look
 	bloomPass = new THREE.BloomPass(1,25,4.0,256);
 	composer.addPass( bloomPass );
 	
