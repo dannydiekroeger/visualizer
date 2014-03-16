@@ -1,9 +1,23 @@
+/*********************************************
+ *
+ * Star Field World
+ *
+ * -------------------------------------------
+ *
+ * A random, colored star field is generated
+ * on each instance. Camera moves through the
+ * star field.
+ *
+ * No additional features available.
+ *
+ *********************************************/
+
+
+
 // the main three.js components
 var camera, scene, renderer,
 
-// to keep track of the mouse position
-//mouseX = 0, mouseY = 0,
-
+//star field variables
 materials = [];
 particles = [];
 hslBase = [];
@@ -12,11 +26,35 @@ hslParticles = [];
 // if true, calculate hsl from material color; else, use base values
 calchsl = false;
 
-zMoveConst = 200; //remove mouse dep
+//beat variables
 StarBeatTime = 0; //current time left for last beat
 StarBeatTimeDur = 8; //how long a beat effects color
 
+//speed variable
 StarTotalAmp = 0;
+
+
+
+/****************************************
+ *
+ * The load function for StarParts.
+ *
+ ***************************************/
+
+function loadStarParticles() {
+	initGraphics = StarInit;
+	updateGraphics = StarUpdate;
+	initSound();
+}
+
+
+
+/****************************************
+ *
+ * The init function for StarParts.
+ * Create a new scene and star field.
+ *
+ ***************************************/
 
 function StarInit() {
 
@@ -37,7 +75,16 @@ function StarInit() {
 
 }
 
-// the main update function, called 30 times a second
+
+
+/****************************************
+ *
+ * The update function for StarParts.
+ * Called 30 times a second.
+ * Sets the variables in star field and
+ * update renderer.
+ *
+ ***************************************/
 
 function StarUpdate(visArray, waveArray, beat) {
 	
@@ -49,7 +96,18 @@ function StarUpdate(visArray, waveArray, beat) {
 
 }
 
-// creates a random field of Particle objects
+
+
+/****************************************
+ *
+ * Called by: StarInit
+ *
+ * Build star field. Color and position
+ * in 3-space are random. Stars are 
+ * sprites and render as circles. 
+ *
+ ***************************************/
+
 function makeStarParticles() { 
 
 	var particle, material, particleColor, hslValues;
@@ -102,25 +160,19 @@ function makeStarParticles() {
 
 }
 
-// there isn't a built in circle particle renderer 
-// so we have to define our own. 
-
-function StarParticleRender( context ) {
-
-	context.beginPath();
-	context.arc( 0, 0, 1, 0,  Math.PI * 2, true );
-	context.fill();
-};
-
-function getTotalAmpStar(visArray) {
-	StarTotalAmp = 0;
-	for(var j = 0; j < visArray.length; j++) {
-		StarTotalAmp += visArray[j];
-	}
-	StarTotalAmp /= visArray.length;
-}
 
 
+/****************************************
+ *
+ * Called by: StarUpdate
+ *
+ * Update position of each particle.
+ * Position is always updates. Particles
+ * rendered white if beat has occured.
+ * Beat duration is updated. Once zero,
+ * particles return to original color. 
+ *
+ ***************************************/
 
 // moves all the particles dependent on mouse position
 function updateStarParticles(beat) { 
@@ -138,7 +190,7 @@ function updateStarParticles(beat) {
 		// if the particle is too close move it to the back
 		if(particle.position.z>1000) particle.position.z-=2000;
 
-
+		//render in original star color
 		if(StarBeatTime == 0) {
 			// set luminosity to range .1 to .9 as sprite gets nearer to viewer
 			if (calchsl) {
@@ -147,6 +199,8 @@ function updateStarParticles(beat) {
 			hsl = hslParticles[i];
 			}
 
+			//maintain color
+			//color changes as it moves closer
 
 			hsl.s = (Math.round((particle.position.z + 1000) / 250)) / 10 + .1;
 			//hsl.l = (Math.round((particle.position.z + 1000) / 250)) / 10 + .1;
@@ -156,6 +210,7 @@ function updateStarParticles(beat) {
 			hsl.ls = hsl.s;
 			hsl.ll = hsl.l;
 		} else {
+			//render white to represent beat
 			particle.material.color.setHSL(360, 1, 1);
 		}
 
@@ -165,8 +220,42 @@ function updateStarParticles(beat) {
 }
 
 
-function loadStarParticles() {
-	initGraphics = StarInit;
-	updateGraphics = StarUpdate;
-	initSound();
+
+/****************************************
+ *
+ * Called by: renderer
+ *
+ * Render the circles of the star field.
+ *
+ ***************************************/ 
+
+function StarParticleRender( context ) {
+
+	context.beginPath();
+	context.arc( 0, 0, 1, 0,  Math.PI * 2, true );
+	context.fill();
+};
+
+
+
+/****************************************
+ *
+ * Called by: StarUpdate
+ *
+ * Calculate the total amplitude of
+ * sound. StarTotalAmp set.
+ *
+ ***************************************/ 
+
+function getTotalAmpStar(visArray) {
+	StarTotalAmp = 0;
+	for(var j = 0; j < visArray.length; j++) {
+		StarTotalAmp += visArray[j];
+	}
+	StarTotalAmp /= visArray.length;
 }
+
+
+
+
+

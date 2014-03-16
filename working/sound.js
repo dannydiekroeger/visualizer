@@ -147,10 +147,6 @@ function initSound() {
         	window.AudioContext = window.webkitAudioContext;
     	}
 	context = new AudioContext();
-/*
-	canv = document.getElementById("canvas");
-	ctx = canv.getContext("2d");
-*/
 
 	var length = 256;
 	for(var i = 0; i < length; i++) {
@@ -214,211 +210,212 @@ function initCanvasWebGL() {
 
 	
 	
-	function updateVisualization() {
-	    // get the average for the first channel
-	    var freqArray =  new Uint8Array(analyser.frequencyBinCount);
-	    analyser.getByteFrequencyData(freqArray);
+function updateVisualization() {
+	// get the average for the first channel
+	var freqArray =  new Uint8Array(analyser.frequencyBinCount);
+	analyser.getByteFrequencyData(freqArray);
 	   
-	   var waveArray = new Uint8Array(analyser.frequencyBinCount);
-	   analyser.getByteTimeDomainData(waveArray);
+	var waveArray = new Uint8Array(analyser.frequencyBinCount);
+	analyser.getByteTimeDomainData(waveArray);
 	   
-	   maxBinCount = freqArray.length;
+	maxBinCount = freqArray.length;
 	   
-	   var beat = gotBeat(freqArray);
-	    // clear the current state
-	    //ctx.clearRect(0, 0, 1000, 325);
-	    // set the fill style
-	    //ctx.fillStyle=gradient;
-	    updateGraphics(freqArray,waveArray, beat);
-	    rafID = window.requestAnimationFrame(updateVisualization);
+	var beat = gotBeat(freqArray);
+		// clear the current state
+		//ctx.clearRect(0, 0, 1000, 325);
+		// set the fill style
+		//ctx.fillStyle=gradient;
+		updateGraphics(freqArray,waveArray, beat);
+		rafID = window.requestAnimationFrame(updateVisualization);
 	}
 	
-	function loadFreqBars() {
-		initGraphics = initFreqBars;
-		updateGraphics = drawBars;
-	}
-	
-	function gotBeat(freqArray){
-	/*	//normalize levelsData from freqByteData
-		for(var i = 0; i < levelsCount; i++) {
-			var sum = 0;
-			for(var j = 0; j < levelBins; j++) {
-				sum += freqByteData[(i * levelBins) + j];
-			}
-			levelsData[i] = sum / levelBins/256 * ControlsHandler.audioParams.volSens; //freqData maxs at 256
+function loadFreqBars() {
+	initGraphics = initFreqBars;
+	updateGraphics = drawBars;
+}
 
-			//adjust for the fact that lower levels are percieved more quietly
-			//make lower levels smaller
-			//levelsData[i] *=  1 + (i/levelsCount)/2;
-		}*/
-		
-		//GET AVG LEVEL
+function gotBeat(freqArray){
+/*	//normalize levelsData from freqByteData
+	for(var i = 0; i < levelsCount; i++) {
 		var sum = 0;
-		var beat = false;
-		for(var j = 0; j < maxBinCount; j++) {
-		//	sum += levelsData[j];
-			sum+=freqArray[j];
+		for(var j = 0; j < levelBins; j++) {
+			sum += freqByteData[(i * levelBins) + j];
 		}
+		levelsData[i] = sum / levelBins/256 * ControlsHandler.audioParams.volSens; //freqData maxs at 256
+
+		//adjust for the fact that lower levels are percieved more quietly
+		//make lower levels smaller
+		//levelsData[i] *=  1 + (i/levelsCount)/2;
+	}*/
 		
-		level = sum / maxBinCount;
+	//GET AVG LEVEL
+	var sum = 0;
+	var beat = false;
+	for(var j = 0; j < maxBinCount; j++) {
+	//	sum += levelsData[j];
+		sum+=freqArray[j];
+	}
+		
+	level = sum / maxBinCount;
+	levelHistory.push(level);
+	levelHistory.shift(1);
 
-		levelHistory.push(level);
-		levelHistory.shift(1);
-
-		//BEAT DETECTION
-		if (level  > beatCutOff && level > BEAT_MIN){
-			beat = true;
-			beatCutOff = level *1.1;
-			beatTime = 0;
+	//BEAT DETECTION
+	if (level  > beatCutOff && level > BEAT_MIN){
+		beat = true;
+		beatCutOff = level *1.1;
+		beatTime = 0;
+	}else{
+		if (beatTime <= BEAT_HOLD_TIME){
+			beatTime ++;
 		}else{
-			if (beatTime <= BEAT_HOLD_TIME){
-				beatTime ++;
-			}else{
-				beatCutOff *= BEAT_DECAY_RATE
-				beatCutOff = Math.max(beatCutOff,BEAT_MIN);
-			}
+			beatCutOff *= BEAT_DECAY_RATE
+			beatCutOff = Math.max(beatCutOff,BEAT_MIN);
 		}
-
-
-		//bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
-		return beat;
 	}
-	
-	
-	function enlargeCanvas() {
-		//canvas.setAttribute("width",screen.width);
-		//canvas.setAttribute("height",screen.height);
-		console.log("changed");
-	}
-	
-	function exitFullScreen() {
-		console.log("Exiting full");
-		initCanvas();
-	}
-	
-	function playClick() {
-		inputtype = "play"
-		clearNodes();
-		setupAudioNodes();
 
-		// when the javascript node is called
+	//bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
+	return beat;
+}
+	
+	
+function enlargeCanvas() {
+	//canvas.setAttribute("width",screen.width);
+	//canvas.setAttribute("height",screen.height);
+	console.log("changed");
+}
+	
+function exitFullScreen() {
+	console.log("Exiting full");
+	initCanvas();
+}
+	
+function playClick() {
+	inputtype = "play"
+	clearNodes();
+	setupAudioNodes();
+
+	// when the javascript node is called
     	// we use information from the analyzer node
     	// to draw the volume
     	
     	////javascriptNode.onaudioprocess = updateVisualization
     	loadSound(song);
-	}
+}
 	
-	function initNavigator() {
-		if (!!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-	            navigator.mozGetUserMedia || navigator.msGetUserMedia)) {
+function initNavigator() {
+	if (!!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia)) {
 			
-			//handle different types navigator objects of different browsers
-			navigator.getUserMedia = navigator.getUserMedia||navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
-	            }
-	}
+		//handle different types navigator objects of different browsers
+		navigator.getUserMedia = navigator.getUserMedia||navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+        }
+}
 	
-	function microClick() {
-		//capturing input of the micropone
-		navigator.getUserMedia({audio: true, video: false}, 
-				//success
-				handleMicrophoneInput, 
-					//failed	
-				function () {
-					console.log('capturing microphone data failed!');
-					console.log(evt);
-				}
-		);
-	}
-	function handleMicrophoneInput (stream) {
-		clearNodes();
-		//convert audio stream to mediaStreamSource (node)
-		microphone = context.createMediaStreamSource(stream);
-		//create analyser
-	  	if (analyser == null) analyser = context.createAnalyser();
-	  	//connect microphone to analyser
-	    microphone.connect(analyser);
+function microClick() {
+	//capturing input of the micropone
+	navigator.getUserMedia({audio: true, video: false}, 
+		//success
+		handleMicrophoneInput, 
+		
+		//failed	
+		function () {
+			console.log('capturing microphone data failed!');
+			console.log(evt);
+		}
+	);
+}
+
+function handleMicrophoneInput (stream) {
+	clearNodes();
+	//convert audio stream to mediaStreamSource (node)
+	microphone = context.createMediaStreamSource(stream);
+
+	//create analyser
+  	if (analyser == null) analyser = context.createAnalyser();
+
+ 	//connect microphone to analyser
+	microphone.connect(analyser);
 	    //start updating
 		rafID = window.requestAnimationFrame( updateVisualization );
-	}
-    function clearNodes() {
-    	if (sourceNode) {
+}
+
+function clearNodes() {
+	if (sourceNode) {
     		sourceNode.stop(0);
     	}
     	analyser = null;
     	sourceNode = null;
-    }
+}
     
-    function setupAudioNodes() {
-        analyser = context.createAnalyser();
-        sourceNode = context.createBufferSource();
-        sourceNode.connect(analyser);
-        sourceNode.connect(context.destination);
-        rafID = window.requestAnimationFrame(updateVisualization);
-    }
+function setupAudioNodes() {
+	analyser = context.createAnalyser();
+	sourceNode = context.createBufferSource();
+	sourceNode.connect(analyser);
+	sourceNode.connect(context.destination);
+	rafID = window.requestAnimationFrame(updateVisualization);
+}
 
 
-    //change to external URL sound
-    function changeSound(){
-    	song = $("#soundUrl").val();
-    	console.log(song)
-    	playClick()
-    	return true;
-    }
+//change to external URL sound
+function changeSound(){
+	song = $("#soundUrl").val();
+	console.log(song)
+	playClick()
+	return true;
+}
 
-        // load the specified sound
-    function loadSound(url) {
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
+// load the specified sound
+function loadSound(url) {
+	var request = new XMLHttpRequest();
+	request.open('GET', url, true);
+	request.responseType = 'arraybuffer';
 
-        // When loaded decode the data
-        request.onload = function() {
+	// When loaded decode the data
+	request.onload = function() {
 
-            // decode the data
-            context.decodeAudioData(request.response, function(buffer) {
-                // when the audio is decoded play the sound
-                playSound(buffer);
+	// decode the data
+	context.decodeAudioData(request.response, function(buffer) {
+		// when the audio is decoded play the sound
+		playSound(buffer);
 ;            }, onError);
-        }
-        request.send();
-    }
+	}
+	request.send();
+}
 
-    function playSound(buffer) {
-        sourceNode.buffer = buffer;
+function playSound(buffer) {
+	sourceNode.buffer = buffer;
         sourceNode.start(0);
         console.log(song);
-    }
+}
 
-    // log if an error occurs
-    function onError(e) {
-    	console.log("error");
-        console.log(e);
-    }
+// log if an error occurs
+function onError(e) {
+	console.log("error");
+	console.log(e);
+}
     
     
-
-
 function goFullScreen(){
-    var canvas = canv;
-    if(canvas.requestFullScreen){
-        canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        var rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-    }
-    else if(canvas.webkitRequestFullScreen){
-        canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        var rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-    }
-    else if(canvas.mozRequestFullScreen){
-        canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        var rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-    }
+	var canvas = canv;
+	if(canvas.requestFullScreen){
+        	canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        	var rect = canvas.getBoundingClientRect();
+        	canvas.width = rect.width;
+        	canvas.height = rect.height;
+    	}
+    	else if(canvas.webkitRequestFullScreen){
+        	canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        	var rect = canvas.getBoundingClientRect();
+        	canvas.width = rect.width;
+        	canvas.height = rect.height;
+    	}
+    	else if(canvas.mozRequestFullScreen){
+        	canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        	var rect = canvas.getBoundingClientRect();
+        	canvas.width = rect.width;
+        	canvas.height = rect.height;
+    	}
 }
 
 
