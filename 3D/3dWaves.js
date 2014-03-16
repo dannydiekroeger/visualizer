@@ -33,9 +33,11 @@ function WavesInit() {
 	vlightRadius = 200;
 	vlightDetail = 3;
 
-	initCanvas();
+	//initCanvas();
 	//remove non 3d canvas from screen
-	canv.remove();
+	//canv.remove();
+
+	initCanvasWebGL(); //this allows for 3D context //ADT
 
 	initCamera();
 	drawWaves();
@@ -53,8 +55,8 @@ function WavesInit() {
 
 //inits the THREE camera and addis it to a new THREE scene
 function initCamera(){
-	var width = canv.width;
-	var height = canv.height;
+	var width = canvWebGL.width; //references to the 3D context //ADT
+	var height = canvWebGL.height; //ADT
 	camera = new THREE.PerspectiveCamera(fov, width / height, near, far );
 	camera.position.z = zpos;
 	camera.position.y= ypos;
@@ -68,14 +70,13 @@ function initCamera(){
 //initializes a THREE renderer and adds its DOM element to the screen
 function initRenderer(){
 console.log("here");
-	var width = canv.width;
-	var height = canv.height;
+	var width = canvWebGL.width; //ADT
+	var height = canvWebGL.height; //ADT
 
-	renderer = new THREE.WebGLRenderer();
+	renderer = new THREE.WebGLRenderer({canvas: canvWebGL}); //ADT
 	//renderer = new THREE.CanvasRenderer({ canvas : canv });
 	renderer.setSize(width, height );
-	document.getElementById("screen").appendChild( renderer.domElement);
-
+	//document.getElementById("screen").appendChild( renderer.domElement); //this isn't needed //ADT
 
 }
 
