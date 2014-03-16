@@ -1,3 +1,7 @@
+var flowerSize= 60;
+var initFlowerRadius = 2;
+var explosionDuration = 400;
+var circleDilution = 10;
 
 function initNeon(){
 		initSVG();
@@ -20,44 +24,138 @@ function drawNeon(freqArray, waveArray, beat){
 	var amp=getTotalAmplitude(freqArray);
 	var maxScale = 95555;
 	var percent = amp/maxScale;
-	var maxRad = 30;
+	var maxRad = 15;
 	var radius = maxRad*amp/maxScale;
-	for(var i=0; i< freqArray.length; i+=50){
-			var fillColor=getNeonColor()
-
+	
+	if(beat){
+		var x =  Math.random() * (canvasWidth - 0) + 0;
+		var y =  Math.random() * (canvasHeight - 0) + 0;
+		var fillColor=getNeonColor()
+		
 		d3.select("svg")
 			.append("circle")
-			.attr("cx", i)
-			.attr("cy", freqArray[i])
-			.attr("r",radius)
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
 			.style("fill-opacity", .4)
 			.style("stroke", fillColor)
 			.style("fill", fillColor)
 			.transition()
-			.duration(600)
-			//.style("stroke-opacity",1e-6)
-			.attr("cy",500)
-			.remove();
-	}
+			.duration(explosionDuration)
+			.attr("cy", y+flowerSize)
+			.attr("r",radius)
+			.remove()
 	
-	/*
-	for(var i=0; i< waveArray.length; i++){
 		var fillColor=getNeonColor()
 		d3.select("svg")
-		.append("circle")
-		.attr("cx", i)
-		//.attr("cy", waveArray[i]+200)
-		.attr("cy", waveArray[i])
-		.attr("r", 2)
-		.style("fill-opacity", .4)
-		.style("stroke", fillColor)
-		.style("fill", fillColor)
-		.transition()
-		.duration(50)
-		.ease(Math.sqrt)
-		.style("stroke-opacity",1e-6)
-		.remove();
-	} */
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("r",radius)
+			.attr("cy", y-flowerSize)
+			.remove()	
+	
+		var fillColor=getNeonColor()	
+		d3.select("svg")
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("cy", y-flowerSize/Math.sqrt(2))
+			.attr("cx", x-flowerSize/Math.sqrt(2))
+			.attr("r",radius)
+			.remove()	
+			
+			var fillColor=getNeonColor()
+			d3.select("svg")
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("cy", y-flowerSize/Math.sqrt(2))
+			.attr("cx", x+flowerSize/Math.sqrt(2))
+			.attr("r",radius)
+			.remove()
+			
+			var fillColor=getNeonColor()
+			d3.select("svg")
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("cy", y+flowerSize/Math.sqrt(2))
+			.attr("cx", x-flowerSize/Math.sqrt(2))
+			.attr("r",radius)
+			.remove()
+			
+			var fillColor=getNeonColor()
+			d3.select("svg")
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("cy", y+flowerSize/Math.sqrt(2))
+			.attr("cx", x+flowerSize/Math.sqrt(2))
+			.attr("r",radius)
+			.remove()
+			
+		var fillColor=getNeonColor()
+		d3.select("svg")
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("cx", x-flowerSize)
+			.attr("r",radius)
+			.remove()
+			
+		var fillColor=getNeonColor()
+		d3.select("svg")
+			.append("circle")
+			.attr("cx", x)
+			.attr("cy", y)
+			.attr("r",initFlowerRadius)
+			.style("fill-opacity", .4)
+			.style("stroke", fillColor)
+			.style("fill", fillColor)
+			.transition()
+			.duration(explosionDuration)
+			.attr("cx", x+flowerSize)
+			.attr("r",radius)
+			.remove()
+	}
+	
 
 }	
 
