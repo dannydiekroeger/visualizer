@@ -191,8 +191,8 @@ function initSVG(){
 	canvWebGL.setAttribute("width", 0);
 	canvWebGL.setAttribute("height", 0);
 
-	var svgWidth = window.innerWidth - 225;
-	var svgHeight = window.innerHeight -150;
+	var svgWidth = canvasWidth;
+	var svgHeight = canvasHeight;
 
 	d3.select("#screen").style("background-color", "black")	
 	var svgContainer = d3.select("#screen").append("svg").attr("width", svgWidth).attr("height",svgHeight);
