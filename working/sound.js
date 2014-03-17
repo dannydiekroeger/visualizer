@@ -412,7 +412,7 @@ function goFullScreen(){
         	canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         	var rect = canvas.getBoundingClientRect();
 
-		if (activeCanvas == 2) { d3.select("svg").attr("width", svgWidth).attr("height",svgHeight); }
+		if (activeCanvas == 2) { d3.select("svg").attr("width", rect.width).attr("height",rect.height); }
 		else {
 	        	canvas.width = rect.width;
         		canvas.height = rect.height;
@@ -422,7 +422,7 @@ function goFullScreen(){
         	canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         	var rect = canvas.getBoundingClientRect();
 
-		if (activeCanvas == 2) { d3.select("svg").attr("width", svgWidth).attr("height",svgHeight); }
+		if (activeCanvas == 2) { d3.select("svg").attr("width", rect.width).attr("height",rect.height); }
 		else {
 	        	canvas.width = rect.width;
         		canvas.height = rect.height;
@@ -432,7 +432,7 @@ function goFullScreen(){
         	canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         	var rect = canvas.getBoundingClientRect();
 
-		if (activeCanvas == 2) { d3.select("svg").attr("width", svgWidth).attr("height",svgHeight); }
+		if (activeCanvas == 2) { d3.select("svg").attr("width", rect.width).attr("height",rect.height); }
 		else {
 	        	canvas.width = rect.width;
         		canvas.height = rect.height;
