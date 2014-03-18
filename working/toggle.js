@@ -42,7 +42,10 @@ function initToggleKeys() {
 	document.onkeydown = function(event) {
 		code = event.keyCode;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0e6dcfcbbf934b1f096703c49bcc6de0af300498
 =======
 >>>>>>> 0e6dcfcbbf934b1f096703c49bcc6de0af300498
 		if(code == 78) currToggledWorld++; //N
