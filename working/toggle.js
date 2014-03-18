@@ -30,20 +30,21 @@ var total2DWorlds = 7;
 function loadToggle(toggleType) {
 	if(toggleType == 0) {
 		initGraphics = init2DToggle;
-		updateGraphics = draw2Dtoggle;
+		updateGraphics = draw2DToggle;
 	} else if (toggleType == 1) {
 		initGraphics = init3DToggle;
-		updateGraphics = draw3Dtoggle;
+		updateGraphics = draw3DToggle;
 	}
 	initSound();
 }
 
 function initToggleKeys() {
-	document.onkeydown = function(event);
-	code = event.keyCode;
+	document.onkeydown = function(event) {
+		code = event.keyCode;
 
-	if(code == 78) currToggledWorld++; //N
-	if(code == 66) currToggledWorld--; //B
+		if(code == 78) currToggledWorld++; //N
+		if(code == 66) currToggledWorld--; //B
+	}
 }
 
 /**********************************
@@ -59,7 +60,7 @@ function init2DToggle() {
 	load2DWorld();	
 }
 
-function draw2DTOggle(freqArray, waveArray, beat) {
+function draw2DToggle(freqArray, waveArray, beat) {
 	load2DWorld();
 	toggleDraw(freqArray, waveArray, beat);
 }
@@ -71,7 +72,7 @@ function load2DWorld() {
 
 			initNeon();
 			toggleDraw = drawNeon;
-/*
+
 	switch(currToggledWorld) 
 	{
 		case 0:
@@ -103,7 +104,7 @@ function load2DWorld() {
 			toggleDraw = drawBars;		
 	}
 
-*/
+
 }
 
 /**********************************
