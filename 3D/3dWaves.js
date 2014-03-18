@@ -33,10 +33,6 @@ function WavesInit() {
 	vlightRadius = 200;
 	vlightDetail = 3;
 
-	//initCanvas();
-	//remove non 3d canvas from screen
-	//canv.remove();
-
 	initCanvasWebGL(); //this allows for 3D context //ADT
 
 	initCamera();
