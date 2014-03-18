@@ -10,7 +10,7 @@ var newfluxImageData;
 var closestNotes;
 var width;
 var height;
-var fluxim;
+//var fluxim;
 var invert;
 var opacityScale;
 var pixels;
@@ -34,9 +34,10 @@ var fluxUpdatePixels;
 var fluxUpdatePixelsVal;
 
 function initFlux() {
-		var imsrc = "frac2.jpg";
+		//var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
+			console.log("here");
 			imsrc = "../serenery/images/"+imsrc;
 		}
 		catch(err){
@@ -45,14 +46,17 @@ function initFlux() {
 		    canv.setAttribute("style", "background:black");
 		    imsrc = "images/"+imsrc;
 		}
+		
 	    fluxCentX = canv.width/2.0;
 	    fluxCentY = canv.height/2.0;
 	    console.log(fluxCentX);
 	    console.log(fluxCentY);
-	    initKeyboard();
-	    fluxim = new Image();
-		fluxim.onload = imageLoadedFlux;
-		fluxim.src = imsrc
+	    fluxInitKeyboard();
+	    
+	    //fluxim = new Image();
+		//fluxim.onload = imageLoadedFlux;
+		//fluxim.src = imsrc;
+		
 		
 		fluxRandMiddle = false;
 		fluxArrayOffset = 100;
@@ -80,8 +84,7 @@ function loadFlux() {
 }
 
 function imageLoadedFlux(ev) {
-    fluxim = ev.target; // the image
-
+    var fluxim = ev.target; // the image
     // read the width and height of the canvas
     width = canv.width;
     height = canv.height;
@@ -91,9 +94,9 @@ function imageLoadedFlux(ev) {
 	fluxInitLiveAndDead();
     fluxImageData = ctx.getImageData(0, 0, width, height);
     //ctx.putfluxImageData(fluxImageData, 0, 0);
-    for (y = 0; y < height; y++) {
+    for (var y = 0; y < height; y++) {
 		inpos = y * width * 4; // *4 for 4 ints per pixel
-	    for (x = 0; x < width; x++) {
+	    for (var x = 0; x < width; x++) {
 	    		var index = inpos;
 	        	var r = fluxImageData.data[inpos++];
 	        	var g = fluxImageData.data[inpos++];
@@ -119,6 +122,7 @@ function imageLoadedFlux(ev) {
 	        	inpos++;
 	    }
    	}
+   	ctx.putImageData(fluxImageData,0,0);
    	initFluxPixels();
 }
 
@@ -137,8 +141,6 @@ function calculateIndex(pixel) {
 }
 
 function updateFlux(array, something, beat) {
-	//if(fluxLivePixels.length > 1)console.log(fluxLivePixels[0].index);
-	//if(beat) velo += 100;
 	fluxUpdatePixels(array);
 	ctx.putImageData(fluxImageData,0,0);
 }
@@ -282,8 +284,8 @@ function updatePixelFromRad(pixel) {
 	var xCoord = Math.floor(pixel.radius * Math.cos(pixel.theta));
 	var yCoord = Math.floor(pixel.radius * Math.sin(pixel.theta));
 	pixel.coord = {"x":xCoord,"y":yCoord};
-	pixel.x = xCoord+fluxCentX;
-	pixel.y = yCoord+fluxCentY;
+	pixel.x = Math.floor(xCoord+fluxCentX);
+	pixel.y = Math.floor(yCoord+fluxCentY);
 	/*For Respawn in center
 	if(pixel.x > canvas.width || pixel.x < 0 || pixel.y > canvas.height || pixel.y < 0) {
 		pixel.x = fluxCentX;
@@ -382,11 +384,14 @@ function addRandomPixelsFlux(num) {
 		var lastPixel = fluxDeadPixels[fluxDeadPixels.length-1];
 		fluxDeadPixels[index] = lastPixel;
 		fluxDeadPixels.pop();
+		if(i==0)console.log(pixel);
 		if(pixel) {
 			fluxLivePixels.push(pixel);
 			fluxImageData.data[pixel.index+3] = 255;
 		}	
 	}
+	console.log('livepix');
+	console.log(fluxLivePixels[0]);
 }
 
 function removeRandomPixelsFlux(num, note) {
@@ -423,7 +428,7 @@ function fluxGetDistanceFromCenter(x,y) {
 	return Math.sqrt((x-fluxCentX)*(x-fluxCentX)+(y-fluxCentY)*(y-fluxCentY));
 }
 
-function initKeyboard() {
+function fluxInitKeyboard() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		if(code == 49) goFullScreen(); // 1

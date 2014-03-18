@@ -19,8 +19,6 @@ var song = "audio/three.mp3";
 // ------------------------------------------------------------//
 
 
-// You can basically ignore everything below here //
-
 
 //         
 //     |---|   |---| 
@@ -138,7 +136,13 @@ function initSoundFirstTime() {
 	for(var i = 0; i < length; i++) {
 		levelHistory.push(0);
 	}
-
+	
+	var imsrc = "images/frac2.jpg";
+	var fluxim = new Image();
+	fluxim.onload = imageLoadedFlux;
+	fluxim.src = imsrc;
+	fluxCentX = canv.width/2.0;
+	fluxCentY = canv.height/2.0;
 	initNavigator();
 	initSound();
 }
