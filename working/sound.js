@@ -143,15 +143,6 @@ function initSoundFirstTime() {
 	initSound();
 }
 
-function loadFluxImage() {
-	var fluxim = new Image();
-	fluxim.onload = imageLoadedFlux;
-	fluxim.src = fluxImsrc;
-	fluxCentX = canv.width/2.0;
-	fluxCentY = canv.height/2.0;
-}
-
-
 function initSound() {
 	if (! window.AudioContext) {
 		if (! window.webkitAudioContext) {

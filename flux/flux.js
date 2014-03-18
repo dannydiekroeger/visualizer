@@ -5,15 +5,14 @@
 //         - refers to "ctx" which is defined in sound.js 
 
 var maxAmp;
+var fluxPixels;
 var fluxImageData;
 var newfluxImageData;
-var closestNotes;
 var width;
 var height;
 //var fluxim;
 var invert;
 var opacityScale;
-var pixels;
 var fluxCentX;
 var fluxCentY;
 var fluxImageDataArray;
@@ -32,6 +31,15 @@ var fluxRandMiddle;
 var fluxArrayOffset;
 var fluxUpdatePixels;
 var fluxUpdatePixelsVal;
+var fluxToggle;
+
+/*
+left to-do:
+transitions between flux and serenery
+incorporate picksle + transition
+transition between radial and gravitational
+
+*/
 
 function initFlux() {
 		//var imsrc = "frac2.jpg";
@@ -49,7 +57,9 @@ function initFlux() {
 	    fluxCentX = canv.width/2.0;
 	    fluxCentY = canv.height/2.0;
 	    fluxInitKeyboard();
-	    
+	    centX = canv.width/2.0;
+	    centY = canv.width/4.0;
+
 	    //fluxim = new Image();
 		//fluxim.onload = imageLoadedFlux;
 		//fluxim.src = imsrc;
@@ -71,12 +81,31 @@ function initFlux() {
 		fluxRotationTheta = 0;
 		fluxRotation = .01;
 		fluxRadius = 100;
+		accentuate = true;
 		//fluxImageData = ctx.getfluxImageData(0,0,canv.width,canv.height);
 }
+
+
+function loadFluxImage() {
+	var fluxim = new Image();
+	fluxim.onload = imageLoadedFlux;
+	fluxim.src = fluxImsrc;
+	fluxCentX = canv.width/2.0;
+	fluxCentY = canv.height/2.0;
+	centX = canv.width/2.0;
+	centY = canv.width/4.0;
+	imageNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
+	closestNotes = new Array();
+	oldNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
+	fluxPixels = new Array();
+}
+
 
 function loadFlux() {
 	initGraphics = initFlux;
 	updateGraphics = updateFlux;
+	fluxToggle = 0;
+	//updateGraphics = updateFluxScreenSerenery;
 	initSound();
 }
 
@@ -89,6 +118,7 @@ function imageLoadedFlux(ev) {
     ctx.drawImage(fluxim, 0, 0);
     // get all canvas pixel data
 	fluxInitLiveAndDead();
+	initPixelsByNote();
     fluxImageData = ctx.getImageData(0, 0, width, height);
     //ctx.putfluxImageData(fluxImageData, 0, 0);
     for (var y = 0; y < height; y++) {
@@ -99,28 +129,52 @@ function imageLoadedFlux(ev) {
 	        	var g = fluxImageData.data[inpos++];
 	        	var b = fluxImageData.data[inpos++];
 	        	var alpha = fluxImageData.data[inpos];
-	        	//var note = getClosestNote([r,g,b]);
+	        	var note = getClosestNote([r,g,b]);
 	        	var pixel = new Object();
 	        	//pixel.r = r;
 	        	//pixel.g = g;
 	        	//pixel.b = b;
 	        	//pixel.alpha = alpha;
-	        	//pixel.note = note;
+	        	pixel.note = note;
 	        	pixel.index = index;
 	        	pixel.x = x;
 	        	pixel.y = y;
 	        	pixel.velocity = [0,0];
 	        	pixel.coord = fluxGetCoord(pixel);
 				pixel = setRadAndTheta(pixel);
+				pixel.distanceFromCenter = getDistanceFromCenter(x,y);
+	        	fluxPixels[fluxPixels.length] = pixel;
 	        	if(!isBlack(pixel)) {
 	        		fluxDeadPixels.push(pixel);
 	        		fluxImageData.data[pixel.index+3] = 0;
+	        		livePixels[note].push(pixel);
+	        		oldNoteCounts[note]++;
+	        		imageNoteCounts[note] = imageNoteCounts[note]+1;
 	        	}
+	        	closestNotes[inpos] = note
 	        	inpos++;
 	    }
    	}
+   	fluxPixels.sort(function(a,b){return a.distanceFromCenter - b.distanceFromCenter});
    	ctx.putImageData(fluxImageData,0,0);
    	initFluxPixels();
+}
+
+function updateFluxScreenSerenery(array) {
+	var maxBin = getMaxFreqBin(array);
+	if(accentuate) array[maxBin]*=3;
+	var amp = getTotalAmplitude(array);
+	if(amp > maxAmp) maxAmp = amp;
+
+	//averageHues(getMaxFreqBin(array));
+	//updateColorize(array);
+	//updateRandomColorize(amp);
+	//ctx.putImageData(imageData,0,0);
+	
+	//ctx.putImageData(imageData,0,0);
+	updateRandomPixels(array);
+	ctx.clearRect(0,0,canv.width,canv.height);
+	ctx.putImageData(fluxImageData,0,0);
 }
 
 function setRadAndTheta(pixel) {
@@ -426,29 +480,34 @@ function fluxInitKeyboard() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		if(code == 49) goFullScreen(); // 1
-		else if(code == 67) toggleCircle(); // C
-		else if(code == 68) toggleDoubleBars(); // D
 		else if(code == 70) toggleUpdateFluxPixels();// F
-		else if(code == 75) fluxDecreaseRad();
-		else if(code == 76) fluxIncreaseRad();
-		else if(code == 65) toggleColor(); // A
-		else if(code == 90) toggleFlippedBars(); // Z
-		else if(code == 77) toggleMiddleBars(); // M
+		else if(code == 75) fluxDecreaseRad(); // K
+		else if(code == 76) fluxIncreaseRad(); // L
 		else if(code==190) lowerOpacityFactor(); // Period
 		else if(code==191) increaseOpacityFactor(); // For. Slash
 		else if(code >=37 && code <=40) fluxCatchArrowKey(code); // Arrow Keys
-		else if(code==80) toggleBallDrop(); // P
+		else if(code==79) fluxToggleScene(); // P
+	}
+}
+
+function fluxToggleScene() {
+	if(fluxToggle == 0) {
+		updateGraphics = updateFluxScreenSerenery;
+		fluxToggle = 1;
+	} else {
+		updateGraphics = updateFlux;
+		fluxToggle = 0;
 	}
 }
 
 function fluxDecreaseRad() {
 	if (fluxRadius >= 0) {
-		fluxRadius -= 1;
+		fluxRadius -= 5;
 	}
 }
 
 function fluxIncreaseRad() {
-	fluxRadius += 1;
+	fluxRadius += 5;
 }
 
 function toggleUpdateFluxPixels() {
@@ -462,7 +521,7 @@ function toggleUpdateFluxPixels() {
 }
 
 function fluxCatchArrowKey(code) {
-	var scale = 2;
+	var scale = 5;
 	if(code == 37) fluxCentX -= scale;
 	else if(code == 38) fluxCentY -= scale;
 	else if(code==39) fluxCentX += scale;
