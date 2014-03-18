@@ -40,7 +40,7 @@ function getRandomScene(){
 		initRetro();
 		randomDraw=drawRetro;
 	}else{
-		initFreqBars()
+		initFreqBars();
 		randomDraw=drawBars;
 	}
 	
