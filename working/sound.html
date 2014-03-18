@@ -1,218 +1,224 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Sound</title>
-		<link rel="stylesheet" type="text/css" href="styles.css" />
-		
-		<!include the d3 library>
-		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>	
-		
-		<!include the d3 jquery>
-		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-		
-		<!include the THREE.js library>
-		<script src="../THREE/build/three.min.js"></script>
-		<script src='../THREE/examples/js/libs/dat.gui.min.js'></script>
-		<script src="../THREE/examples/js/libs/stats.min.js"></script>
-		
-		<!include the THREE.js postprocessing features>
-		<script src="../THREE/examples/js/postprocessing/EffectComposer.js"></script>
-		<script src="../THREE/examples/js/postprocessing/RenderPass.js"></script>
-		<script src="../THREE/examples/js/postprocessing/ShaderPass.js"></script>
-		<script src="../THREE/examples/js/postprocessing/MaskPass.js"></script> 
-		<script src="../THREE/examples/js/postprocessing/BloomPass.js"></script> 
-		
-		<!include the THREE.js shaders>
-		<script src="../THREE/examples/js/shaders/CopyShader.js"></script>
-		<script src="../THREE/examples/js/shaders/BleachBypassShader.js"></script>
-		<script src="../THREE/examples/js/shaders/ColorifyShader.js"></script>
-		<script src="../THREE/examples/js/shaders/DotScreenShader.js"></script>
-		<script src="../THREE/examples/js/shaders/BrightnessContrastShader.js"></script>
-		<script src="../THREE/examples/js/shaders/ColorCorrectionShader.js"></script>
-		<script src="../THREE/examples/js/shaders/ConvolutionShader.js"></script>
-		<script src="../THREE/examples/js/shaders/FilmShader.js"></script>	
-		<script src="../THREE/examples/js/shaders/FocusShader.js"></script>
-		<script src="../THREE/examples/js/shaders/HorizontalBlurShader.js"></script>
-		<script src="../THREE/examples/js/shaders/HueSaturationShader.js"></script>
-		<script src="../THREE/examples/js/shaders/KaleidoShader.js"></script>
-		<script src="../THREE/examples/js/shaders/LuminosityShader.js"></script>
-		<script src="../THREE/examples/js/shaders/MirrorShader.js"></script>
-		<script src="../THREE/examples/js/shaders/RGBShiftShader.js"></script>
-		<script src="../THREE/examples/js/shaders/SepiaShader.js"></script>
-		<script src="../THREE/examples/js/shaders/VerticalBlurShader.js"></script>
-		<script src="../THREE/examples/js/shaders/VignetteShader.js"></script>
+<head>
+	<title>Sound</title>
+	<link rel="stylesheet" type="text/css" href="styles.css" />
 
-		<!include all of our scene javascript files>
-		<script src="main.js" type="text/javascript"></script>
-		<script src="../oscillator/oscillator.js" type="text/javascript"></script>
-		<script src="../neon/neon.js" type="text/javascript"></script>
-		<script src="../rainbowLine/RainbowLine.js" type="text/javascript"></script>
-		<script src="../retroCircles/retroCircle.js" type="text/javascript"></script>
-		<script src="../serenery/serenery.js" type="text/javascript"></script>
-		<script src="../flux/flux.js" type="text/javascript"></script>
-		<script src="../picksle/picksle.js" type="text/javascript"></script>
-		<script src="../3D/StarParts.js" type="text/javascript"></script>
-		<script src="../3D/Donuts.js" type="text/javascript"></script>		
-		<script src="../3D/3dWaves.js" type="text/javascript"></script>
-		<script src="../3D/kaleido.js" type="text/javascript"></script>
-		<script src="../3D/dots.js" type="text/javascript"></script>
-		<script type="text/javascript" src="random.js"></script>
-		<script type="text/javascript" src="mygraphics.js"></script>
-		
-		<!include our main audio javascript file>
-		<script type="text/javascript" src="sound.js"></script>
+	<!include the d3 library>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>	
 
+	<!include the d3 jquery>
+	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 
-<style>
-			/* tell the SVG path to be a thin blue line without any area fill */
-			path {
-				stroke: white;
-				stroke-width: 1;
-				fill: none;
-			}
-			
-			.axis {
-			  shape-rendering: crispEdges;
-			}
+	<!include the THREE.js library>
+	<script src="../THREE/build/three.min.js"></script>
+	<script src='../THREE/examples/js/libs/dat.gui.min.js'></script>
+	<script src="../THREE/examples/js/libs/stats.min.js"></script>
 
-			.x.axis line {
-			  stroke: black;
-			}
+	<!include the THREE.js postprocessing features>
+	<script src="../THREE/examples/js/postprocessing/EffectComposer.js"></script>
+	<script src="../THREE/examples/js/postprocessing/RenderPass.js"></script>
+	<script src="../THREE/examples/js/postprocessing/ShaderPass.js"></script>
+	<script src="../THREE/examples/js/postprocessing/MaskPass.js"></script> 
+	<script src="../THREE/examples/js/postprocessing/BloomPass.js"></script> 
 
-			.x.axis .minor {
-			  stroke-opacity: .5;
-			}
+	<!include the THREE.js shaders>
+	<script src="../THREE/examples/js/shaders/CopyShader.js"></script>
+	<script src="../THREE/examples/js/shaders/BleachBypassShader.js"></script>
+	<script src="../THREE/examples/js/shaders/ColorifyShader.js"></script>
+	<script src="../THREE/examples/js/shaders/DotScreenShader.js"></script>
+	<script src="../THREE/examples/js/shaders/BrightnessContrastShader.js"></script>
+	<script src="../THREE/examples/js/shaders/ColorCorrectionShader.js"></script>
+	<script src="../THREE/examples/js/shaders/ConvolutionShader.js"></script>
+	<script src="../THREE/examples/js/shaders/FilmShader.js"></script>	
+	<script src="../THREE/examples/js/shaders/FocusShader.js"></script>
+	<script src="../THREE/examples/js/shaders/HorizontalBlurShader.js"></script>
+	<script src="../THREE/examples/js/shaders/HueSaturationShader.js"></script>
+	<script src="../THREE/examples/js/shaders/KaleidoShader.js"></script>
+	<script src="../THREE/examples/js/shaders/LuminosityShader.js"></script>
+	<script src="../THREE/examples/js/shaders/MirrorShader.js"></script>
+	<script src="../THREE/examples/js/shaders/RGBShiftShader.js"></script>
+	<script src="../THREE/examples/js/shaders/SepiaShader.js"></script>
+	<script src="../THREE/examples/js/shaders/VerticalBlurShader.js"></script>
+	<script src="../THREE/examples/js/shaders/VignetteShader.js"></script>
 
-			.x.axis path {
-			  display: none;
-			}
+	<!include all of our scene javascript files>
+	<script src="main.js" type="text/javascript"></script>
+	<script src="../oscillator/oscillator.js" type="text/javascript"></script>
+	<script src="../neon/neon.js" type="text/javascript"></script>
+	<script src="../rainbowLine/RainbowLine.js" type="text/javascript"></script>
+	<script src="../retroCircles/retroCircle.js" type="text/javascript"></script>
+	<script src="../serenery/serenery.js" type="text/javascript"></script>
+	<script src="../flux/flux.js" type="text/javascript"></script>
+	<script src="../picksle/picksle.js" type="text/javascript"></script>
+	<script src="../3D/StarParts.js" type="text/javascript"></script>
+	<script src="../3D/Donuts.js" type="text/javascript"></script>		
+	<script src="../3D/3dWaves.js" type="text/javascript"></script>
+	<script src="../3D/kaleido.js" type="text/javascript"></script>
+	<script src="../3D/dots.js" type="text/javascript"></script>
+	<script type="text/javascript" src="random.js"></script>
+	<script type="text/javascript" src="mygraphics.js"></script>
 
-			.y.axis line, .y.axis path {
-			  fill: none;
-			  stroke: black;
-			}
-		</style>
+	<!include our main audio javascript file>
+	<script type="text/javascript" src="sound.js"></script>
 
 
-	</head>
-	<body onload="initSoundFirstTime()">
-		<div id = 'title'>
-			<h1 align = "center" style="font-family:verdana; color:#A9BCF5">DEEZY VISUALIZER</h1>
+	<style>
+	/* tell the SVG path to be a thin blue line without any area fill */
+	path {
+		stroke: white;
+		stroke-width: 1;
+		fill: none;
+	}
+
+	.axis {
+		shape-rendering: crispEdges;
+	}
+
+	.x.axis line {
+		stroke: black;
+	}
+
+	.x.axis .minor {
+		stroke-opacity: .5;
+	}
+
+	.x.axis path {
+		display: none;
+	}
+
+	.y.axis line, .y.axis path {
+		fill: none;
+		stroke: black;
+	}
+	</style>
+
+
+</head>
+<body onload="initSoundFirstTime()">
+	<div id = 'title'>
+		<h1 align = "center" style="font-family:verdana; color:#A9BCF5">DEEZY VISUALIZER</h1>
+	</div>
+	<div id = 'all'>
+		<div id = 'screen'>
+			<canvas id="canvas" mozfullscreenchange="fullScreenChange()"></canvas>
 		</div>
 		<div id = 'setup'>
 			<div id = 'forms'>
 				<input type = "file" id = "selectFile">
-				<button id="playUpload" onclick="playUpload()" class = "button">Play Sound</button>
-				<button id="next" onclick="next()" class = "button">Next</button>
 				<button id="back" onclick="back()" class = "button">Back</button>
+				<button id="playUpload" onclick="playUpload()" class = "button">Play</button>
+				<button id="next" onclick="next()" class = "button">Next</button>
+
 				<!--<form name = "urlForm" action="">-->
-				URL Audio: <!--<input type="text" name="urlText" id="soundUrl">-->
+
+				URL Audio: 
 				<select id="soundUrl">
-				<option value="audio/satisfy.mp3">Satisfy</option>
-				<option value="audio/cake.mp3">Cake</option>
-				<option value="audio/death.mp3">Death</option>
-				<option value="audio/heart.mp3">Heart</option>
-				<option value="audio/jetpack.mp3">Jetpack</option>
-				<option value="audio/nirvana.mp3">Nirvana</option>
-				<option value="audio/pianoman.mp3">Pianoman</option>
-				<option value="audio/requiem.mp3">Requiem</option>
-				<option value="audio/saveferris.mp3">SaveFerris</option>
-				<option value="audio/three.mp3">Bob</option>
+					<option value="audio/satisfy.mp3">Satisfy</option>
+					<option value="audio/cake.mp3">Cake</option>
+					<option value="audio/death.mp3">Death</option>
+					<option value="audio/heart.mp3">Heart</option>
+					<option value="audio/jetpack.mp3">Jetpack</option>
+					<option value="audio/nirvana.mp3">Nirvana</option>
+					<option value="audio/pianoman.mp3">Pianoman</option>
+					<option value="audio/requiem.mp3">Requiem</option>
+					<option value="audio/saveferris.mp3">SaveFerris</option>
+					<option value="audio/three.mp3">Bob</option>
 
 				</select>
 				<input id="soundUrlButton" type="submit" value="Submit" onclick="changeSound()">
-				IMG Image: <!--<input type="text" name="imgText" id="imageImg">-->
+				IMG Image:
 				<select id="imageImg">
-				<option value="biggie.jpg"> Biggie </option>
-				<option value="everest.jpg"> Everest </option>
-				<option value="frac1.jpg"> Frac1 </option>
-				<option value="frac2.jpg"> Frac2 </option>
-				<option value="frac3.jpg"> Frac3 </option>
-				<option value="frac4.jpg"> Frac4 </option>
-				<option value="frac5.jpg"> Frac5 </option>
-				<option value="mychem.jpg"> Chem </option>
-				<option value="night.jpg"> Night </option>
-				<option value="rgb.jpg"> RGB </option>
-				<option value="scene1.jpg"> Scene </option>
+					<option value="biggie.jpg"> Biggie </option>
+					<option value="everest.jpg"> Everest </option>
+					<option value="frac1.jpg"> Frac1 </option>
+					<option value="frac2.jpg"> Frac2 </option>
+					<option value="frac3.jpg"> Frac3 </option>
+					<option value="frac4.jpg"> Frac4 </option>
+					<option value="frac5.jpg"> Frac5 </option>
+					<option value="mychem.jpg"> Chem </option>
+					<option value="night.jpg"> Night </option>
+					<option value="rgb.jpg"> RGB </option>
+					<option value="scene1.jpg"> Scene </option>
 				</select>
-				<input id="imageImgButton" type="submit" value="Submit" onclick="changeSereneryImg()"><br>
+				<input id="imageImgButton" type="submit" value="Submit" onclick="changeSereneryImg()">
+				<button id="play" onclick="playClick()" class = "button">Play Sound</button>
+				<button id="micro" onclick="microClick()" class = "button">Microphone</button>
+				<button id="gofull" onclick="goFullScreen()" class="button">Go Fullscreen</button>
 				<!--</form>-->
 			</div>
 
-			<button id="play" onclick="playClick()" class = "button">Play Sound</button>
-			<button id="micro" onclick="microClick()" class = "button">Microphone</button>
-			<button id="gofull" onclick="goFullScreen()" class="button">Go Fullscreen</button>
+
 		</div>
-		<div id= 'mainarea'>
+
 		<div id='cssmenu'>
 			<ul>
-			   <li><a href='#'><span>Effects</span></a></li>
+				<li><a href='#'><span>Effects</span></a></li>
 				<li><a><span>Freq Bars</span></a>
-				  <ul>
-					 <li><a onclick="loadFreqBars()">Load Freq Bars</a></li>
-				  </ul>
-			   </li>
-			   <li><a href='#'><span>Oscillator</span></a>
-				  <ul>
-					 <li><a onclick="loadOscillator()">Load Oscillator</a></li>
-				  </ul>
-			   </li>
-			   <li><a href='#'><span>Neon</span></a>
-				  <ul>
-					 <li><a onclick="loadNeon()">Load Neon</a></li>
-					<!-- <li><a onclick="loadNeon2()">Load Neon 2</a></li>-->
-				  </ul>
-			   </li>
+					<ul>
+						<li><a onclick="loadFreqBars()">Load Freq Bars</a></li>
+					</ul>
+				</li>
+				<li><a href='#'><span>Oscillator</span></a>
+					<ul>
+						<li><a onclick="loadOscillator()">Load Oscillator</a></li>
+					</ul>
+				</li>
+				<li><a href='#'><span>Neon</span></a>
+					<ul>
+						<li><a onclick="loadNeon()">Load Neon</a></li>
+						<!-- <li><a onclick="loadNeon2()">Load Neon 2</a></li>-->
+					</ul>
+				</li>
 
-			  <li><a href='#'><span>Rainbow</span></a>
-				  <ul>
-					 <li><a onclick="loadRainbowLine(0)">Load Rainbow</a></li>	
-					 <li><a onclick="loadRainbowLine(1)">Load Rainbow, Decreased Range</a></li>	
-					 <li><a onclick="loadRainbowLine(2)">Load Rainbow With Wave</a></li>	
-					 <li><a onclick="loadRainbowLine(3)">Load Rainbow With Wave, Decreaded Range</a></li>
-				  </ul>
-			   </li>
-			  <li><a href='#'><span>Retro</span></a>
-				  <ul>
-					 <li><a onclick="loadRetro(0)">Load Retro</a></li>
-			        	 <li><a onclick="loadRetro(1)">Load Retro with Box</a></li>
-			        	 <li><a onclick="loadRetro(2)">Load Retro with Gradient Box</a></li>
-					 <li><a onclick="loadRetro(3)">Load Retro with Beat</a></li>
-				  </ul>
-			   </li>
-			   <li><a href='#'><span>Serenery</span></a>
-				  <ul>
-					 <li><a onclick="loadSerenery()">Load Image</a></li>
-					 <li><a onclick="loadFlux()">Load Flux</a></li>
-					 <li><a onclick="loadPicksle()">Load Picksle</a></li>
-				  </ul>
-			   </li>
+				<li><a href='#'><span>Rainbow</span></a>
+					<ul>
+						<li><a onclick="loadRainbowLine(0)">Load Rainbow</a></li>	
+						<li><a onclick="loadRainbowLine(1)">Load Rainbow, Decreased Range</a></li>	
+						<li><a onclick="loadRainbowLine(2)">Load Rainbow With Wave</a></li>	
+						<li><a onclick="loadRainbowLine(3)">Load Rainbow With Wave, Decreaded Range</a></li>
+					</ul>
+				</li>
+				<li><a href='#'><span>Retro</span></a>
+					<ul>
+						<li><a onclick="loadRetro(0)">Load Retro</a></li>
+						<li><a onclick="loadRetro(1)">Load Retro with Box</a></li>
+						<li><a onclick="loadRetro(2)">Load Retro with Gradient Box</a></li>
+						<li><a onclick="loadRetro(3)">Load Retro with Beat</a></li>
+					</ul>
+				</li>
+				<li><a href='#'><span>Serenery</span></a>
+					<ul>
+						<li><a onclick="loadSerenery()">Load Image</a></li>
+						<li><a onclick="loadFlux()">Load Flux</a></li>
+						<li><a onclick="loadPicksle()">Load Picksle</a></li>
+					</ul>
+				</li>
 
-			   <li><a href='#'><span>3D</span></a>
-				  <ul>
-					 <li><a onclick="loadStarParticles()">Load Stars</a></li>
-					 <li><a onclick="loadDonuts(0)">Load Freq Donuts</a></li>
-					 <li><a onclick="loadDonuts(1)">Load Slinky Donuts</a></li>
-					 <li><a onclick="loadWaves()">Load Waves</a></li>
-					 <li><a onclick="loadKaleido()">Load Kaleido</a></li>
-					 <li><a onclick="loadDots()">Load Dots</a></li>
-				  </ul>
-			   </li>
+				<li><a href='#'><span>3D</span></a>
+					<ul>
+						<li><a onclick="loadStarParticles()">Load Stars</a></li>
+						<li><a onclick="loadDonuts(0)">Load Freq Donuts</a></li>
+						<li><a onclick="loadDonuts(1)">Load Slinky Donuts</a></li>
+						<li><a onclick="loadWaves()">Load Waves</a></li>
+						<li><a onclick="loadKaleido()">Load Kaleido</a></li>
+						<li><a onclick="loadDots()">Load Dots</a></li>
+					</ul>
+				</li>
 
 
-			   <li><a href='#'><span>Random</span></a>
-				  <ul>
-					 <li><a onclick="loadRandom()">Load Random</a></li>
-				  </ul>
-			   </li>
-			   <li><a href="#" onClick="MyWindow=window.open('help.html','MyWindow',width=600,height=300); return false;"><span>Help</span></a></li>
+				<li><a href='#'><span>Random</span></a>
+					<ul>
+						<li><a onclick="loadRandom()">Load Random</a></li>
+					</ul>
+				</li>
+				<li><a href="#" onClick="MyWindow=window.open('help.html','MyWindow',width=600,height=300); return false;"><span>Help</span></a></li>
 			</ul>
-	</div>
-		<div id = 'screen'>
-		<canvas id="canvas" mozfullscreenchange="fullScreenChange()"></canvas>
 		</div>
+		
 	</div>
 
 
-	</body>
+
+</body>
 </html>

@@ -31,21 +31,21 @@ var song = "audio/three.mp3";
 //     ---      ---
 //       --------
 //
-	var context;
-	var audioBuffer;
-	var sourceNode;
-	var analyser;
-	var javascriptNode;
-	var canv;
-	var ctx;
-	var canvWebGL;
-	var gradient;
-	var canvasWidth;
-	var canvasHeight;
-	var maxBinCount;
-	var filePlaylist;
-	var plIndicator = 0;
-	var plSize = 0;
+var context;
+var audioBuffer;
+var sourceNode;
+var analyser;
+var javascriptNode;
+var canv;
+var ctx;
+var canvWebGL;
+var gradient;
+var canvasWidth;
+var canvasHeight;
+var maxBinCount;
+var filePlaylist;
+var plIndicator = 0;
+var plSize = 0;
 
 	var activeCanvas = 0; // 0 = 2d, 1 = 3d, 2 = d3
 	
@@ -60,43 +60,45 @@ var song = "audio/three.mp3";
 	var BEAT_MIN = 0.20; //a volume less than this is no beat
 
 
-$(document).ready(function() {
-	$("#selectFile").change(function(e) {
-        var file = e.originalEvent.srcElement.files[0];
-        console.log(e.originalEvent.srcElement.files[0].name);
-        filePlaylist[plSize] = file;
-        plSize++;
-	});
-}); 
+	$(document).ready(function() {
+		$("#selectFile").change(function(e) {
+			var file = e.originalEvent.srcElement.files[0];
+			console.log(e.originalEvent.srcElement.files[0].name);
+			filePlaylist[plSize] = file;
+			plSize++;
+		});
+	}); 
 
-function next(){
-	if(plIndicator < plSize-1){
-		plIndicator ++;
-		playUpload();
+	function next(){
+		if(plIndicator < plSize-1){
+			plIndicator ++;
+			playUpload();
+		}
 	}
-}
 
-function back(){
-	if(plIndicator > 0){
-		plIndicator --;
-		playUpload();
+	function back(){
+		if(plIndicator > 0){
+			plIndicator --;
+			playUpload();
+		}
 	}
-}
 
-function playUpload() {
-		var reader = new FileReader();
-        clearNodes();
-		setupAudioNodes();
+	function playUpload() {
+		if(plSize>0){
+			var reader = new FileReader();
+			clearNodes();
+			setupAudioNodes();
 
 		//Add for loop for all playlist elements, need callback from playSound
-        reader.onloadend = function() {
-             context.decodeAudioData(reader.result, function(buffer) {
+		reader.onloadend = function() {
+			context.decodeAudioData(reader.result, function(buffer) {
                 // when the audio is decoded play the sound
                 playSound(buffer);
             }, onError);
-        }
-        reader.readAsArrayBuffer(filePlaylist[plIndicator]);
+		}
+		reader.readAsArrayBuffer(filePlaylist[plIndicator]);
 	}
+}
 
 
 //Needed because there two canvases that need to be build once
@@ -113,8 +115,8 @@ function initSoundFirstTime() {
 	}
 	context = new AudioContext();
 
-	canvasWidth = window.innerWidth - 225;										// relocated from initCanvas()
-	canvasHeight = window.innerHeight - 150;									// relocated from initCanvas()
+	canvasWidth = window.innerWidth - 30;										// relocated from initCanvas()
+	canvasHeight = window.innerHeight-125;									// relocated from initCanvas()
 	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );		// relocated from initCanvas()
 
 	// create 2d canvas context
@@ -131,7 +133,7 @@ function initSoundFirstTime() {
 
 	var length = 256;
 	for(var i = 0; i < length; i++) {
-	    levelHistory.push(0);
+		levelHistory.push(0);
 	}
 
 	initNavigator();
@@ -142,16 +144,16 @@ function initSoundFirstTime() {
 
 function initSound() {
 	if (! window.AudioContext) {
-        	if (! window.webkitAudioContext) {
-            		alert('no audiocontext found');
-        	}
-        	window.AudioContext = window.webkitAudioContext;
-    	}
+		if (! window.webkitAudioContext) {
+			alert('no audiocontext found');
+		}
+		window.AudioContext = window.webkitAudioContext;
+	}
 
 
 	var length = 256;
 	for(var i = 0; i < length; i++) {
-	    levelHistory.push(0);
+		levelHistory.push(0);
 	}
 
 	initGraphics();
@@ -169,7 +171,7 @@ function initCanvas() {
 	//canvasWidth = window.innerWidth - 225;
 	//canvasHeight = window.innerHeight -150;
 
-   	canv.setAttribute("width", canvasWidth);
+	canv.setAttribute("width", canvasWidth);
 	canv.setAttribute("height", canvasHeight);
 	canv.setAttribute("style","background:black");
 	
@@ -178,9 +180,9 @@ function initCanvas() {
 
 	activeCanvas = 0; //for the full screen //adt
 }
-	
+
 //function to init the svg element. Should be called from all init methods using an svg container as a background (all applications using d3)
-	
+
 function initSVG(){
 	d3.select("svg").remove();
 
@@ -198,7 +200,7 @@ function initSVG(){
 
 	activeCanvas = 2; //for the full screen //adt
 }	
-	
+
 // function to init the WebGL canvas element. Should be called from all init methods using the html WebGL canvas
 
 function initCanvasWebGL() {
@@ -215,18 +217,18 @@ function initCanvasWebGL() {
 }
 
 
-	
-	
+
+
 function updateVisualization() {
 	// get the average for the first channel
 	var freqArray =  new Uint8Array(analyser.frequencyBinCount);
 	analyser.getByteFrequencyData(freqArray);
-	   
+	
 	var waveArray = new Uint8Array(analyser.frequencyBinCount);
 	analyser.getByteTimeDomainData(waveArray);
-	   
+	
 	maxBinCount = freqArray.length;
-	   
+	
 	var beat = gotBeat(freqArray);
 		// clear the current state
 		//ctx.clearRect(0, 0, 1000, 325);
@@ -238,7 +240,7 @@ function updateVisualization() {
 	
 
 
-function gotBeat(freqArray){
+	function gotBeat(freqArray){
 /*	//normalize levelsData from freqByteData
 	for(var i = 0; i < levelsCount; i++) {
 		var sum = 0;
@@ -251,18 +253,18 @@ function gotBeat(freqArray){
 		//make lower levels smaller
 		//levelsData[i] *=  1 + (i/levelsCount)/2;
 	}*/
-		
+	
 	//GET AVG LEVEL
 	var sum = 0;
 	var beat = false;
 	for(var j = 0; j < maxBinCount; j++) {
 	//	sum += levelsData[j];
-		sum+=freqArray[j];
-	}
-		
-	level = sum / maxBinCount;
-	levelHistory.push(level);
-	levelHistory.shift(1);
+	sum+=freqArray[j];
+}
+
+level = sum / maxBinCount;
+levelHistory.push(level);
+levelHistory.shift(1);
 
 	//BEAT DETECTION
 	if (level  > beatCutOff && level > BEAT_MIN){
@@ -281,19 +283,19 @@ function gotBeat(freqArray){
 	//bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
 	return beat;
 }
-	
-	
+
+
 function enlargeCanvas() {
 	//canvas.setAttribute("width",screen.width);
 	//canvas.setAttribute("height",screen.height);
 	console.log("changed");
 }
-	
+
 function exitFullScreen() {
 	console.log("Exiting full");
 	initCanvas();
 }
-	
+
 function playClick() {
 	inputtype = "play"
 	clearNodes();
@@ -305,17 +307,17 @@ function playClick() {
     	
     	////javascriptNode.onaudioprocess = updateVisualization
     	loadSound(song);
-}
-	
-function initNavigator() {
-	if (!!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia || navigator.msGetUserMedia)) {
-			
+    }
+    
+    function initNavigator() {
+    	if (!!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+    		navigator.mozGetUserMedia || navigator.msGetUserMedia)) {
+    		
 		//handle different types navigator objects of different browsers
-		navigator.getUserMedia = navigator.getUserMedia||navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
-        }
+	navigator.getUserMedia = navigator.getUserMedia||navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
 }
-	
+}
+
 function microClick() {
 	//capturing input of the micropone
 	navigator.getUserMedia({audio: true, video: false}, 
@@ -327,7 +329,7 @@ function microClick() {
 			console.log('capturing microphone data failed!');
 			console.log(evt);
 		}
-	);
+		);
 }
 
 function handleMicrophoneInput (stream) {
@@ -336,29 +338,29 @@ function handleMicrophoneInput (stream) {
 	microphone = context.createMediaStreamSource(stream);
 
 	//create analyser
-  	if (analyser == null) analyser = context.createAnalyser();
+	if (analyser == null) analyser = context.createAnalyser();
 
  	//connect microphone to analyser
-	microphone.connect(analyser);
+ 	microphone.connect(analyser);
 	    //start updating
-		rafID = window.requestAnimationFrame( updateVisualization );
-}
+	    rafID = window.requestAnimationFrame( updateVisualization );
+	}
 
-function clearNodes() {
-	if (sourceNode) {
-    		sourceNode.stop(0);
-    	}
-    	analyser = null;
-    	sourceNode = null;
-}
-    
-function setupAudioNodes() {
-	analyser = context.createAnalyser();
-	sourceNode = context.createBufferSource();
-	sourceNode.connect(analyser);
-	sourceNode.connect(context.destination);
-	rafID = window.requestAnimationFrame(updateVisualization);
-}
+	function clearNodes() {
+		if (sourceNode) {
+			sourceNode.stop(0);
+		}
+		analyser = null;
+		sourceNode = null;
+	}
+	
+	function setupAudioNodes() {
+		analyser = context.createAnalyser();
+		sourceNode = context.createBufferSource();
+		sourceNode.connect(analyser);
+		sourceNode.connect(context.destination);
+		rafID = window.requestAnimationFrame(updateVisualization);
+	}
 
 
 //change to external URL sound
@@ -382,15 +384,15 @@ function loadSound(url) {
 	context.decodeAudioData(request.response, function(buffer) {
 		// when the audio is decoded play the sound
 		playSound(buffer);
-;            }, onError);
-	}
-	request.send();
+		;            }, onError);
+}
+request.send();
 }
 
 function playSound(buffer) {
 	sourceNode.buffer = buffer;
-        sourceNode.start(0);
-        console.log(song);
+	sourceNode.start(0);
+	console.log(song);
 }
 
 // log if an error occurs
@@ -398,8 +400,8 @@ function onError(e) {
 	console.log("error");
 	console.log(e);
 }
-    
-    
+
+
 function goFullScreen(){
 	var canvas;
 
@@ -408,41 +410,41 @@ function goFullScreen(){
 	//else { canvas = d3.select("svg"); }//for the svg 	
 
 	if(canvas.requestFullScreen){
-        	canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        	var rect = canvas.getBoundingClientRect();
+		canvas.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+		var rect = canvas.getBoundingClientRect();
 
 		if (activeCanvas == 2) { d3.select("svg").attr("width", rect.width).attr("height",rect.height); }
 		else {
-	        	canvas.width = rect.width;
-        		canvas.height = rect.height;
+			canvas.width = rect.width;
+			canvas.height = rect.height;
 		}
-    	}
-    	else if(canvas.webkitRequestFullScreen){
-        	canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        	var rect = canvas.getBoundingClientRect();
+	}
+	else if(canvas.webkitRequestFullScreen){
+		canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+		var rect = canvas.getBoundingClientRect();
 
 		if (activeCanvas == 2) { d3.select("svg").attr("width", rect.width).attr("height",rect.height); }
 		else {
-	        	canvas.width = rect.width;
-        		canvas.height = rect.height;
+			canvas.width = rect.width;
+			canvas.height = rect.height;
 		}
-    	}
-    	else if(canvas.mozRequestFullScreen){
-        	canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        	var rect = canvas.getBoundingClientRect();
+	}
+	else if(canvas.mozRequestFullScreen){
+		canvas.mozRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+		var rect = canvas.getBoundingClientRect();
 
 		if (activeCanvas == 2) { d3.select("svg").attr("width", rect.width).attr("height",rect.height); }
 		else {
-	        	canvas.width = rect.width;
-        		canvas.height = rect.height;
+			canvas.width = rect.width;
+			canvas.height = rect.height;
 		}
-    	}
+	}
 }
 
 
 
 
 
-	
-	
-	
+
+
+
