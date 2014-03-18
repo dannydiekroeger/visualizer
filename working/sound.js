@@ -141,14 +141,13 @@ function initSoundFirstTime() {
 
 
 function initSound() {
-	filePlaylist = new Array();
 	if (! window.AudioContext) {
         	if (! window.webkitAudioContext) {
             		alert('no audiocontext found');
         	}
         	window.AudioContext = window.webkitAudioContext;
     	}
-	context = new AudioContext();
+
 
 	var length = 256;
 	for(var i = 0; i < length; i++) {
