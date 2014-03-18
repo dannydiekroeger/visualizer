@@ -48,12 +48,6 @@ function drawBars (array, waveArray, beat) {
 			//draw bin
 			ctx.fillRect(5 + i * space, canv.height - value, 5 , value);
 
-			//draw every second bin area in hertz	
-			if (i % 2 == 0) {
-				ctx.font = '12px sans-serif';
-				ctx.textBaseline = 'bottom';
-				ctx.fillText(Math.floor(context.sampleRate / analyser.fftSize * i), i * space + 5, 20);
-			}
 		}
 	}
 }

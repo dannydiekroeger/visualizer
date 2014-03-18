@@ -41,7 +41,10 @@ function loadToggle(toggleType) {
 function initToggleKeys() {
 	document.onkeydown = function(event) {
 		code = event.keyCode;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0e6dcfcbbf934b1f096703c49bcc6de0af300498
 		if(code == 78) currToggledWorld++; //N
 		if(code == 66) currToggledWorld--; //B
 	}
