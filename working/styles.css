@@ -192,7 +192,20 @@ body {
     margin:0;
 }
 
+#playlist{
+  position:absolute;
+  background-color: rgba(255, 255, 255, 0.3);
+  right:10px;
+  top:35px;
+  width:150px;
+  visibility: hidden;
+}
+
 #all:hover > #setup{
+  visibility:visible;
+}
+
+#all:hover > #playlist{
   visibility:visible;
 }
 

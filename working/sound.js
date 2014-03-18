@@ -66,6 +66,9 @@ var plSize = 0;
 			console.log(e.originalEvent.srcElement.files[0].name);
 			filePlaylist[plSize] = file;
 			plSize++;
+			var doc = document.getElementById('playlist');
+            doc.innerHTML += '<br />';
+            doc.innerHTML+=e.originalEvent.srcElement.files[0].name;
 		});
 	}); 
 
@@ -115,8 +118,8 @@ function initSoundFirstTime() {
 	}
 	context = new AudioContext();
 
-	canvasWidth = window.innerWidth - 30;										// relocated from initCanvas()
-	canvasHeight = window.innerHeight-125;									// relocated from initCanvas()
+	canvasWidth = window.innerWidth*.98;										// relocated from initCanvas()
+	canvasHeight = window.innerHeight*.8;									// relocated from initCanvas()
 	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );		// relocated from initCanvas()
 
 	// create 2d canvas context
@@ -223,12 +226,12 @@ function updateVisualization() {
 	// get the average for the first channel
 	var freqArray =  new Uint8Array(analyser.frequencyBinCount);
 	analyser.getByteFrequencyData(freqArray);
-	
+
 	var waveArray = new Uint8Array(analyser.frequencyBinCount);
 	analyser.getByteTimeDomainData(waveArray);
-	
+
 	maxBinCount = freqArray.length;
-	
+
 	var beat = gotBeat(freqArray);
 		// clear the current state
 		//ctx.clearRect(0, 0, 1000, 325);
@@ -253,7 +256,7 @@ function updateVisualization() {
 		//make lower levels smaller
 		//levelsData[i] *=  1 + (i/levelsCount)/2;
 	}*/
-	
+
 	//GET AVG LEVEL
 	var sum = 0;
 	var beat = false;
@@ -308,11 +311,11 @@ function playClick() {
     	////javascriptNode.onaudioprocess = updateVisualization
     	loadSound(song);
     }
-    
+
     function initNavigator() {
     	if (!!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
     		navigator.mozGetUserMedia || navigator.msGetUserMedia)) {
-    		
+
 		//handle different types navigator objects of different browsers
 	navigator.getUserMedia = navigator.getUserMedia||navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
 }
@@ -353,7 +356,7 @@ function handleMicrophoneInput (stream) {
 		analyser = null;
 		sourceNode = null;
 	}
-	
+
 	function setupAudioNodes() {
 		analyser = context.createAnalyser();
 		sourceNode = context.createBufferSource();
