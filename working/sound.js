@@ -44,6 +44,7 @@ var maxBinCount;
 var filePlaylist;
 var plIndicator = 0;
 var plSize = 0;
+var fluxImsrc;
 
 	var activeCanvas = 0; // 0 = 2d, 1 = 3d, 2 = d3
 	
@@ -136,17 +137,19 @@ function initSoundFirstTime() {
 	for(var i = 0; i < length; i++) {
 		levelHistory.push(0);
 	}
-	
-	var imsrc = "images/frac2.jpg";
-	var fluxim = new Image();
-	fluxim.onload = imageLoadedFlux;
-	fluxim.src = imsrc;
-	fluxCentX = canv.width/2.0;
-	fluxCentY = canv.height/2.0;
+	fluxImsrc = "images/frac2.jpg";
+	loadFluxImage();
 	initNavigator();
 	initSound();
 }
 
+function loadFluxImage() {
+	var fluxim = new Image();
+	fluxim.onload = imageLoadedFlux;
+	fluxim.src = fluxImsrc;
+	fluxCentX = canv.width/2.0;
+	fluxCentY = canv.height/2.0;
+}
 
 
 function initSound() {
@@ -369,6 +372,13 @@ function handleMicrophoneInput (stream) {
 		rafID = window.requestAnimationFrame(updateVisualization);
 	}
 
+
+
+function changeFluxImg(){
+	imsrc = $("#imageImg").val();
+    initScreenSerenery();
+    return true;
+}
 
 //change to external URL sound
 function changeSound(){

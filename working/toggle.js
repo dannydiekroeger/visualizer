@@ -39,11 +39,11 @@ function loadToggle(toggleType) {
 }
 
 function initToggleKeys() {
-	document.onkeydown = function(event);
-	code = event.keyCode;
-
-	if(code == 78) currToggledWorld++; //N
-	if(code == 66) currToggledWorld--; //B
+	document.onkeydown = function(event) {
+		code = event.keyCode;
+		if(code == 78) currToggledWorld++; //N
+		if(code == 66) currToggledWorld--; //B
+	}
 }
 
 /**********************************

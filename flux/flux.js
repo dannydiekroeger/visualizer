@@ -38,7 +38,7 @@ function initFlux() {
 		try {
 			initCanvas();
 			console.log("here");
-			imsrc = "../serenery/images/"+imsrc;
+			//imsrc = "../serenery/images/"+imsrc;
 		}
 		catch(err){
 		   	canv.setAttribute("width", window.innerWidth - 50);
@@ -384,14 +384,11 @@ function addRandomPixelsFlux(num) {
 		var lastPixel = fluxDeadPixels[fluxDeadPixels.length-1];
 		fluxDeadPixels[index] = lastPixel;
 		fluxDeadPixels.pop();
-		if(i==0)console.log(pixel);
 		if(pixel) {
 			fluxLivePixels.push(pixel);
 			fluxImageData.data[pixel.index+3] = 255;
 		}	
 	}
-	console.log('livepix');
-	console.log(fluxLivePixels[0]);
 }
 
 function removeRandomPixelsFlux(num, note) {
