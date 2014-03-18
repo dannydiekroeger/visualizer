@@ -375,9 +375,8 @@ function handleMicrophoneInput (stream) {
 
 
 function changeFluxImg(){
-	imsrc = $("#imageImg").val();
-    initScreenSerenery();
-    return true;
+	fluxImsrc = "images/"+ $("#imageImg").val();
+	loadFluxImage();
 }
 
 //change to external URL sound

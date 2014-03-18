@@ -37,7 +37,6 @@ function initFlux() {
 		//var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
-			console.log("here");
 			//imsrc = "../serenery/images/"+imsrc;
 		}
 		catch(err){
@@ -49,8 +48,6 @@ function initFlux() {
 		
 	    fluxCentX = canv.width/2.0;
 	    fluxCentY = canv.height/2.0;
-	    console.log(fluxCentX);
-	    console.log(fluxCentY);
 	    fluxInitKeyboard();
 	    
 	    //fluxim = new Image();
