@@ -1,8 +1,9 @@
-// My init function
-// Notice: - no parameters taken
-//         - refers to "canv" which refers to the element with
-//           id "canvas" in sound.html
-//         - refers to "ctx" which is defined in sound.js 
+/*
+flux.js
+
+Implements the Flux world. Called from sound.js
+Uses helper functions from serenery.js and picksle.js
+*/
 
 var fluxMaxAmp;
 var fluxPixels;
@@ -10,7 +11,6 @@ var fluxImageData;
 var newfluxImageData;
 var width;
 var height;
-//var fluxim;
 var invert;
 var opacityScale;
 var fluxCentX;
@@ -38,19 +38,9 @@ var fluxPixPerBin;
 var fluxMaxBinAmp;
 var fluxNumPix;
 
-/*
-left to-do:
-transitions between flux and serenery
-incorporate picksle + transition
-transition between radial and gravitational
-
-*/
-
 function initFlux() {
-		//var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
-			//imsrc = "../serenery/images/"+imsrc;
 		}
 		catch(err){
 		   	canv.setAttribute("width", window.innerWidth - 50);
@@ -64,17 +54,10 @@ function initFlux() {
 	    fluxInitKeyboard();
 	    centX = canv.width/2.0;
 	    centY = canv.width/4.0;
-
-	    //fluxim = new Image();
-		//fluxim.onload = imageLoadedFlux;
-		//fluxim.src = imsrc;
-		
-		
 		fluxRandMiddle = false;
 		fluxArrayOffset = 100;
 		fluxUpdatePixels = updateFluxPixels;
 		fluxUpdatePixelsVal = 0;
-		//canv.style.backgroundImage=im;
 		opacityScale = 5;
 		fluxMaxAmp = 1.0;
 		invert = false;
@@ -87,7 +70,6 @@ function initFlux() {
 		fluxRotation = .01;
 		fluxRadius = 100;
 		accentuate = true;
-		//fluxImageData = ctx.getfluxImageData(0,0,canv.width,canv.height);
 }
 
 
@@ -164,8 +146,7 @@ function imageLoadedFlux(ev) {
 	        	if(!isBlack(pixel)) {
 	        		fluxDeadPixels.push(pixel);
 	        		fluxImageData.data[pixel.index+3] = 0;
-	        		livePixels[note].push(pixel);
-	        		oldNoteCounts[note]++;
+	        		deadPixels[note].push(pixel);
 	        		imageNoteCounts[note] = imageNoteCounts[note]+1;
 	        	}
 	        	closestNotes[inpos] = note
@@ -502,12 +483,7 @@ function transitionSereneryToFlux() {
 }
 
 function transitionFluxToSerenery() {
-	// make all flux pix dead
-	for(var i=0;i<fluxLivePixels.length;i++){
-		var pixel = fluxLivePixels[i];
-		fluxDeadPixels.push(pixel);
-		fluxImageData.data[pixel.index+3] = 0;
-	}
+	// clear flux live pix array
 	fluxLivePixels = new Array();
 	// change update
 	updateGraphics = updateFluxScreenSerenery;
