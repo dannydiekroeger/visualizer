@@ -81,7 +81,6 @@ var fluxImsrc;
             	str += filePlaylist[i].name;
             	str += "<br></p>";
             	doc.innerHTML+=str;
-            	console.log(str);
         	}
 		});
 	}); 
@@ -121,7 +120,6 @@ var fluxImsrc;
             	str += filePlaylist[i].name;
             	str += "<br></p>";
             	doc.innerHTML+=str;
-            	console.log(str);
         	}
 
 		//Add for loop for all playlist elements, need callback from playSound
