@@ -36,6 +36,9 @@ var plFramesMaxTorus = 3;
 
 var torusMaterials = [];
 
+var torusDftOpacity = 0.7;
+var torusDftTransparency = true;
+
 // an array to store our toruses in
 
 var toruses = [];
@@ -192,7 +195,7 @@ function updateCameraParmsTorus(deltaZ) {
  ***************************************/ 
 
 function makeToruses() { 
-	var torus, material, torusColor, hslValues;
+	var torus, material, torusColor, hslValues, opacity, transparent;
 	var radius, tube;
 	var colorDelta = 1 / numTorus;
 	var maxHeight = canvWebGL.height / 2;
@@ -206,7 +209,17 @@ function makeToruses() {
 		var hue = m * colorDelta;
 		hslValues = {h:hue, s:0.5, l:0.5};
 		torusColor = new THREE.Color().setHSL(hue, 0.5, 0.5);
-		material = new THREE.MeshPhongMaterial( { color: torusColor, ambient: torusColor, overdraw: 0.5 } );
+
+		if(doValue == 0 && m != 0) {
+			opacity = torusDftOpacity;
+			transparent = torusDftTransparency;
+		} else {
+			opacity = 1.0;
+			transparent = false;
+		}
+		
+		//material = new THREE.MeshPhongMaterial( { color: torusColor, ambient: torusColor, overdraw: 0.5 } );
+		material = new THREE.MeshPhongMaterial( { color: torusColor, ambient: torusColor, opacity: opacity, transparent: transparent, overdraw: 0.5 } );
 		torusMaterials.push(material);
 	}
 
