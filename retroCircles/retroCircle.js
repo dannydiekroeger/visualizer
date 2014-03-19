@@ -50,10 +50,9 @@ var canvCentY;
 
 //beat variables
 
-//var retroBeatColor = "#805B37"; //brown
-var retroBeatColor = "#1D271E"; //grey
+var retroBeatColor = "#E8D392";
 var retroBeatTime = 0;
-var retroBeatTimeDur = 12;
+var retroBeatTimeDur = 8;
 
 //total amplitude gradient variables
 
@@ -153,7 +152,6 @@ function drawRetro(visArray, waveArray, beat)
 		if(beat) { retroBeatTime = retroBeatTimeDur; }
 		drawRetroBeat();
 	} else {
-		ctx.clearRect(0, 0, canv.width, canv.height);
 		valueBox /= visArray.length;
 		valueBox = Math.floor((valueBox + 1) / retroGrays) * retroGrays;
 		if (retroDoBox == 1) {
@@ -238,11 +236,12 @@ function drawRetroBeat() {
 
 
 function initKeyboardRetro() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
 		implementMainKeyboardKeys(code);
-		if (code == 65) retroDoBox = 0;
+		if (code == 65) {retroDoBox = 0; alert("You hit 'a'!"); }
 		else if (code == 66) retroDoBox = 1;
 		else if (code == 67) retroDoBox = 2;
 		else if (code == 68) retroDoBox = 3;
-
 	}
 }
