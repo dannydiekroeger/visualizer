@@ -98,8 +98,7 @@ function updateScreenOsc(array) {
     function initKeyboardOsc() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
-		if(code == 49) goFullScreen(); // 1
-		else if(code == 67) toggleCircle(); // C
+		if(code == 67) toggleCircle(); // C
 		else if(code == 68) toggleDoubleBars(); // D
 		else if(code == 70) toggleFluid();// F
 		else if(code == 65) toggleColor(); // A
