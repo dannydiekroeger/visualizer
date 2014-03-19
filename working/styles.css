@@ -171,7 +171,7 @@ background: url('button_pressed.png') 0 0 no-repeat;
  position: absolute;
  top:3;
  left:3;
- height:89%;
+ height:99%;
  width:99%;
  visibility:visible;
  z-index: 0;
@@ -195,7 +195,7 @@ background: url('button_pressed.png') 0 0 no-repeat;
 
 #all{
   position: absolute;
-  height:90%;
+  height:99%;
   width:99%;
     padding:0;
     margin:0;

@@ -5,13 +5,13 @@
 //
 // 2. Set initGraphics to equal the name of your init function.
 // No parameters are taken, see mygraphics.js for example.
-var initGraphics = initFreqBars;
+var initGraphics;
 
 // 3. Set updateGraphics to equal the name of your update function.
 // This function must take in a single parameter "array" which is
 // the frequency array bin.
 // see mygraphics.js for example.
-var updateGraphics = drawBars;
+var updateGraphics;
 
 //update song to equal the name of the mp3 file you want to play
 var song = "audio/three.mp3";
@@ -149,7 +149,7 @@ function initSoundFirstTime() {
 	context = new AudioContext();
 
 	canvasWidth = window.innerWidth*.98;										// relocated from initCanvas()
-	canvasHeight = window.innerHeight*.8;									// relocated from initCanvas()
+	canvasHeight = window.innerHeight*.98;									// relocated from initCanvas()
 	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );		// relocated from initCanvas()
 
 	// create 2d canvas context
@@ -170,8 +170,10 @@ function initSoundFirstTime() {
 	}
 	fluxImsrc = "images/frac2.jpg";
 	loadFluxImage();
-	initNavigator();
-	initSound();
+	//initNavigator();
+	loadOscillator();
+	//initSound();
+	microClick();
 }
 
 function initSound() {
@@ -358,6 +360,7 @@ function microClick() {
 		
 		//failed	
 		function () {
+			alert("You must allow microphone access for the site to work. Please reload the page and allow microphone access at the top of your browser window.");
 			console.log('capturing microphone data failed!');
 			console.log(evt);
 		}
