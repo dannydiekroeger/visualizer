@@ -50,7 +50,7 @@ function averageHues(bin) {
 }
 
 function bounceAlpha(amp) {
-	updateAlphas(amp/(maxAmp+0.0))
+	updateAlphas(amp/(fluxMaxAmp+0.0))
 }
 
 function updateRandomPixels(array) {
@@ -162,7 +162,7 @@ function getNotePercents(noteTotals){
 	var note="a";
 	var notePercents = new Object();
 	for(var i=0; i<7; i++){
-		var val = (noteTotals[note]*opacityScale+0.0)/(maxAmp+0.0);
+		var val = (noteTotals[note]*opacityScale+0.0)/(fluxMaxAmp+0.0);
 		notePercents[note] = Math.min(1.0, val*val);
 		note=getNextNote(note);
 	}
