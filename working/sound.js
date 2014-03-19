@@ -174,6 +174,7 @@ function initSoundFirstTime() {
 	loadOscillator();
 	//initSound();
 	microClick();
+	initMainKeyboard();
 }
 
 function initSound() {

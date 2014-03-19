@@ -240,10 +240,18 @@ function drawRetroBeat() {
 function initKeyboardRetro() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
+<<<<<<< HEAD
 	
 		if (code == 48) retroDoBox = 0;
 		else if (code == 49) retroDoBox = 1;
 		else if (code == 50) retroDoBox = 2;
 		else if (code == 51) retroDoBox = 3;
+=======
+		implementMainKeyboardKeys(code);
+		if (code == 65) {retroDoBox = 0; alert("You hit 'a'!"); }
+		else if (code == 66) retroDoBox = 1;
+		else if (code == 67) retroDoBox = 2;
+		else if (code == 68) retroDoBox = 3;
+>>>>>>> ec0907c2b2159226b7cb66238d33eee224361db0
 	}
 }
