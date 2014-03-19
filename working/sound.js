@@ -169,12 +169,13 @@ function initSoundFirstTime() {
 		levelHistory.push(0);
 	}
 	fluxImsrc = "images/frac2.jpg";
+	initMainKeyboard();
 	loadFluxImage();
 	//initNavigator();
 	loadOscillator();
 	//initSound();
 	microClick();
-	initMainKeyboard();
+	
 }
 
 function initSound() {

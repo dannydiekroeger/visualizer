@@ -47,7 +47,6 @@ function initScreenOsc() {
 		gradient.addColorStop(.05, 'rgb(0,255,0)');//green
 		gradient.addColorStop(0,'#ffffff'); //white
 		initConstants();
-		initImage();
 		circle = false;
 		fluid = true;
 		maxfluid = false;
@@ -72,10 +71,10 @@ function updateScreenOsc(array) {
 	var percent = amp/maxScale;
 	var maxRad = 150*heightMult;
 	var radius = maxRad*amp/maxScale;
-	var maxFreqBin = getMaxFreqBin(array);
+	var maxFreqBin = getMaxFreqBinOsc(array);
 	var color = getBinColor(maxFreqBin, array.length);
 	//logPeaks(detectPeaks(array),5);
-	//var color = binNoteColor(maxFreqBin);
+	//var color = binNoteColorOsc(maxFreqBin);
 	//canv.setAttribute("style","background:"+color);
 	//console.log(maxFreqBin);
 	//ctx.fillStyle = backgroundPattern;
@@ -95,7 +94,7 @@ function updateScreenOsc(array) {
 	
 }
 
-    function initKeyboardOsc() {
+function initKeyboardOsc() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		implementMainKeyboardKeys(code);
@@ -113,7 +112,7 @@ function updateScreenOsc(array) {
 		else if(code==80) toggleBallDrop(); // P
 		else if(code==83) toggleSideFluid(); // P
 	}
-	}
+}
 
 function loadOscillator() {
 	initGraphics = initScreenOsc;
@@ -128,14 +127,6 @@ function convertArray(array) {
 		newArray[i] = array[i];
 	}
 	return newArray;
-}
-
-function initImage(){
-	var img = new Image()
-	img.src = "../serenery/images/scene1.jpg";
-	img.onload = function() {
-		backgroundPattern = ctx.createPattern(img,"repeat");
-	}
 }
 
 function logPeaks(peakarray, num) {
@@ -326,7 +317,7 @@ function drawSmoothBars(array) {
 	var maxBinCount = array.length;
 	//space between bins
 	var yval = 0;
-	var maxBin = getMaxFreqBin(array);
+	var maxBin = getMaxFreqBinOsc(array);
 	//set fill color to maxBin % 7
 	//var color = getBinColor(maxBin, array.length);
 	//gradient.addColorStop(.75, color);
@@ -373,7 +364,7 @@ function helpDrawBars(array, maxBinCount, threshold, yval, expandFactor) {
 	}
 }
 
-function binNoteColor(bin) {
+function binNoteColorOsc(bin) {
 	var c=12;
 	var d=13.25;
 	var e=15;
@@ -381,8 +372,8 @@ function binNoteColor(bin) {
 	var g=9;
 	var a=10;
 	var b=11;
-	minVal = bin%c;
-	minNote = 'c';
+	var minVal = bin%c;
+	var minNote = 'c';
 	if(bin%d<minVal) {
 		minVal = bin%d;
 		minNote = 'd';
@@ -445,7 +436,7 @@ function getBinColor(bin, numBins) {
 		var color = 'rgb('+red+','+green+','+blue+')';
 		return color;
 	}
-	return binNoteColor(bin);
+	return binNoteColorOsc(bin);
 	/*
 	var num = bin%7;
 	if(num ==0) return 'ff0000'
@@ -458,7 +449,7 @@ function getBinColor(bin, numBins) {
 	*/
 }
 
-function getMaxFreqBin(array) { 
+function getMaxFreqBinOsc(array) { 
 	var maxBin;
 	var maxVal=0;
 	for ( var i = 0; i < array.length; i++ ){
