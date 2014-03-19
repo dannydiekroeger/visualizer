@@ -66,8 +66,23 @@ var fluxImsrc;
 			filePlaylist[plSize] = file;
 			plSize++;
 			var doc = document.getElementById('playlist');
-            doc.innerHTML += '<br />';
-            doc.innerHTML+=e.originalEvent.srcElement.files[0].name;
+			doc.innerHTML = "<h3 id = 'plHeader'>Playlist</h3>";
+            for(var i = 0; i<plSize;i++){
+
+            	if(i == plIndicator){
+            		doc.innerHTML+= "<p class = 'plPointer'> > </p>";
+            	}
+
+            	var j = i+1;
+
+            	var str = "<p class = 'plText'>";
+            	str += j;
+            	str += ": ";
+            	str += filePlaylist[i].name;
+            	str += "<br></p>";
+            	doc.innerHTML+=str;
+            	console.log(str);
+        	}
 		});
 	}); 
 
@@ -80,7 +95,7 @@ var fluxImsrc;
 
 	function back(){
 		if(plIndicator > 0){
-			plIndicator --;
+			plIndicator --;			
 			playUpload();
 		}
 	}
@@ -90,6 +105,24 @@ var fluxImsrc;
 			var reader = new FileReader();
 			clearNodes();
 			setupAudioNodes();
+			var doc = document.getElementById('playlist');
+			doc.innerHTML = "<h3 id = 'plHeader'>Playlist</h3>";
+            for(var i = 0; i<plSize;i++){
+
+            	if(i == plIndicator){
+            		doc.innerHTML+= "<p class = 'plPointer'> > </p>";
+            	}
+
+            	var j = i+1;
+
+            	var str = "<p class = 'plText'>";
+            	str += j;
+            	str += ": ";
+            	str += filePlaylist[i].name;
+            	str += "<br></p>";
+            	doc.innerHTML+=str;
+            	console.log(str);
+        	}
 
 		//Add for loop for all playlist elements, need callback from playSound
 		reader.onloadend = function() {

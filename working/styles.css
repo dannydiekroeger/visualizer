@@ -8,11 +8,20 @@ body {
 }
 
 .button {
-  padding:5px;
-  background-color: #dcdcdc;
-  border: 1px solid #666;
-  color:#000;
-  text-decoration:none;
+  width: 93px;
+height: 28px;
+background: url('button_normal.png') 0 0 no-repeat;
+border:none;
+padding: 0 4px 8px 0;
+font-weight:bold
+}
+
+.button:hover {
+background: url('button_hover.png') 0 0 no-repeat;
+}
+
+.button:active {
+background: url('button_pressed.png') 0 0 no-repeat;
 }
 
 #cssmenu,
@@ -197,7 +206,7 @@ body {
   background-color: rgba(255, 255, 255, 0.3);
   right:10px;
   top:35px;
-  width:150px;
+  width:175px;
   visibility: hidden;
 }
 
@@ -217,4 +226,50 @@ body {
 body, html { 
 overflow-x: hidden; 
 overflow-y: hidden;
+}
+
+#file_browse_wrapper {
+width: 93px;
+height: 28px;
+background: url('file_browse_normal.png') 0 0 no-repeat;
+border:none;
+overflow:hidden;
+display:inline;
+}
+#file_browse_wrapper:hover {
+background: url('file_browse_hover.png') 0 0 no-repeat;
+}
+#file_browse_wrapper:active {
+background: url('file_browse_pressed.png') 0 0 no-repeat;
+}
+#selectFile{
+margin-left:-145px;
+opacity:0;
+-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+}
+
+.menuText{
+  position:relative;
+  display:inline;
+  left:3px;
+  font-family:verdana; 
+  color:#A9BCF5;
+}
+
+.plText{
+  font-family:verdana; 
+  color:#A9BCF5;
+  display:inline;
+}
+
+.plPointer{
+  font-family:verdana; 
+  color:#FF8000;
+  display:inline;
+}
+
+#plHeader{
+  font-family:verdana; 
+  color:#A9BCF5;
 }
