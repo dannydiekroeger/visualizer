@@ -59,6 +59,7 @@ var fluxImsrc;
 	var BEAT_MIN = 0.20; //a volume less than this is no beat
 
 
+	//Adds the audio file to the playlist when a file is selected by the input.
 	$(document).ready(function() {
 		$("#selectFile").change(function(e) {
 			var file = e.originalEvent.srcElement.files[0];
@@ -67,7 +68,7 @@ var fluxImsrc;
 			plSize++;
 			var doc = document.getElementById('playlist');
 			doc.innerHTML = "<h3 id = 'plHeader'>Playlist</h3>";
-            for(var i = 0; i<plSize;i++){
+            for(var i = 0; i<plSize;i++){ 
 
             	if(i == plIndicator){
             		doc.innerHTML+= "<p class = 'plPointer'> > </p>";
@@ -99,6 +100,8 @@ var fluxImsrc;
 		}
 	}
 
+
+	//Begins playing the playlist audio. Clears and creates a new audio context and plays the file
 	function playUpload() {
 		if(plSize>0){
 			var reader = new FileReader();
@@ -122,7 +125,6 @@ var fluxImsrc;
             	doc.innerHTML+=str;
         	}
 
-		//Add for loop for all playlist elements, need callback from playSound
 		reader.onloadend = function() {
 			context.decodeAudioData(reader.result, function(buffer) {
                 // when the audio is decoded play the sound
@@ -178,6 +180,7 @@ function initSoundFirstTime() {
 	
 }
 
+//Creates a web audio context if none exist
 function initSound() {
 	if (! window.AudioContext) {
 		if (! window.webkitAudioContext) {
@@ -332,6 +335,7 @@ function exitFullScreen() {
 	initCanvas();
 }
 
+//Plays the selected demo song
 function playClick() {
 	inputtype = "play"
 	clearNodes();
@@ -340,8 +344,7 @@ function playClick() {
 	// when the javascript node is called
     	// we use information from the analyzer node
     	// to draw the volume
-    	
-    	////javascriptNode.onaudioprocess = updateVisualization
+  
     	loadSound(song);
     }
 
@@ -353,6 +356,7 @@ function playClick() {
 	navigator.getUserMedia = navigator.getUserMedia||navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
 }
 }
+
 
 function microClick() {
 	//capturing input of the micropone
@@ -383,6 +387,7 @@ function handleMicrophoneInput (stream) {
 	    rafID = window.requestAnimationFrame( updateVisualization );
 	}
 
+	//Clears the nodes for use again
 	function clearNodes() {
 		if (sourceNode) {
 			sourceNode.stop(0);
@@ -391,6 +396,7 @@ function handleMicrophoneInput (stream) {
 		sourceNode = null;
 	}
 
+	//Creates the audioNodes and analyzer
 	function setupAudioNodes() {
 		analyser = context.createAnalyser();
 		sourceNode = context.createBufferSource();
@@ -406,7 +412,7 @@ function changeFluxImg(){
 	loadFluxImage();
 }
 
-//change to external URL sound
+//Get the location of the demo sound and begin playing
 function changeSound(){
 	song = $("#soundUrl").val();
 	console.log(song)
@@ -432,6 +438,7 @@ function loadSound(url) {
 request.send();
 }
 
+//Begins playing the buffered sound wwith the node
 function playSound(buffer) {
 	sourceNode.buffer = buffer;
 	sourceNode.start(0);
