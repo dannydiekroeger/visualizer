@@ -98,6 +98,7 @@ function updateScreenOsc(array) {
     function initKeyboardOsc() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
+		implementMainKeyboardKeys(code);
 		if(code == 67) toggleCircle(); // C
 		else if(code == 68) toggleDoubleBars(); // D
 		else if(code == 70) toggleFluid();// F
