@@ -48,12 +48,12 @@ var myCircles = new Array();
 var canvCentX;
 var canvCentY;
 
-//beat circle variables
+//beat variables
 
-var retroBeatRadius = 50;
-var retroBeatCX;
-var retroBeatYX;
-var retroBeatColor = "#E8D392";
+//var retroBeatColor = "#805B37"; //brown
+var retroBeatColor = "#1D271E"; //grey
+var retroBeatTime = 0;
+var retroBeatTimeDur = 12;
 
 //total amplitude gradient variables
 
@@ -78,6 +78,7 @@ function loadRetro(type) {
 	initGraphics = initRetro;
 	updateGraphics = drawRetro;
 	retroDoBox = type;
+	initKeyboardRetro();
 	initSound();
 }
 
@@ -127,7 +128,6 @@ function initRetro() {
 
 function drawRetro(visArray, waveArray, beat)
 {
-//	ctx.clearRect(0, 0, canv.width, canv.height);
 	var interpSize = visArray.length / myCircles.length;		
 	var interpStart = 0;						
 	var interpEnd = interpSize;					
@@ -150,7 +150,8 @@ function drawRetro(visArray, waveArray, beat)
 		ctx.clearRect(0, 0, canv.width, canv.height);
 	} else if (retroDoBox == 3) {
 		ctx.clearRect(0, 0, canv.width, canv.height);
-		drawRetroBeat(beat);
+		if(beat) { retroBeatTime = retroBeatTimeDur; }
+		drawRetroBeat();
 	} else {
 		valueBox /= visArray.length;
 		valueBox = Math.floor((valueBox + 1) / retroGrays) * retroGrays;
@@ -162,7 +163,7 @@ function drawRetro(visArray, waveArray, beat)
 			grad.addColorStop(1, "black");
 			ctx.fillStyle = grad;
 		}
-		ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW)
+		ctx.fillRect(retroBoxX, retroBoxY, retroBoxW, retroBoxW);
 	}
 
 	drawCircleLines();			
@@ -220,21 +221,28 @@ function drawCircleLines() {
  *
  * Called by: drawRetro
  *
- * Draws beat circle when requested.
+ * Changes background when requested.
  * Similar logic to drawCircleLines.
  *
  ***************************************/
 
-function drawRetroBeat(beat) {
-
-	if (beat) {
-		ctx.beginPath();
+function drawRetroBeat() {
+	if (retroBeatTime > 0) {
 		ctx.fillStyle = retroBeatColor;
-		ctx.arc(retroBeatCX, retroBeatCY, retroBeatRadius, 0, twoPI, false);
-		ctx.fill();
+		ctx.fillRect(0, 0, canv.width, canv.height);
+		retroBeatTime--;
 	}
 }
 
 
 
-
+function initKeyboardRetro() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
+		implementMainKeyboardKeys(code);
+		if (code == 65) retroDoBox = 0;
+		else if (code == 66) retroDoBox = 1;
+		else if (code == 67) retroDoBox = 2;
+		else if (code == 68) retroDoBox = 3;
+	}
+}

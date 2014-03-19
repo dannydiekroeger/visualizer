@@ -38,9 +38,10 @@ function getRandomScene(){
 		randomDraw=updateRainbowLine;
 	}else if(rand< 3/numModes) {
 		initRetro();
+		retroDoBox = 0;
 		randomDraw=drawRetro;
 	}else{
-		initFreqBars()
+		initFreqBars();
 		randomDraw=drawBars;
 	}
 	

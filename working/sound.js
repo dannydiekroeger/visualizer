@@ -5,21 +5,19 @@
 //
 // 2. Set initGraphics to equal the name of your init function.
 // No parameters are taken, see mygraphics.js for example.
-var initGraphics = initFreqBars;
+var initGraphics;
 
 // 3. Set updateGraphics to equal the name of your update function.
 // This function must take in a single parameter "array" which is
 // the frequency array bin.
 // see mygraphics.js for example.
-var updateGraphics = drawBars;
+var updateGraphics;
 
 //update song to equal the name of the mp3 file you want to play
 var song = "audio/three.mp3";
 
 // ------------------------------------------------------------//
 
-
-// You can basically ignore everything below here //
 
 
 //         
@@ -46,6 +44,7 @@ var maxBinCount;
 var filePlaylist;
 var plIndicator = 0;
 var plSize = 0;
+var fluxImsrc;
 
 	var activeCanvas = 0; // 0 = 2d, 1 = 3d, 2 = d3
 	
@@ -67,8 +66,22 @@ var plSize = 0;
 			filePlaylist[plSize] = file;
 			plSize++;
 			var doc = document.getElementById('playlist');
-            doc.innerHTML += '<br />';
-            doc.innerHTML+=e.originalEvent.srcElement.files[0].name;
+			doc.innerHTML = "<h3 id = 'plHeader'>Playlist</h3>";
+            for(var i = 0; i<plSize;i++){
+
+            	if(i == plIndicator){
+            		doc.innerHTML+= "<p class = 'plPointer'> > </p>";
+            	}
+
+            	var j = i+1;
+
+            	var str = "<p class = 'plText'>";
+            	str += j;
+            	str += ": ";
+            	str += filePlaylist[i].name;
+            	str += "<br></p>";
+            	doc.innerHTML+=str;
+        	}
 		});
 	}); 
 
@@ -81,7 +94,7 @@ var plSize = 0;
 
 	function back(){
 		if(plIndicator > 0){
-			plIndicator --;
+			plIndicator --;			
 			playUpload();
 		}
 	}
@@ -91,6 +104,23 @@ var plSize = 0;
 			var reader = new FileReader();
 			clearNodes();
 			setupAudioNodes();
+			var doc = document.getElementById('playlist');
+			doc.innerHTML = "<h3 id = 'plHeader'>Playlist</h3>";
+            for(var i = 0; i<plSize;i++){
+
+            	if(i == plIndicator){
+            		doc.innerHTML+= "<p class = 'plPointer'> > </p>";
+            	}
+
+            	var j = i+1;
+
+            	var str = "<p class = 'plText'>";
+            	str += j;
+            	str += ": ";
+            	str += filePlaylist[i].name;
+            	str += "<br></p>";
+            	doc.innerHTML+=str;
+        	}
 
 		//Add for loop for all playlist elements, need callback from playSound
 		reader.onloadend = function() {
@@ -119,7 +149,7 @@ function initSoundFirstTime() {
 	context = new AudioContext();
 
 	canvasWidth = window.innerWidth*.98;										// relocated from initCanvas()
-	canvasHeight = window.innerHeight*.8;									// relocated from initCanvas()
+	canvasHeight = window.innerHeight*.98;									// relocated from initCanvas()
 	document.getElementById("screen").setAttribute("style", "border:3px solid #A9BCF5; background:black" );		// relocated from initCanvas()
 
 	// create 2d canvas context
@@ -138,12 +168,15 @@ function initSoundFirstTime() {
 	for(var i = 0; i < length; i++) {
 		levelHistory.push(0);
 	}
-
-	initNavigator();
-	initSound();
+	fluxImsrc = "images/frac2.jpg";
+	initMainKeyboard();
+	loadFluxImage();
+	//initNavigator();
+	loadOscillator();
+	//initSound();
+	microClick();
+	
 }
-
-
 
 function initSound() {
 	if (! window.AudioContext) {
@@ -329,6 +362,7 @@ function microClick() {
 		
 		//failed	
 		function () {
+			alert("You must allow microphone access for the site to work. Please reload the page and allow microphone access at the top of your browser window.");
 			console.log('capturing microphone data failed!');
 			console.log(evt);
 		}
@@ -365,6 +399,12 @@ function handleMicrophoneInput (stream) {
 		rafID = window.requestAnimationFrame(updateVisualization);
 	}
 
+
+
+function changeFluxImg(){
+	fluxImsrc = "images/"+ $("#imageImg").val();
+	loadFluxImage();
+}
 
 //change to external URL sound
 function changeSound(){

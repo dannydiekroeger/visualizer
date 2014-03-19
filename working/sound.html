@@ -56,8 +56,10 @@
 	<script src="../3D/3dWaves.js" type="text/javascript"></script>
 	<script src="../3D/kaleido.js" type="text/javascript"></script>
 	<script src="../3D/dots.js" type="text/javascript"></script>
+	<script src="toggle.js" type="text/javascript"></script>
 	<script type="text/javascript" src="random.js"></script>
 	<script type="text/javascript" src="mygraphics.js"></script>
+	<script type="text/javascript" src = "mainkeyboard.js"></script>
 
 	<!include our main audio javascript file>
 	<script type="text/javascript" src="sound.js"></script>
@@ -96,27 +98,31 @@
 
 </head>
 <body onload="initSoundFirstTime()">
-	<div id = 'title'>
+	<!--<div id = 'title'>
 		<h1 align = "center" style="font-family:verdana; color:#A9BCF5">DEEZY VISUALIZER</h1>
 		<p align = "left" style="font-family:verdana; color:#A9BCF5">Hover over screen to display menu <a align="right" style="position:fixed; right: 10px; font-family:verdana; color:#A9BCF5" href="#" onClick="MyWindow=window.open('help.html','MyWindow',width=600,height=300); return false;"><span>Help</span></a>  </p>
 	</div>
 	<div id = "help">
 		help text here
 	</div>
+	-->
 	<div id = 'all'>
 		<div id = 'screen'>
 			<canvas id="canvas" mozfullscreenchange="fullScreenChange()"></canvas>
 		</div>
 		<div id = 'setup'>
 			<div id = 'forms'>
-				<input type = "file" id = "selectFile">
+				<p class="menuText">Add Song:</p>
+				<div id='file_browse_wrapper'>
+					<input type = "file" id = "selectFile" accept="audio/*">
+				</div>
 				<button id="back" onclick="back()" class = "button">Back</button>
 				<button id="playUpload" onclick="playUpload()" class = "button">Play</button>
 				<button id="next" onclick="next()" class = "button">Next</button>
 
 				<!--<form name = "urlForm" action="">-->
 
-				URL Audio: 
+				<p class="menuText">Demo: </p>
 				<select id="soundUrl">
 					<option value="audio/satisfy.mp3">Satisfy</option>
 					<option value="audio/cake.mp3">Cake</option>
@@ -130,8 +136,9 @@
 					<option value="audio/three.mp3">Bob</option>
 
 				</select>
-				<input id="soundUrlButton" type="submit" value="Submit" onclick="changeSound()">
-				IMG Image:
+				<input id="soundUrlButton" type="submit" value="Play" onclick="changeSound()"class="button">
+				<button id="micro" onclick="microClick()" class = "button">Microphone</button>
+				<p class="menuText">Images:</p>
 				<select id="imageImg">
 					<option value="biggie.jpg"> Biggie </option>
 					<option value="everest.jpg"> Everest </option>
@@ -145,10 +152,11 @@
 					<option value="rgb.jpg"> RGB </option>
 					<option value="scene1.jpg"> Scene </option>
 				</select>
-				<input id="imageImgButton" type="submit" value="Submit" onclick="changeSereneryImg()">
-				<button id="play" onclick="playClick()" class = "button">Play Sound</button>
-				<button id="micro" onclick="microClick()" class = "button">Microphone</button>
-				<button id="gofull" onclick="goFullScreen()" class="button">Go Fullscreen</button>
+
+				<input id="imageImgButton" type="submit" value="Submit" onclick="changeFluxImg()"class="button">
+				
+				<button id="gofull" onclick="goFullScreen()" class="button">Fullscreen</button>
+
 				<!--</form>-->
 			</div>
 
@@ -156,13 +164,19 @@
 		</div>
 
 		<div id = 'playlist'>
-			<h3>Playlist</h3>
+			<h3 id = "plHeader">Playlist</h3>
 			
 		</div>
 
 		<div id='cssmenu'>
 			<ul>
 				<li><a href='#'><span>Effects</span></a></li>
+				<li><a><span>Toggle</span></a>
+					<ul>
+						<li><a onclick="loadToggle(0)">Load 2D Worlds</a></li>
+						<li><a onclick="loadToggle(1)">Load 3D Worlds</a></li>
+					</ul>
+				</li>
 				<li><a><span>Freq Bars</span></a>
 					<ul>
 						<li><a onclick="loadFreqBars()">Load Freq Bars</a></li>
@@ -190,15 +204,14 @@
 				</li>
 				<li><a href='#'><span>Retro</span></a>
 					<ul>
-						<li><a onclick="loadRetro(0)">Load Retro</a></li>
-						<li><a onclick="loadRetro(1)">Load Retro with Box</a></li>
-						<li><a onclick="loadRetro(2)">Load Retro with Gradient Box</a></li>
-						<li><a onclick="loadRetro(3)">Load Retro with Beat</a></li>
+						<li><a onclick="loadRetro(0)">Load Retro (A)</a></li>
+						<li><a onclick="loadRetro(1)">Load Retro with Box (B) </a></li>
+						<li><a onclick="loadRetro(2)">Load Retro with Gradient Box ©</a></li>
+						<li><a onclick="loadRetro(3)">Load Retro with Beat (D)</a></li>
 					</ul>
 				</li>
 				<li><a href='#'><span>Serenery</span></a>
 					<ul>
-						<li><a onclick="loadSerenery()">Load Image</a></li>
 						<li><a onclick="loadFlux()">Load Flux</a></li>
 						<li><a onclick="loadPicksle()">Load Picksle</a></li>
 					</ul>
@@ -206,6 +219,7 @@
 
 				<li><a href='#'><span>3D</span></a>
 					<ul>
+						
 						<li><a onclick="loadStarParticles()">Load Stars</a></li>
 						<li><a onclick="loadDonuts(0)">Load Freq Donuts</a></li>
 						<li><a onclick="loadDonuts(1)">Load Slinky Donuts</a></li>
