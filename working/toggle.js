@@ -17,7 +17,7 @@ var toggleDraw;
 
 var currToggledWorld = 0;
 var worldChanged = false;
-var total3DWorlds = 0;
+var total3DWorlds = 4;
 var total2DWorlds = 7;
 
 
@@ -27,7 +27,8 @@ var total2DWorlds = 7;
  *
  **********************************/
 
-function loadToggle(toggleType) {
+function loadToggle(type) {
+	toggleType = type;
 	if(toggleType == 0) {
 		initGraphics = init2DToggle;
 		updateGraphics = draw2DToggle;
@@ -36,10 +37,12 @@ function loadToggle(toggleType) {
 		updateGraphics = draw3DToggle;
 	}
 	initSound();
+	initToggleKeys();
 }
 
 function initToggleKeys() {
 	document.onkeydown = function(event) {
+		worldChanged = true;
 		code = event.keyCode;
 		if(code == 78) currToggledWorld++; //N
 		if(code == 66) currToggledWorld--; //B
@@ -54,23 +57,19 @@ function initToggleKeys() {
 
 function init2DToggle() {
 	currToggledWorld = 0;
-	initToggleKeys();
 
 	load2DWorld();	
 }
 
 function draw2DToggle(freqArray, waveArray, beat) {
-	load2DWorld();
+	
+	if (worldChanged) { worldChanged = false; load2DWorld(); }
 	toggleDraw(freqArray, waveArray, beat);
 }
 
 function load2DWorld() {
-	if(currToggledWorld > total2DWorlds) currToggledWorld = 0;
-	if(currToggledWorld < 0) currToggledWorld = 0;
-
-
-			initNeon();
-			toggleDraw = drawNeon;
+	if(currToggledWorld == total2DWorlds) currToggledWorld = 0;
+	if(currToggledWorld < 0) currToggledWorld = total2DWorlds - 1;
 
 	switch(currToggledWorld) 
 	{
@@ -79,24 +78,29 @@ function load2DWorld() {
 			toggleDraw = drawNeon;
 			break;
 		case 1:
-			initRainBowLine();
+			doType = 0;
+			initRainbowLine();
 			toggleDraw = updateRainbowLine;
 			break;
 		case 2:
-			initRetro(0);
-			toggleDraw = drawRetro;
+			doType = 2;
+			initRainbowLine();
+			toggleDraw = updateRainbowLine;
 			break;
 		case 3:
-			initRetro(1);
+			initRetro();
 			toggleDraw = drawRetro;
+			retroDoBox = 0;
 			break;
 		case 4:
-			initRetro(2);
+			initRetro();
 			toggleDraw = drawRetro;
+			retroDoBox = 2;
 			break;
 		case 5:
-			initRetro(3);
+			initRetro();
 			toggleDraw = drawRetro;
+			retroDoBox = 3;
 			break;
 		default:
 			initFreqBars();	
@@ -114,32 +118,40 @@ function load2DWorld() {
 
 function init3DToggle() {
 	currToggledWorld = 0;
-	initToggleKeys();
 
 	load3DWorld();	
 }
 
 function draw3DToggle(freqArray, waveArray, beat) {
-	load3DWorld();
+	if (worldChanged) { worldChanged = false; load3DWorld(); }
 	toggleDraw(freqArray, waveArray, beat);
 }
 
 function load3DWorld() {
-	if(currToggledWorld > total3DWorlds) currToggledWorld = 0;
-	if(currToggledWorld < 0) currToggledWorld = 0;
-/*	
+	if(currToggledWorld == total3DWorlds) currToggledWorld = 0;
+	if(currToggledWorld < 0) currToggledWorld = total3DWorlds - 1;
+	
 	switch(currToggledWorld) 
 	{
 		case 0:
-			
+			StarInit();
+			toggleDraw = StarUpdate;
 			break;
 		case 1:
-
+			doValue = 0;
+			DonutInit();
+			toggleDraw = DonutUpdate;
 			break;
 		case 2:
-
+			doValue = 1;
+			DonutInit();
+			toggleDraw = DonutUpdate;
 			break;
-		default:			
+		default:
+			initComposer = wavesComposer;			
+			WavesInit();
+			toggleDraw = WaveUpdate;
+			
 	}
-*/	
+	
 }
