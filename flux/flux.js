@@ -1,16 +1,16 @@
-// My init function
-// Notice: - no parameters taken
-//         - refers to "canv" which refers to the element with
-//           id "canvas" in sound.html
-//         - refers to "ctx" which is defined in sound.js 
+/*
+flux.js
 
-var maxAmp;
+Implements the Flux world. Called from sound.js
+Uses helper functions from serenery.js and picksle.js
+*/
+
+var fluxMaxAmp;
 var fluxPixels;
 var fluxImageData;
 var newfluxImageData;
 var width;
 var height;
-//var fluxim;
 var invert;
 var opacityScale;
 var fluxCentX;
@@ -32,20 +32,15 @@ var fluxArrayOffset;
 var fluxUpdatePixels;
 var fluxUpdatePixelsVal;
 var fluxToggle;
-
-/*
-left to-do:
-transitions between flux and serenery
-incorporate picksle + transition
-transition between radial and gravitational
-
-*/
+var fluxArrayUsage;
+var fluxBinwidth;
+var fluxPixPerBin;
+var fluxMaxBinAmp;
+var fluxNumPix;
 
 function initFlux() {
-		//var imsrc = "frac2.jpg";
 		try {
 			initCanvas();
-			//imsrc = "../serenery/images/"+imsrc;
 		}
 		catch(err){
 		   	canv.setAttribute("width", window.innerWidth - 50);
@@ -59,30 +54,22 @@ function initFlux() {
 	    fluxInitKeyboard();
 	    centX = canv.width/2.0;
 	    centY = canv.width/4.0;
-
-	    //fluxim = new Image();
-		//fluxim.onload = imageLoadedFlux;
-		//fluxim.src = imsrc;
-		
-		
 		fluxRandMiddle = false;
 		fluxArrayOffset = 100;
-		fluxUpdatePixels = updateFluxRadial;
-		fluxUpdatePixelsVal = 1;
-		//canv.style.backgroundImage=im;
-		opacityScale = 10;
-		maxAmp = 1.0;
+		fluxUpdatePixels = updateFluxPixels;
+		fluxUpdatePixelsVal = 0;
+		opacityScale = 5;
+		fluxMaxAmp = 1.0;
 		invert = false;
 		velo = 1;
 		fluxgravity = 1;
 		fluxRadialGrav = 2;
 		fluxheightscale = 10;
 		fluxradscale = 10;
-		fluxRotationTheta = 0;
+		fluxRotationTheta = .02;
 		fluxRotation = .01;
 		fluxRadius = 100;
 		accentuate = true;
-		//fluxImageData = ctx.getfluxImageData(0,0,canv.width,canv.height);
 }
 
 
@@ -98,14 +85,23 @@ function loadFluxImage() {
 	closestNotes = new Array();
 	oldNoteCounts = {"a":0,"b":0,"c":0,"d":0,"e":0,"f":0,"g":0};
 	fluxPixels = new Array();
+	fluxArrayUsage = 600.0;
+	fluxBinwidth = (canv.height+0.0)/fluxArrayUsage;
+	fluxPixPerBin = fluxBinwidth*canv.width;
+	opacityScale = 10;
+	fluxMaxAmp = 1.0;
+	fluxMaxBinAmp = 1.0;
+	initPrevArrayP();
+	fluxNumPix =10000;
 }
 
 
 function loadFlux() {
 	initGraphics = initFlux;
 	updateGraphics = updateFlux;
-	fluxToggle = 0;
+	fluxToggle = 1;
 	//updateGraphics = updateFluxScreenSerenery;
+	//updateGraphics = updatePicksle;
 	initSound();
 }
 
@@ -120,6 +116,7 @@ function imageLoadedFlux(ev) {
 	fluxInitLiveAndDead();
 	initPixelsByNote();
     fluxImageData = ctx.getImageData(0, 0, width, height);
+    initPixelBinsP();
     //ctx.putfluxImageData(fluxImageData, 0, 0);
     for (var y = 0; y < height; y++) {
 		inpos = y * width * 4; // *4 for 4 ints per pixel
@@ -144,11 +141,12 @@ function imageLoadedFlux(ev) {
 				pixel = setRadAndTheta(pixel);
 				pixel.distanceFromCenter = getDistanceFromCenter(x,y);
 	        	fluxPixels[fluxPixels.length] = pixel;
+	        	var arrayIndex = Math.floor(Math.min((canv.height-y)/fluxBinwidth,fluxArrayUsage-1));
+	        	deadPixelsPix[arrayIndex].push(pixel);
 	        	if(!isBlack(pixel)) {
 	        		fluxDeadPixels.push(pixel);
 	        		fluxImageData.data[pixel.index+3] = 0;
-	        		livePixels[note].push(pixel);
-	        		oldNoteCounts[note]++;
+	        		deadPixels[note].push(pixel);
 	        		imageNoteCounts[note] = imageNoteCounts[note]+1;
 	        	}
 	        	closestNotes[inpos] = note
@@ -164,7 +162,7 @@ function updateFluxScreenSerenery(array) {
 	var maxBin = getMaxFreqBin(array);
 	if(accentuate) array[maxBin]*=3;
 	var amp = getTotalAmplitude(array);
-	if(amp > maxAmp) maxAmp = amp;
+	if(amp > fluxMaxAmp) fluxMaxAmp = amp;
 
 	//averageHues(getMaxFreqBin(array));
 	//updateColorize(array);
@@ -194,41 +192,6 @@ function calculateIndex(pixel) {
 function updateFlux(array, something, beat) {
 	fluxUpdatePixels(array);
 	ctx.putImageData(fluxImageData,0,0);
-}
-
-function updateFluxPixelsSpawn(array) {
-	var newfluxLivePixels = new Array();
-	//console.log(fluxLivePixels);
-	for(var i=0;i<fluxLivePixels.length;i++){
-		var pixel = fluxLivePixels[i];
-		fluxImageData.data[pixel.index+3]=0;
-		var newPixel = fluxMoveStep(pixel);
-		//newPixel.velocity = fluxGetVelocity(newPixel);
-		if(newPixel.y <= canv.height) {
-			newPixel.velocity = fluxGetVelocity(newPixel,array);
-			newfluxLivePixels.push(newPixel);
-			fluxImageData.data[pixel.index+3]=255;
-		}
-	}
-	
-	var chunksize = canv.width/array.length;
-	for(var i=0; i<array.length;i++) {
-		var x = Math.floor(i*chunksize);
-		var value = array[i];
-		var numPix = 0;
-		if(value>150) numPix = 1;
-		for(var j=0;j<numPix;j++) {
-			var newPixel = new Object();
-			newPixel.x = x;
-			newPixel.y = canv.height;
-			newPixel.velocity = [getRandZeroOne(),(-1)*Math.floor(array[i]/fluxheightscale)-j];
-			newPixel.index = calculateIndex(newPixel);
-			newfluxLivePixels.push(newPixel);
-			fluxImageData.data[newPixel.index+3]=255;
-		}
-	}
-	
-	fluxLivePixels = newfluxLivePixels;	
 }
 
 function getRandZeroOne(){
@@ -383,8 +346,7 @@ function fluxGetBump(pixel,array){
 }
 
 function initFluxPixels() {
-	var numpix =10000;
-	addRandomPixelsFlux(numpix)
+	addRandomPixelsFlux(fluxNumPix)
 }
 
 function fluxGetCoord(pixel) {
@@ -480,25 +442,51 @@ function fluxInitKeyboard() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		implementMainKeyboardKeys(code);
-		if(code == 49) goFullScreen(); // 1
-		else if(code == 70) toggleUpdateFluxPixels();// F
+		if(code == 70) toggleUpdateFluxPixels();// F
 		else if(code == 75) fluxDecreaseRad(); // K
 		else if(code == 76) fluxIncreaseRad(); // L
 		else if(code==190) lowerOpacityFactor(); // Period
 		else if(code==191) increaseOpacityFactor(); // For. Slash
 		else if(code >=37 && code <=40) fluxCatchArrowKey(code); // Arrow Keys
-		else if(code==79) fluxToggleScene(); // P
+		else if(code==79) fluxToggleScene(); // O
+		else if(code==82) fluxToggleRotate(); //R
+	}
+}
+
+function fluxToggleRotate() {
+	if(fluxRotationTheta == 0)
+		fluxRotationTheta = .02;
+	else {
+		fluxRotationTheta = 0;
 	}
 }
 
 function fluxToggleScene() {
 	if(fluxToggle == 0) {
-		updateGraphics = updateFluxScreenSerenery;
+		transitionSereneryToFlux();
 		fluxToggle = 1;
-	} else {
-		updateGraphics = updateFlux;
+	} else if(fluxToggle == 1) {
+		transitionFluxToSerenery();
+		fluxToggle=0;
+		//fluxToggle = 2;
+	} 
+	/*
+	else {
+		updateGraphics = updatePicksle;
 		fluxToggle = 0;
-	}
+	}*/
+}
+
+function transitionSereneryToFlux() {
+	initFluxPixels();
+	updateGraphics = updateFlux;
+}
+
+function transitionFluxToSerenery() {
+	// clear flux live pix array
+	fluxLivePixels = new Array();
+	// change update
+	updateGraphics = updateFluxScreenSerenery;
 }
 
 function fluxDecreaseRad() {

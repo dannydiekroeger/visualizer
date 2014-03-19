@@ -52,7 +52,7 @@ function initScreenOsc() {
 		maxfluid = false;
 		fill = 0;
 		accentPeaks = true;
-		flippedBars = false;
+		flippedBars = true;
 		doubleBars = false;
 		middleBars = false;
 		ballDrop = false;
@@ -118,7 +118,7 @@ function loadOscillator() {
 	initGraphics = initScreenOsc;
 	updateGraphics = updateScreenOsc;
 	initSound();
-	alert("Hot Keys are F,Z,D,M,A,S,'Period','Backslash',K,L,P,C \n Try them out!");
+	//alert("Hot Keys are F,Z,D,M,A,S,'Period','Backslash',K,L,P,C \n Try them out!");
 }
 
 function convertArray(array) {
