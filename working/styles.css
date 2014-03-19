@@ -235,6 +235,7 @@ background: url('file_browse_normal.png') 0 0 no-repeat;
 border:none;
 overflow:hidden;
 display:inline;
+padding: 0 4px 8px 0;
 }
 #file_browse_wrapper:hover {
 background: url('file_browse_hover.png') 0 0 no-repeat;
