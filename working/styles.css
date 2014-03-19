@@ -218,3 +218,14 @@ body, html {
 overflow-x: hidden; 
 overflow-y: hidden;
 }
+
+#help{
+  background-color: #676767;
+  opacity: .7;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100px;
+  z-index:100;
+
+}
