@@ -461,8 +461,7 @@ function fluxInitKeyboard() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		implementMainKeyboardKeys(code);
-		if(code == 49) goFullScreen(); // 1
-		else if(code == 70) toggleUpdateFluxPixels();// F
+		if(code == 70) toggleUpdateFluxPixels();// F
 		else if(code == 75) fluxDecreaseRad(); // K
 		else if(code == 76) fluxIncreaseRad(); // L
 		else if(code==190) lowerOpacityFactor(); // Period
