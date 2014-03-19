@@ -106,14 +106,17 @@
 		</div>
 		<div id = 'setup'>
 			<div id = 'forms'>
-				<input type = "file" id = "selectFile">
+				<p class="menuText">Add Song:</p>
+				<div id='file_browse_wrapper'>
+					<input type = "file" id = "selectFile">
+				</div>
 				<button id="back" onclick="back()" class = "button">Back</button>
 				<button id="playUpload" onclick="playUpload()" class = "button">Play</button>
 				<button id="next" onclick="next()" class = "button">Next</button>
 
 				<!--<form name = "urlForm" action="">-->
 
-				URL Audio: 
+				<p class="menuText">Demo: </p>
 				<select id="soundUrl">
 					<option value="audio/satisfy.mp3">Satisfy</option>
 					<option value="audio/cake.mp3">Cake</option>
@@ -127,8 +130,9 @@
 					<option value="audio/three.mp3">Bob</option>
 
 				</select>
-				<input id="soundUrlButton" type="submit" value="Submit" onclick="changeSound()">
-				IMG Image:
+				<input id="soundUrlButton" type="submit" value="Play" onclick="changeSound()"class="button">
+				<button id="micro" onclick="microClick()" class = "button">Microphone</button>
+				<p class="menuText">Images:</p>
 				<select id="imageImg">
 					<option value="biggie.jpg"> Biggie </option>
 					<option value="everest.jpg"> Everest </option>
@@ -142,10 +146,11 @@
 					<option value="rgb.jpg"> RGB </option>
 					<option value="scene1.jpg"> Scene </option>
 				</select>
-				<input id="imageImgButton" type="submit" value="Submit" onclick="changeSereneryImg()">
-				<button id="play" onclick="playClick()" class = "button">Play Sound</button>
-				<button id="micro" onclick="microClick()" class = "button">Microphone</button>
-				<button id="gofull" onclick="goFullScreen()" class="button">Go Fullscreen</button>
+
+				<input id="imageImgButton" type="submit" value="Submit" onclick="changeSereneryImg()"class="button">
+				
+				<button id="gofull" onclick="goFullScreen()" class="button">Fullscreen</button>
+
 				<!--</form>-->
 			</div>
 
@@ -153,7 +158,7 @@
 		</div>
 
 		<div id = 'playlist'>
-			<h3>Playlist</h3>
+			<h3 id = "plHeader">Playlist</h3>
 			
 		</div>
 
