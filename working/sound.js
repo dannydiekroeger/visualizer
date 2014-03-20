@@ -410,7 +410,12 @@ function handleMicrophoneInput (stream) {
 
 
 function changeFluxImg(){
-	fluxImsrc = "images/"+ $("#imageImg").val();
+	var imageval = $("#imageImg").val();
+	if(imageval == "capture") {
+		fluxImsrc = "capture";
+	} else {
+		fluxImsrc = "images/"+ $("#imageImg").val();
+	}
 	loadFluxImage();
 }
 

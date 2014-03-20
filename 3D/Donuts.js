@@ -74,12 +74,13 @@ function setupControlPanelDonuts() {
 	document.getElementById("controlPanelHeader").innerHTML="Donuts";
 	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: style 1 <br>B: style 2";
 }
+
 function initKeyboardDonuts() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		implementMainKeyboardKeys(code);
-		if (code == 65) doValue = 0;
-		else if (code == 66) doValue = 1;
+		if (code == 65) loadDonuts(0);
+		else if (code == 66) loadDonuts(1);
 	}
 }
 

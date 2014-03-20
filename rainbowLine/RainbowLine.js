@@ -75,7 +75,7 @@ function loadRainbowLine(type){
 
 function setupControlPanelRainbow() {
 	document.getElementById("controlPanelHeader").innerHTML="Rainbow";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: type 1 <br>B: type 2 <br> C: type 3 <br> D: type 4";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: frequency <br>B: frequency and wave <br> C: frequency in human hearing range <br> D: frequency and wave in human hearing range";
 }
 
 
@@ -131,14 +131,16 @@ function initRainbowLine() {
 	}
 }
 
+
+
 function initKeyboardRainbow() {
 	document.onkeydown = function (event) {
 		code = event.keyCode;
 		implementMainKeyboardKeys(code);
-		if(code == 65) doType=1;
-		else if(code == 66) doType=2;
-		else if(code == 67) doType=3;
-		else if(code == 68) doType=4;
+		if(code == 65) loadRainbowLine(0); //just freq
+		else if(code == 66) loadRainbowLine(2); //freq and wave
+		else if(code == 67) loadRainbowLine(1); //freq in human
+		else if(code == 68) loadRainbowLine(3); //freq and wave in human
 	}
 }
 
@@ -156,11 +158,6 @@ function initKeyboardRainbow() {
 function updateRainbowLine(visArray, waveArray, beat)
 {
 	ctx.clearRect(0, 0, canv.width, canv.height);
-	
-	if (doType == 1) { rainbowHuman = true; rainbowWavesDraw = false; }
-	else if (doType == 2) { rainbowHuman = false; rainbowWavesDraw = true; }
-	else if (doType == 3) { rainbowHuman = true; rainbowWavesDraw = true; }
-	else { rainbowHuman = false; rainbowWavesDraw = false; }
 	
 	if (!rainbowFirsttime) {
 		rainbowFirstvisArrayElem = analyser.fftSize / 2;

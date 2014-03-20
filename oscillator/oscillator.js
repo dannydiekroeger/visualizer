@@ -1,8 +1,9 @@
-// My init function
-// Notice: - no parameters taken
-//         - refers to "canv" which refers to the element with
-//           id "canvas" in sound.html
-//         - refers to "ctx" which is defined in sound.js 
+/*
+oscillator.js
+
+Implements the oscillator world
+
+*/
 
 var centX;
 var centY;
