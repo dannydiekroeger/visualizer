@@ -18,8 +18,7 @@ var lookAtWaves;
 var yUpWaves = new THREE.Vector3(0, 1, 0);	// used as a vector in the xy plane for up vector calculations
 var rotate = false;
 
-//array to hold all of the lines in the scene
-lines = [];
+
 
 //constant definitions
 var MOVE_RIGHT =30;
@@ -60,6 +59,8 @@ function WavesInit() {
 	vlightRadius = 200;
 	vlightDetail = 3;
 	AMPLITUDE_SCALE=10;
+	//array to hold all of the lines in the scene
+	lines = [];
 
 	initCanvasWebGL(); //this allows for 3D context 
 
@@ -82,7 +83,11 @@ function WavesInit() {
 function initCamera(){
 	var width = canvWebGL.width; //references to the 3D context 
 	var height = canvWebGL.height; 
+
 	camera = new THREE.PerspectiveCamera(fov, width / height, near, far );
+	console.log(near);
+	console.log(far);
+	console.log(fov);
 	camera.position.z = zpos;
 	camera.position.y= ypos;
 	camera.position.x= xpos;
@@ -159,18 +164,18 @@ function drawWaves(){
 	var  lineColor;
 
      for(var n=0; n<numLines;n++){
-          var geometry = new THREE.Geometry();
-          geometry.dynamic=true;
+         var geometry = new THREE.Geometry();
+         geometry.dynamic=true;
           
           	
-			var color = getNeonColor();
-			var material = new THREE.LineBasicMaterial({
-			  color: color,
-			  ambient: color,  
-			  linewidth: LINE_WIDTH,			  
+		var color = getNeonColor();
+		var material = new THREE.LineBasicMaterial({
+			 color: color,
+			 ambient: color,  
+			 linewidth: LINE_WIDTH,			  
 		});
 
-     for(var i=0;i<lineLength;i++){	
+     	for(var i=0;i<lineLength;i++){	
 	 		geometry.vertices.push(new THREE.Vector3(START_X+i, START_Y, START_Z-LINE_SEP*n));
 	 	}
 	 	 line = new THREE.Line(geometry, material);

@@ -40,6 +40,8 @@ function kaleidoInit(){
 	vlightRadius = 200;
 	vlightDetail = 3;
 	AMPLITUDE_SCALE=10;
+	//array to hold all of the lines in the scene
+	lines = [];
 
 	initCanvasWebGL(); //this allows for 3D context 
 
