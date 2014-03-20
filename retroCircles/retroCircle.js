@@ -237,7 +237,7 @@ function drawRetroBeat() {
 
 function setupControlPanelRetro() {
 	document.getElementById("controlPanelHeader").innerHTML="Retro";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: normal <br>B: gradient box <br> C: type 3 <br> D: background beat";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: normal <br>B: amplitude box <br> C: amplitude gradient <br> D: background beat";
 }
 
 function initKeyboardRetro() {

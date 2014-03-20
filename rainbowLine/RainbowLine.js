@@ -75,7 +75,7 @@ function loadRainbowLine(type){
 
 function setupControlPanelRainbow() {
 	document.getElementById("controlPanelHeader").innerHTML="Rainbow";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: type 1 <br>B: type 2 <br> C: type 3 <br> D: type 4";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: frequency <br>B: frequency and wave <br> C: frequency in human hearing range <br> D: frequency and wave in human hearing range";
 }
 
 
