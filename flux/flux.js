@@ -108,7 +108,7 @@ function loadFlux() {
 
 function setupControlPanelFlux() {
 	document.getElementById("controlPanelHeader").innerHTML="Flux";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands: <br> F: alternate gravity <br> O: coolify <br>. (period): decrease opacity <br> / (slash): increase opacity <br> K: decrease radius <br> L: increase radius <br> R: toggle rotate <br> Arrow Keys: move circle";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: <br> F: alternate gravity <br> O: toggle coolify <br>. (period): decrease opacity <br> / (slash): increase opacity <br> K: decrease radius <br> L: increase radius <br> R: toggle rotate <br> Arrow Keys: move circle";
 }
 
 function imageLoadedFlux(ev) {
