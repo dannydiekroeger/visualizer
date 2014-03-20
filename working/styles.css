@@ -178,10 +178,7 @@ background: url('button_pressed.png') 0 0 no-repeat;
 
 }
 
-#title{
- background-color: rgba(0, 0, 0, 0.5);
- top:-20px;
-}
+
 
 #setup{
   position:relative;
@@ -199,6 +196,20 @@ background: url('button_pressed.png') 0 0 no-repeat;
   width:99%;
     padding:0;
     margin:0;
+}
+
+#title{
+    visibility: hidden;   
+    text-align: center;
+    width: 100%;
+    font-family:verdana; 
+   color:white;
+    position: absolute;
+    top: 10px;
+}
+
+h1{
+  color: white;
 }
 
 #playlist{
@@ -223,7 +234,7 @@ background: url('button_pressed.png') 0 0 no-repeat;
   position:absolute;
   background-color: rgba(255, 255, 255, 0.3);
   left:10px;
-  bottom:100px;
+  bottom:50px;
   width:175px;
   visibility: hidden;		
 }
@@ -272,6 +283,11 @@ background: url('button_pressed.png') 0 0 no-repeat;
 #all:hover > #globalPanel{
   visibility:visible;
 }
+
+#all:hover > #title{
+  visibility:visible;
+}
+
 
 #all:hover > #cssmenu{
   visibility:visible;

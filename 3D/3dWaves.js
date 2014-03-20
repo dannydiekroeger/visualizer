@@ -14,11 +14,38 @@ var near = 1;
 var far = 4000;
 var vlightRadius;
 var vlightDetail;
+var lookAtWaves; 
+var yUpWaves = new THREE.Vector3(0, 1, 0);	// used as a vector in the xy plane for up vector calculations
+var rotate = false;
 
 //array to hold all of the lines in the scene
 lines = [];
 
+//constant definitions
+var MOVE_RIGHT =30;
+var STEP_SIZE=100;
+var RAND_MAX=5;
+var RAND_MIN=0;
+var ROT_MAX = .2;
+var ROT_MIN = -.2;
+var PROB_ROTATION = .3;
+var RENDER_CONST = .1;
+var LINE_WIDTH = 3;
+var START_X = -1000;
+var START_Y=600;
+var START_Z = 500;
+var LINE_SEP = 30;
+var X_OFFSET = 1200;
+var LIGHT_X_OFFSET = X_OFFSET+50;
+var AMPLITUDE_SCALE=10;
+var BASE_Z = 200;
 
+
+/*
+*the init method for the waves world. Sets up variables needed to draw the world that 
+* are specific to the starndard waves then calls methods to create the canvas, 
+*camera, voluminous light, and waves
+*/
 function WavesInit() {
 	//initialize the variables to draw the waves
 	vlightx = 500;
@@ -33,26 +60,27 @@ function WavesInit() {
 	vlightRadius = 200;
 	vlightDetail = 3;
 
-	initCanvasWebGL(); //this allows for 3D context //ADT
+	initCanvasWebGL(); //this allows for 3D context 
 
 	initCamera();
 	drawWaves();
 	drawvLight();
 				
-	//camera.lookAt(vlight);  WHY DOESN'T THIS WORK
+	lookAtWaves = new THREE.Vector3(vlightx, vlighty, vlightz);
+	camera.lookAt(lookAtWaves); 
 	initRenderer();
 	
 	initComposer();
 	
-    	composer.render();
+    composer.render();
 
 
 }
 
 //inits the THREE camera and addis it to a new THREE scene
 function initCamera(){
-	var width = canvWebGL.width; //references to the 3D context //ADT
-	var height = canvWebGL.height; //ADT
+	var width = canvWebGL.width; //references to the 3D context 
+	var height = canvWebGL.height; 
 	camera = new THREE.PerspectiveCamera(fov, width / height, near, far );
 	camera.position.z = zpos;
 	camera.position.y= ypos;
@@ -65,14 +93,11 @@ function initCamera(){
 
 //initializes a THREE renderer and adds its DOM element to the screen
 function initRenderer(){
-	var width = canvWebGL.width; //ADT
-	var height = canvWebGL.height; //ADT
+	var width = canvWebGL.width; 
+	var height = canvWebGL.height; 
 
-	renderer = new THREE.WebGLRenderer({canvas: canvWebGL}); //ADT
-	//renderer = new THREE.CanvasRenderer({ canvas : canv });
+	renderer = new THREE.WebGLRenderer({canvas: canvWebGL}); 
 	renderer.setSize(width, height );
-	//document.getElementById("screen").appendChild( renderer.domElement); //this isn't needed //ADT
-
 }
 
 
@@ -96,68 +121,37 @@ function drawvLight(){
 //updates each line's y value to show the sound wave form
 //line stays a constant length, just shifts to add each new value to the end
 function WaveUpdate(visArray, waveArray, beat) {
-	ticks+=30;
+	//the ticks variable keeps track of how far to the right we have moved in the world
+	ticks+=MOVE_RIGHT;
 
-	for(var i=0; i<waveArray.length;i+=100){
+	for(var i=0; i<waveArray.length;i+=STEP_SIZE){
 	for(var l=0;l<lines.length;l++){
 		var curLine = lines[l];
-		var randSwitch = Math.random() * (5 - 0) + 0;
-		var randLine =  Math.random() * (l - 0) + 0;
-		if(randLine%1==0){
-					lines[l]=lines[randLine];
-					lines[randLine]=curLine;
-		}
 		curLine.geometry.vertices.shift();
-		curLine.geometry.vertices.push(new THREE.Vector3(700+ticks, waveArray[i]*10, 200-l*30));
+		curLine.geometry.vertices.push(new THREE.Vector3(X_OFFSET+ticks, waveArray[i]*AMPLITUDE_SCALE, BASE_Z-l*LINE_SEP));
 		curLine.geometry.verticesNeedUpdate=true;
-		
-		  vlight.position.set(750+ticks, waveArray[i]*10, 200-lines.length/2*30 );
-
-		
+		vlight.position.set(LIGHT_X_OFFSET+ticks, waveArray[i]*AMPLITUDE_SCALE, BASE_Z-lines.length/2*LINE_SEP );
 		}
 	}
-	//camera.position.x=camera.position.x+27;
-    camera.position.x=100+ticks;
-   //scene.remove(light);
-	//scene.add(light);
-
-	if(beat){
-		var options = 5;
-		var rand = Math.random() * (5 - 0) + 0;
-		var rot = Math.random() * (.2 +.2) - .2;
-		//if(rand<1)
-
-		//rotate camera
-		
-	/*	var delta = 2;
-	camera.position.y += delta;
-	if (camera.position.y > 1500) {
-		camera.position.z = 1500;
-
+    camera.position.x=STEP_SIZE+ticks;
+	if(beat && rotate){
+		rotateCam();
 	}
-	if (camera.position.z < -1500) {
-		camera.position.z = -1500;
-
-	}*/
-
-
-	//camera.position.y = Math.sqrt((800 * 800) - (camera.position.z * camera.position.z));
-	//var upVector = new THREE.Vector3();
-	//upVector.copy(camera.position);
-	//upVector.cross(yUpTorus).normalize();
-	
-	//camera.up = upVector;
-	//camera.lookAt(200+ticks, 1200, 200);		// WHY DOESN'T THIS WORK EITHER??????
-
-
-		
-		//end
-
-	}
-//renderer.render( scene, camera );
-composer.render(.1);
+composer.render(RENDER_CONST);
 
 }
+
+function rotateCam(){
+		var rand = Math.random() * (RAND_MAX - RAND_MIN) + RAND_MIN;
+		var rot = Math.random() * (ROT_MAX - ROT_MIN) + ROT_MIN;
+		if(rand<PROB_ROTATION){
+			//rotate camera
+			camera.position.z+=rot;
+			camera.up=yUpWaves;
+			camera.lookAt(vlight.position); // set to be looking at the light
+		}
+}
+
 
 //creates the line objects and adds them to the scene when the scene is intiailized
 function drawWaves(){
@@ -172,11 +166,11 @@ function drawWaves(){
 			var material = new THREE.LineBasicMaterial({
 			  color: color,
 			  ambient: color,  
-			  linewidth: 3,			  
+			  linewidth: LINE_WIDTH,			  
 		});
 
      for(var i=0;i<lineLength;i++){	
-	 		geometry.vertices.push(new THREE.Vector3(-1000+i, 600, 500-100*n));
+	 		geometry.vertices.push(new THREE.Vector3(START_X+i, START_Y, START_Z-LINE_SEP*n));
 	 	}
 	 	 line = new THREE.Line(geometry, material);
 	     scene.add(line);
@@ -192,12 +186,13 @@ function loadWaves() {
 	updateGraphics = WaveUpdate;
 	initComposer = wavesComposer;
 	setupControlPanelWaves();
+	initKeyboardWaves();
 	initSound();
 }
 
 function setupControlPanelWaves() {
 	document.getElementById("controlPanelHeader").innerHTML="Waves";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands: none";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: Waves <br>B: Dot Waves <br> C: Kaleido Waves <br> R: Turn On/Off Rotation";
 }
 
 
@@ -213,10 +208,23 @@ function wavesComposer(){
 	//bloom pass creates the glowing look
 	bloomPass = new THREE.BloomPass(1,25,4.0,256);
 	composer.addPass( bloomPass );
-	
+
 	copyPass = new THREE.ShaderPass( THREE.CopyShader );
 	composer.addPass( copyPass );
 	//set last pass in composer chain to renderToScreen
 	copyPass.renderToScreen = true;
+}
+
+
+//inits the keyboard functions for the waves
+function initKeyboardWaves() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
+		implementMainKeyboardKeys(code);
+		if (code == 65) loadWaves(); //A switches to normal waves
+		else if (code == 66) loadDots(); //B switches to the dot world
+		else if (code == 67) loadKaleido(); //C switches to the Kaleido world
+		else if (code == 82) rotate=!rotate; //R turns on camera rotation for all worlds
+	}
 }
 
