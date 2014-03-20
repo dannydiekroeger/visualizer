@@ -99,10 +99,16 @@ function loadFluxImage() {
 function loadFlux() {
 	initGraphics = initFlux;
 	updateGraphics = updateFlux;
+	setupControlPanelFlux();
 	fluxToggle = 1;
 	//updateGraphics = updateFluxScreenSerenery;
 	//updateGraphics = updatePicksle;
 	initSound();
+}
+
+function setupControlPanelFlux() {
+	document.getElementById("controlPanelHeader").innerHTML="Flux";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: <br> F: alternate gravity <br> O: coolify <br>. (period): decrease opacity <br> / (slash): increase opacity <br> K: decrease radius <br> L: increase radius <br> R: toggle rotate <br> Arrow Keys: move circle";
 }
 
 function imageLoadedFlux(ev) {

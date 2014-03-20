@@ -44,9 +44,14 @@ StarTotalAmp = 0;
 function loadStarParticles() {
 	initGraphics = StarInit;
 	updateGraphics = StarUpdate;
+	setupControlPanelStars();
 	initSound();
 }
 
+function setupControlPanelStars() {
+	document.getElementById("controlPanelHeader").innerHTML="Stars";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: none";
+}
 
 
 /****************************************

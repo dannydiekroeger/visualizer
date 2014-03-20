@@ -68,8 +68,14 @@ var doType = 0;
 function loadRainbowLine(type){
 	initGraphics = initRainbowLine;
 	updateGraphics = updateRainbowLine;
+	setupControlPanelRainbow();
 	doType = type;
 	initSound();
+}
+
+function setupControlPanelRainbow() {
+	document.getElementById("controlPanelHeader").innerHTML="Rainbow";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: type 1 <br>B: type 2 <br> C: type 3 <br> D: type 4";
 }
 
 
@@ -88,7 +94,7 @@ function loadRainbowLine(type){
 function initRainbowLine() {
 
 	initCanvas();
-
+	initKeyboardRainbow();
 	//set variant variables	
 	if (doType == 1) { rainbowHuman = true; rainbowWavesDraw = false; }
 	else if (doType == 2) { rainbowHuman = false; rainbowWavesDraw = true; }
@@ -125,6 +131,16 @@ function initRainbowLine() {
 	}
 }
 
+function initKeyboardRainbow() {
+	document.onkeydown = function (event) {
+		code = event.keyCode;
+		implementMainKeyboardKeys(code);
+		if(code == 65) doType=1;
+		else if(code == 66) doType=2;
+		else if(code == 67) doType=3;
+		else if(code == 68) doType=4;
+	}
+}
 
 
 /****************************************
@@ -140,7 +156,12 @@ function initRainbowLine() {
 function updateRainbowLine(visArray, waveArray, beat)
 {
 	ctx.clearRect(0, 0, canv.width, canv.height);
-
+	
+	if (doType == 1) { rainbowHuman = true; rainbowWavesDraw = false; }
+	else if (doType == 2) { rainbowHuman = false; rainbowWavesDraw = true; }
+	else if (doType == 3) { rainbowHuman = true; rainbowWavesDraw = true; }
+	else { rainbowHuman = false; rainbowWavesDraw = false; }
+	
 	if (!rainbowFirsttime) {
 		rainbowFirstvisArrayElem = analyser.fftSize / 2;
 		rainbowLastvisArrayElem = 0;

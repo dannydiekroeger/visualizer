@@ -123,7 +123,6 @@ function WaveUpdate(visArray, waveArray, beat) {
 	//scene.add(light);
 
 	if(beat){
-		console.log("beat");
 		var options = 5;
 		var rand = Math.random() * (5 - 0) + 0;
 		var rot = Math.random() * (.2 +.2) - .2;
@@ -193,7 +192,13 @@ function loadWaves() {
 	initGraphics = WavesInit;
 	updateGraphics = WaveUpdate;
 	initComposer = wavesComposer;
+	setupControlPanelWaves();
 	initSound();
+}
+
+function setupControlPanelWaves() {
+	document.getElementById("controlPanelHeader").innerHTML="Waves";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: none";
 }
 
 

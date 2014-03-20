@@ -110,7 +110,7 @@ function initKeyboardOsc() {
 		else if(code==76) increaseRiseFactor(); // L
 		else if(code >=37 && code <=40) catchArrowKey(code); // Arrow Keys
 		else if(code==80) toggleBallDrop(); // P
-		else if(code==83) toggleSideFluid(); // P
+		else if(code==83) toggleSideFluid(); // S
 	}
 }
 
@@ -124,7 +124,7 @@ function loadOscillator() {
 
 function setupControlPanelOsc() {
 	document.getElementById("controlPanelHeader").innerHTML="Oscillator";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands: <br><br> A: change color scheme <br> F: toggle fluid <br> S: toggle side fluid <br> . (period): squash fluid <br> / (slash): expand fluid <br> Z: flip fluid <br> D: double fluid <br> M: middle fluid <br> K: decrease amplitude <br> L: increase amplitude <br> C: toggle circle <br> Arrow Keys: move circle <br> P: drop circle";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: <br>A: change color scheme <br> F: toggle fluid <br> S: toggle side fluid <br> . (period): squash fluid <br> / (slash): expand fluid <br> Z: flip fluid <br> D: double fluid <br> M: middle fluid <br> K: decrease amplitude <br> L: increase amplitude <br> C: toggle circle <br> Arrow Keys: move circle <br> P: drop circle";
 }
 
 function convertArray(array) {

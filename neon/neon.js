@@ -201,7 +201,14 @@ function getNeonColor(){
 function loadNeon() {
 	initGraphics = initNeon;
 	updateGraphics = drawNeon;
+	setupControlPanelNeon();
 	initSound();
 }
+
+function setupControlPanelNeon() {
+	document.getElementById("controlPanelHeader").innerHTML="Neon";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: none";
+}
+
 
  
