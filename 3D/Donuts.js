@@ -72,7 +72,7 @@ function loadDonuts(type) {
 
 function setupControlPanelDonuts() {
 	document.getElementById("controlPanelHeader").innerHTML="Donuts";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: style 1 <br>B: style 2";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: Frequency and Beat <br>B: Beat";
 }
 
 function initKeyboardDonuts() {
