@@ -112,16 +112,8 @@
 		</div>
 		<div id = 'setup'>
 			<div id = 'forms'>
-				<p class="menuText">Add Song:</p>
-				<div id='file_browse_wrapper'>
-					<input type = "file" id = "selectFile" accept="audio/*">
-				</div>
-				<button id="back" onclick="back()" class = "button">Back</button>
-				<button id="playUpload" onclick="playUpload()" class = "button">Play</button>
-				<button id="next" onclick="next()" class = "button">Next</button>
-
-				<!--<form name = "urlForm" action="">-->
-
+								<!--<form name = "urlForm" action="">-->
+				<!--
 				<p class="menuText">Demo: </p>
 				<select id="soundUrl">
 					<option value="audio/satisfy.mp3">Satisfy</option>
@@ -136,26 +128,37 @@
 					<option value="audio/three.mp3">Bob</option>
 
 				</select>
+				
 				<input id="soundUrlButton" type="submit" value="Play" onclick="changeSound()"class="button">
+				-->
 				<button id="micro" onclick="microClick()" class = "button">Microphone</button>
-				<p class="menuText">Images:</p>
+				<p class="menuText">Change Flux Image:</p>
 				<select id="imageImg">
-					<option value="biggie.jpg"> Biggie </option>
-					<option value="everest.jpg"> Everest </option>
+
 					<option value="frac1.jpg"> Frac1 </option>
 					<option value="frac2.jpg"> Frac2 </option>
 					<option value="frac3.jpg"> Frac3 </option>
 					<option value="frac4.jpg"> Frac4 </option>
 					<option value="frac5.jpg"> Frac5 </option>
-					<option value="mychem.jpg"> Chem </option>
 					<option value="night.jpg"> Night </option>
-					<option value="rgb.jpg"> RGB </option>
 					<option value="scene1.jpg"> Scene </option>
+					<option value="biggie.jpg"> Biggie </option>
+					<option value="everest.jpg"> Everest </option>
+					<option value="capture"> Capture Current </option>
 				</select>
 
 				<input id="imageImgButton" type="submit" value="Submit" onclick="changeFluxImg()"class="button">
 				
 				<button id="gofull" onclick="goFullScreen()" class="button">Fullscreen</button>
+				<p class="menuText">Playlist Options:</p>
+				<div id='file_browse_wrapper'>
+					<button id="clickFile" onclick="document.getElementById('selectFile').click();" class="button">Upload Song</button>
+					<input type = "file" id = "selectFile" accept="audio/*">
+				</div>
+				<button id="back" onclick="back()" class = "button">Back</button>
+				<button id="playUpload" onclick="playUpload()" class = "button">Play</button>
+				<button id="next" onclick="next()" class = "button">Next</button>
+
 
 				<!--</form>-->
 			</div>
