@@ -59,6 +59,7 @@ function WavesInit() {
 	ticks=0;
 	vlightRadius = 200;
 	vlightDetail = 3;
+	AMPLITUDE_SCALE=10;
 
 	initCanvasWebGL(); //this allows for 3D context 
 
@@ -192,8 +193,8 @@ function loadWaves() {
 
 function setupControlPanelWaves() {
 	document.getElementById("controlPanelHeader").innerHTML="Waves";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: Waves <br>B: Dot Waves <br> C: Kaleido Waves <br> R: Turn On/Off Rotation";
-}
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: Waves <br>B: Dot Waves <br> C: Kaleido Waves <br> R: Turn On/Off Rotation <br> I: Increase Amplitude <br> D: Decrease Amplitude";
+} 
 
 
 //This function applies several THREE.JS shaders to apply the 
@@ -225,6 +226,8 @@ function initKeyboardWaves() {
 		else if (code == 66) loadDots(); //B switches to the dot world
 		else if (code == 67) loadKaleido(); //C switches to the Kaleido world
 		else if (code == 82) rotate=!rotate; //R turns on camera rotation for all worlds
+		else if (code == 68) AMPLITUDE_SCALE--;
+		else if (code == 73)  AMPLITUDE_SCALE++;
 	}
 }
 

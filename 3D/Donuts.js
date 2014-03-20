@@ -72,7 +72,7 @@ function loadDonuts(type) {
 
 function setupControlPanelDonuts() {
 	document.getElementById("controlPanelHeader").innerHTML="Donuts";
-	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: style 1 <br>B: style 2";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands:<br>A: Frequency and Beat <br>B: Beat";
 }
 
 function initKeyboardDonuts() {
@@ -192,7 +192,7 @@ function updateCameraParmsTorus(deltaZ) {
 	var upVector = new THREE.Vector3();
 	upVector.copy(cameraTorus.position);
 	upVector.cross(yUpTorus).normalize();
-	
+
 	cameraTorus.up = upVector;
 	cameraTorus.lookAt(lookAtTorus); // set to be looking at the origin
 }
@@ -231,7 +231,7 @@ function makeToruses() {
 			opacity = 1.0;
 			transparent = false;
 		}
-		
+
 		//material = new THREE.MeshPhongMaterial( { color: torusColor, ambient: torusColor, overdraw: 0.5 } );
 		material = new THREE.MeshPhongMaterial( { color: torusColor, ambient: torusColor, opacity: opacity, transparent: transparent, overdraw: 0.5 } );
 		torusMaterials.push(material);
@@ -300,21 +300,21 @@ function updateToruses(visArray, beat) {
 		dirReversed = false;
 
 		if (doValue == 0) {
-	
+
 			valueTorus = 0;
 			for (var j = interpStartTorus; j < interpEndTorus; j++) {		
 				valueTorus += visArray[j];				
 			}
 			valueTorus /= interpSizeTorus;
 			valueTorus -= 128; //this will allow it to move up and down
-			
+
 			torus.position.z = valueTorus * torusParms[i].speed;
-			
+
 			interpStartTorus += interpSizeTorus;				
 			interpEndTorus += interpSizeTorus;
 
 		}
-		
+
 		if (doValue == 1) {
 			torus.position.z +=  torusParms[i].speed * torusParms[i].dir;
 
@@ -332,5 +332,3 @@ function updateToruses(visArray, beat) {
 	else sceneTorus.remove(pntLightTorus);
 
 }
-
-

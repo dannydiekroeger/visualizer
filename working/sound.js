@@ -204,11 +204,10 @@ function initSound() {
 function initCanvas() {
 	d3.select("svg").remove();
 
-	canvWebGL.setAttribute("width", 0);
-	canvWebGL.setAttribute("height", 0);
+	//canvWebGL.setAttribute("width", 0);
+	//canvWebGL.setAttribute("height", 0);
+	canvWebGL.remove();
 
-	//canvasWidth = window.innerWidth - 225;
-	//canvasHeight = window.innerHeight -150;
 
 	canv.setAttribute("width", canvasWidth);
 	canv.setAttribute("height", canvasHeight);
@@ -228,8 +227,9 @@ function initSVG(){
 	canv.setAttribute("width", 0);
 	canv.setAttribute("height", 0);
 
-	canvWebGL.setAttribute("width", 0);
-	canvWebGL.setAttribute("height", 0);
+	//canvWebGL.setAttribute("width", 0);
+	//canvWebGL.setAttribute("height", 0);
+	canvWebGL.remove();
 
 	var svgWidth = canvasWidth;
 	var svgHeight = canvasHeight;
@@ -245,8 +245,17 @@ function initSVG(){
 function initCanvasWebGL() {
 	d3.select("svg").remove();
 
-	canv.width = 0;
-	canv.height = 0;
+	canv.setAttribute("width", 0);
+	canv.setAttribute("height", 0);
+
+	canvWebGL.remove();
+	canvWebGL = document.createElement("canvas");
+	canvWebGL.setAttribute("id", "canvasWebGL");
+	canvWebGL.setAttribute("width", 0);
+	canvWebGL.setAttribute("height", 0);
+	document.getElementById("screen").appendChild(canvWebGL);
+	canvWebGL.setAttribute("style","background:black");
+
 
 	canvWebGL.width = canvasWidth;
 	canvWebGL.height = canvasHeight;

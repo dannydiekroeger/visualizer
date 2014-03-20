@@ -39,6 +39,7 @@ function kaleidoInit(){
 	ticks=0;
 	vlightRadius = 200;
 	vlightDetail = 3;
+	AMPLITUDE_SCALE=10;
 
 	initCanvasWebGL(); //this allows for 3D context 
 
