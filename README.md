@@ -1,4 +1,4 @@
-MUSIC VISUALIZER README
+﻿MUSIC VISUALIZER README
 Katie Redmond, Will Han, Alex Tamplin, Danny Diekroger
 
 Usage Guide:
@@ -65,26 +65,26 @@ D3: http://d3js.org/
 
 iv. Rainbow -- rainbowLine/RainbowLine.js
 
-A HTML5 canvas world. It is a histogram of the frequencies grouped together and averaged for less clutter. 
+A HTML5 canvas world. It is a histogram of the frequencies grouped together and averaged for less clutter. All code is uniquely written.
 Utilizes a type variable to give the world more variation. Main variation is the inclusion of an identical line of rainbow dots to represent wavelength, calculated by averaging the most recent wave samples. The range of frequencies is decreased in duplicate variations to remove frequencies that are less common (or outside the average human hearing range)
 
 v. Retro -- retroCircles/RetroCircles.js
 
-A HTML5 canvas world. Frequencies are represented by radius of circles. 
+A HTML5 canvas world. Frequencies are represented by radius of circles. All code was developed for this application.
 Type variable used for variation. Available variations are: total amplitude shown in a box around circles, total amplitude shown with radial gradient, beat as a background change. 
 Color pallets from http://www.colourlovers.com/blog/2009/04/16/130-retro-color-palettes 
 
 vii. 3D Stars -- 3D/StarParts.js
 
-Uses THREE.js library. Random circles of random color are placed on a 2D canvas. 
+Uses THREE.js library. Random circles of random color are placed on a 2D canvas.
 Speed of circles towards user is calculated by total amplitude. Once the circles reach user, they return to the back of the world. Circles turn white when there is a beat. 
-Inspiration from http://creativejs.com/tutorials/three-js-part-1-make-a-star-field/ 
+Inspiration from http://creativejs.com/tutorials/three-js-part-1-make-a-star-field/ Direct implimentation, color, and sound interaction is uniquely developed.
 
 viii. 3D donuts -- 3D/Donuts.js
 
 Uses THREE.js library. Toruses built and stacked in decreasing diameter size and rainbow color. Demonstrates camera movement. 
 Two variations exist, one where toruses move independent of music and one where height of torus determined by frequency. 
-Additional lighting turned on when there is a beat, seen as white light on toruses. 
+Additional lighting turned on when there is a beat, seen as white light on toruses. All code is uniquely written.
 Material is transparent when in frequency mode to better see toruses in the middle
 
 ix. 3D waves -- 3D/3dWaves.js
