@@ -483,6 +483,10 @@ function transitionSereneryToFlux() {
 }
 
 function transitionFluxToSerenery() {
+	/*for(var i=0;i<fluxLivePixels.length;i++){
+		var pix = fluxLivePixels[i];
+		livePixels[pix.note].push(pix)
+	}*/
 	// clear flux live pix array
 	fluxLivePixels = new Array();
 	// change update

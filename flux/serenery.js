@@ -64,6 +64,7 @@ function updateRandomPixels(array) {
 function addPixels(num, note) {
 	for(var i=0;i<num;i++){
 		var index = Math.floor(Math.random()*deadPixels[note].length);
+		//index = deadPixels[note].length-1;
 		var pixel = deadPixels[note][index];
 		var lastPixel = deadPixels[note][deadPixels[note].length-1];
 		deadPixels[note][index] = lastPixel;
@@ -78,6 +79,7 @@ function addPixels(num, note) {
 function removePixels(num, note) {
 	for(var i=0;i<num;i++){
 		var index = Math.floor(Math.random()*livePixels[note].length);
+		index = livePixels[note].length-1;
 		var pixel = livePixels[note][index];
 		var lastPixel = livePixels[note][livePixels[note].length-1];
 		livePixels[note][index] = lastPixel;
