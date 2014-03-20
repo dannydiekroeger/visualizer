@@ -9,8 +9,13 @@
 function loadFreqBars() {
 	initGraphics = initFreqBars;
 	updateGraphics = drawBars;
-
+	setupControlPanelFreqBars();
 	initSound();
+}
+
+function setupControlPanelFreqBars() {
+	document.getElementById("controlPanelHeader").innerHTML="Frequency Bars";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: none";
 }
 
 

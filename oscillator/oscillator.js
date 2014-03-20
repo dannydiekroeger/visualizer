@@ -117,8 +117,14 @@ function initKeyboardOsc() {
 function loadOscillator() {
 	initGraphics = initScreenOsc;
 	updateGraphics = updateScreenOsc;
+	setupControlPanelOsc();
 	initSound();
 	//alert("Hot Keys are F,Z,D,M,A,S,'Period','Backslash',K,L,P,C \n Try them out!");
+}
+
+function setupControlPanelOsc() {
+	document.getElementById("controlPanelHeader").innerHTML="Oscillator";
+	document.getElementById("controlPanelMessage").innerHTML="Key Commands: <br><br> A: change color scheme <br> F: toggle fluid <br> S: toggle side fluid <br> . (period): squash fluid <br> / (slash): expand fluid <br> Z: flip fluid <br> D: double fluid <br> M: middle fluid <br> K: decrease amplitude <br> L: increase amplitude <br> C: toggle circle <br> Arrow Keys: move circle <br> P: drop circle";
 }
 
 function convertArray(array) {
