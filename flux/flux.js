@@ -105,11 +105,11 @@ function loadFluxImage() {
 
 function loadFlux() {
 	initGraphics = initFlux;
-	updateGraphics = updateFlux;
+	//updateGraphics = updateFlux;
+	updateGraphics = updateFluxScreenSerenery;
 	setupControlPanelFlux();
-	fluxToggle = 1;
-	//updateGraphics = updateFluxScreenSerenery;
-	//updateGraphics = updatePicksle;
+	fluxToggle = 0;
+
 	initSound();
 }
 
