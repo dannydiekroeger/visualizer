@@ -65,7 +65,6 @@ function initCamera(){
 
 //initializes a THREE renderer and adds its DOM element to the screen
 function initRenderer(){
-console.log("here");
 	var width = canvWebGL.width; //ADT
 	var height = canvWebGL.height; //ADT
 
