@@ -11,12 +11,6 @@ function initNeon(){
 	initSVG();
 	var svgContainer = d3.select("svg")
 	var currentGenre;
-	  /* function mycallback() { 
-		   currentGenre="katie"
-		   currentGenre = ID3.getTag(song, "genre");
-		};
-		ID3.loadTags(song,mycallback);*/
-		//console.log(currentGenre);
 }
 
 //the main update function for this scene, called 30 times per second
