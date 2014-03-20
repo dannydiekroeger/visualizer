@@ -74,9 +74,11 @@ function initFlux() {
 
 
 function loadFluxImage() {
-	var fluxim = new Image();
-	fluxim.onload = imageLoadedFlux;
-	fluxim.src = fluxImsrc;
+	if(fluxImsrc != "capture") {
+		var fluxim = new Image();
+		fluxim.onload = imageLoadedFlux;
+		fluxim.src = fluxImsrc;
+	}
 	fluxCentX = canv.width/2.0;
 	fluxCentY = canv.height/2.0;
 	centX = canv.width/2.0;
@@ -93,6 +95,11 @@ function loadFluxImage() {
 	fluxMaxBinAmp = 1.0;
 	initPrevArrayP();
 	fluxNumPix =10000;
+	if(fluxImsrc == "capture") {
+		var ev = new Object();
+		ev.target = "none";
+		imageLoadedFlux(ev);
+	}
 }
 
 
@@ -117,7 +124,7 @@ function imageLoadedFlux(ev) {
     width = canv.width;
     height = canv.height;
     // stamp the image on the left of the canvas:
-    ctx.drawImage(fluxim, 0, 0);
+    if(fluxim != "none") ctx.drawImage(fluxim, 0, 0);
     // get all canvas pixel data
 	fluxInitLiveAndDead();
 	initPixelsByNote();
