@@ -88,7 +88,7 @@ function loadFluxImage() {
 	fluxArrayUsage = 600.0;
 	fluxBinwidth = (canv.height+0.0)/fluxArrayUsage;
 	fluxPixPerBin = fluxBinwidth*canv.width;
-	opacityScale = 10;
+	opacityScale = 5;
 	fluxMaxAmp = 1.0;
 	fluxMaxBinAmp = 1.0;
 	initPrevArrayP();

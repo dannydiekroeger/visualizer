@@ -210,6 +210,29 @@ background: url('button_pressed.png') 0 0 no-repeat;
   visibility: hidden;
 }
 
+#microMessage{
+	position:absolute;
+	background-color: rgba(255, 255, 255, 0.3);
+  	left:40%;
+  	top:60%;
+  	width:20%;
+  	visibility: visible;	
+}
+
+#introMessage{
+	position:absolute;
+	background-color: rgba(255, 255, 255, 0.3);
+  	left:13%;
+  	top:30%;
+  	width:74%;
+  	visibility: visible;
+}
+
+#message{
+	text-align:center;
+	color:white;
+}
+
 #all:hover > #setup{
   visibility:visible;
 }
@@ -237,6 +260,11 @@ overflow-y: hidden;
   height: 100px;
   z-index:100;
 
+}
+
+#forms {
+	position:fixed;
+	bottom:2px;
 }
 
 #file_browse_wrapper {

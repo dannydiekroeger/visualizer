@@ -374,6 +374,8 @@ function microClick() {
 }
 
 function handleMicrophoneInput (stream) {
+	document.getElementById("microMessage").style.display = "none";
+	document.getElementById("introMessage").style.display = "none";
 	clearNodes();
 	//convert audio stream to mediaStreamSource (node)
 	microphone = context.createMediaStreamSource(stream);
