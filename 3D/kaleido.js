@@ -42,6 +42,7 @@ function kaleidoInit(){
 	AMPLITUDE_SCALE=10;
 	//array to hold all of the lines in the scene
 	lines = [];
+	rotate = false;
 
 	initCanvasWebGL(); //this allows for 3D context 
 
